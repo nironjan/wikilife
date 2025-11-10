@@ -1,0 +1,104 @@
+User-agent: *
+Allow: /
+
+# SEO Crawlers - Enhanced Access
+User-agent: Googlebot
+Allow: /
+Crawl-delay: 1
+
+User-agent: Bingbot
+Allow: /
+Crawl-delay: 1
+
+User-agent: YandexBot
+Allow: /
+Crawl-delay: 2
+
+User-agent: Baiduspider
+Allow: /
+Crawl-delay: 2
+
+# AI Training Bots - Restricted
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: GPTBot
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: FacebookBot
+Disallow: /
+
+User-agent: Twitterbot
+Allow: /
+
+# Aggressive Crawlers - Rate Limited
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+User-agent: MJ12bot
+Crawl-delay: 10
+
+User-agent: DotBot
+Crawl-delay: 5
+
+# Directory Restrictions
+Disallow: /webmaster/
+Disallow: /admin/
+Disallow: /dashboard/
+Disallow: /settings/
+Disallow: /api/
+Disallow: /storage/
+Disallow: /vendor/
+Disallow: /node_modules/
+Disallow: /.env
+Disallow: /config/
+Disallow: /logs/
+
+# Query Parameter Handling
+Disallow: /*?sort=
+Disallow: /*?filter=
+Disallow: /*?page=
+Disallow: /*?search=
+Disallow: /*?utm_
+Disallow: /*?ref=
+Disallow: /*?share=
+
+# File Type Restrictions
+Disallow: /*.pdf$
+Disallow: /*.doc$
+Disallow: /*.docx$
+Disallow: /*.xls$
+Disallow: /*.xlsx$
+Disallow: /*.ppt$
+Disallow: /*.pptx$
+Disallow: /*.zip$
+Disallow: /*.rar$
+Disallow: /*.exe$
+Disallow: /*.dmg$
+
+# Dynamic Content Restrictions
+Disallow: /search/
+Disallow: /people/search/
+
+# Allow Important Dynamic Pages
+Allow: /people/profession/
+Allow: /articles/category/
+Allow: /people/*/updates/
+Allow: /people/*/controversies/
+Allow: /people/*/career/
+
+# Sitemap Locations
+Sitemap: https://wikilife.in/sitemap.xml
+Sitemap: https://wikilife.in/sitemap_index.xml
+
+# Crawl-Delay for all other bots
+Crawl-delay: 2
+
+# Host Directive
+Host: https://wikilife.in

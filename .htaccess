@@ -1,0 +1,2 @@
+# Sitemap
+RewriteRule ^sitemap\.xml$ /sitemap.xml [L]
