@@ -77,7 +77,7 @@ class Form extends Component
     public function loadParents(): void
     {
         $query = Menu::where('type', $this->type)
-            ->whereNull('parent_id') // Use whereNull instead of root() scope
+            ->whereNull('parent_id')
             ->active()
             ->ordered();
 

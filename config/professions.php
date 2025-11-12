@@ -100,14 +100,5 @@ return [
 
     // ... keep your existing profession arrays for backward compatibility
 
-    // Helper method to get URL-safe profession names
-    'getUrlSafeProfession' => function($profession) {
-        return urlencode(strtolower($profession));
-    },
-
-    // Helper method to decode URL-safe profession names
-    'getDisplayProfession' => function($urlSafeProfession) {
-        return ucwords(urldecode($urlSafeProfession));
-    },
 
 ];

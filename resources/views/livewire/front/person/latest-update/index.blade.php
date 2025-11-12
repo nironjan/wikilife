@@ -193,4 +193,13 @@
             </div>
         </div>
     </div>
+
+    <!-- JSON-LD Structured Data -->
+    @isset($structuredData)
+        @foreach($structuredData as $data)
+            <script type="application/ld+json">
+                {!! json_encode($data) !!}
+            </script>
+        @endforeach
+    @endisset
 </div>

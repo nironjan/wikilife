@@ -8,6 +8,8 @@ use App\Models\PersonAward;
 use App\Services\ImageKitService;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Masmerise\Toaster\Toaster;
@@ -19,10 +21,14 @@ class Manage extends Component
     public ?int $editingId = null;
     public int $currentStep = 1;
 
+    public bool $autoSlug = true;
+
     // Literature Career fields
     public $person_id = '';
     public $award_ids = [];
     public $role = '';
+
+    public $slug = '';
     public $media_type = '';
     public $start_date = '';
     public $end_date = '';
@@ -60,6 +66,7 @@ class Manage extends Component
             'award_ids' => 'nullable|array',
             'award_ids.*' => 'exists:person_awards,id',
             'role' => 'required|string|max:255',
+            'slug' => 'required|string|unique:literature_careers,slug',
             'media_type' => 'required|string|max:255',
             'start_date' => 'nullable|date',
             'end_date' => 'nullable|date|after_or_equal:start_date',
@@ -91,10 +98,12 @@ class Manage extends Component
         if ($id) {
             $this->editingId = $id;
             $this->loadLiteratureCareer($id);
+            $this->autoSlug = false;
         } else {
             $this->award_ids = [];
             $this->is_verified = false;
             $this->sort_order = 0;
+            $this->autoSlug = true;
         }
     }
 
@@ -105,6 +114,7 @@ class Manage extends Component
         $this->person_id = $literatureCareer->person_id;
         $this->award_ids = $literatureCareer->award_ids ?? [];
         $this->role = $literatureCareer->role;
+        $this->slug = $literatureCareer->slug;
         $this->media_type = $literatureCareer->media_type;
         $this->start_date = optional($literatureCareer->start_date)->format('Y-m-d');
         $this->end_date = optional($literatureCareer->end_date)->format('Y-m-d');
@@ -165,6 +175,52 @@ class Manage extends Component
         return PersonAward::whereIn('id', $this->award_ids)->get();
     }
 
+    /**
+     * Auto-generate slug when political party and position change
+     */
+    public function updatedLiteratureRole($value)
+    {
+        if ($this->autoSlug && !empty($value) && !empty($this->title)) {
+            $this->generateSlug();
+        }
+    }
+
+    /**
+     * Generate slug from political party and position
+     */
+    public function generateSlug()
+    {
+        if ($this->autoSlug && !empty($this->title)) {
+            $baseSlug = Str::slug($this->title);
+            $this->slug = $baseSlug;
+
+            // Check uniqueness
+            $this->ensureUniqueSlug();
+        }
+    }
+
+     /**
+     * Ensure the generated slug is unique
+     */
+    protected function ensureUniqueSlug()
+    {
+        $baseSlug = $this->slug;
+        $counter = 1;
+
+        while (
+            LiteratureCareer::where('slug', $this->slug)
+                ->when($this->editingId, fn($q) => $q->where('id', '!=', $this->editingId))
+                ->exists()
+        ) {
+            $this->slug = $baseSlug . '-' . $counter;
+            $counter++;
+
+            if ($counter > 100)
+                break;
+        }
+    }
+
+
     public function updatedPersonId($value)
     {
         if ($value) {
@@ -175,6 +231,32 @@ class Manage extends Component
         } else {
             $this->person_search = '';
         }
+    }
+
+    /**
+     * When user manually edits slug, disable auto-generation
+     */
+    public function updatedSlug($value)
+    {
+        $expectedSlug = Str::slug($this->title);
+        if (!empty($value) && $value !== $expectedSlug) {
+            $this->autoSlug = false;
+        }
+
+        if (empty($value)) {
+            $this->autoSlug = true;
+            $this->generateSlug();
+        }
+    }
+
+    /**
+     * Reset to auto-generated slug
+     */
+    public function resetSlug()
+    {
+        $this->autoSlug = true;
+        $this->generateSlug();
+        Toaster::success('Slug reset to auto-generated value.');
     }
 
     public function clearPerson()
@@ -204,12 +286,13 @@ class Manage extends Component
     }
 
 
-
-
-
-
     public function nextStep()
     {
+        // Ensure slug is generated before validation
+        if ($this->currentStep === 1 && $this->autoSlug && empty($this->slug) && !empty($this->title)) {
+            $this->generateSlug();
+        }
+
         $this->validateCurrentStep();
         if ($this->currentStep < 3) {
             $this->currentStep++;
@@ -229,6 +312,7 @@ class Manage extends Component
             1 => [
                 'person_id' => 'required|exists:people,id',
                 'role' => 'required|string|max:255',
+                'slug' => ['required', 'string', Rule::unique('literature_careers', 'slug')->ignore($this->editingId)],
                 'media_type' => 'required|string|max:255',
                 'title' => 'required|string|max:255',
                 'work_type' => 'required|string|max:255',
@@ -258,16 +342,21 @@ class Manage extends Component
 
     public function save()
     {
+        $rules = $this->rules();
+
+        if ($this->editingId) {
+            $rules['slug'] = 'required|string|unique:literature_careers,slug,' . $this->editingId;
+        }
 
 
-
-        $this->validate();
+        $this->validate($rules);
 
         try {
             $data = [
                 'person_id' => $this->person_id,
                 'award_ids' => $this->award_ids,
                 'role' => $this->role,
+                'slug' => Str::slug($this->slug),
                 'media_type' => $this->media_type,
                 'start_date' => $this->start_date ?: null,
                 'end_date' => $this->end_date ?: null,

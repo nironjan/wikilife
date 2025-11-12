@@ -33,7 +33,7 @@ class Details extends Component
         $this->person = People::active()
             ->verified()
             ->where('slug', $this->personSlug)
-            ->with(['seo'])
+            ->with(['seo', 'socialLinks'])
             ->firstOrFail();
 
         $this->update = LatestUpdate::where('slug', $this->updateSlug)
@@ -137,7 +137,7 @@ class Details extends Component
         // Priority: Update image > Person profile image > Default image
         $image = $this->update->image_url ??
                 $this->person->profile_image_url ??
-                asset('images/update-details-og.jpg');
+                default_image(1200, 630);
 
         $imageWidth = 1200;
         $imageHeight = 630;
@@ -312,10 +312,143 @@ class Details extends Component
 
     public function getStructuredData()
     {
+        $schemas = [
+            $this->getPersonStructuredData(),
+            $this->getBreadcrumbStructuredData(),
+            $this->getArticleStructuredData(),
+            $this->getWebPageStructuredData()
+        ];
+
+        // Remove empty schemas and decode/re-encode to ensure valid JSON
+        $validSchemas = [];
+        foreach ($schemas as $schema) {
+            if (!empty($schema)) {
+                $decoded = json_decode($schema, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $validSchemas[] = $decoded;
+                }
+            }
+        }
+
+        // If multiple schemas, output as array, otherwise as single object
+        if (count($validSchemas) > 1) {
+            return json_encode($validSchemas, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        } elseif (count($validSchemas) === 1) {
+            return json_encode($validSchemas[0], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        }
+
+        return '';
+    }
+
+    private function getPersonStructuredData()
+    {
         $personName = $this->person->name;
         $primaryProfession = $this->person->primary_profession;
 
-        $schema = [
+        $personSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "Person",
+            "@id" => LaravelURL::route('people.people.show', $this->personSlug) . "#person",
+            "name" => $personName,
+            "description" => Str::limit(strip_tags($this->person->about ?? ''), 200),
+            "url" => LaravelURL::route('people.people.show', $this->personSlug),
+            "mainEntityOfPage" => LaravelURL::route('people.people.show', $this->personSlug),
+            "image" => $this->person->profile_image_url ?: default_image(400, 400),
+            "sameAs" => $this->getPersonSameAsLinks()
+        ];
+
+        // Add profession/occupation
+        if ($primaryProfession) {
+            $personSchema["hasOccupation"] = [
+                "@type" => "Occupation",
+                "name" => $primaryProfession,
+                "description" => "Professional {$primaryProfession}"
+            ];
+
+            $personSchema["jobTitle"] = $primaryProfession;
+        }
+
+        // Add birth details
+        if ($this->person->birth_date) {
+            $personSchema["birthDate"] = $this->person->birth_date->format('Y-m-d');
+        }
+
+        if ($this->person->birth_place) {
+            $personSchema["birthPlace"] = [
+                "@type" => "Place",
+                "name" => $this->person->birth_place
+            ];
+        }
+
+        // Add nationality
+        if ($this->person->nationality) {
+            $personSchema["nationality"] = [
+                "@type" => "Country",
+                "name" => $this->person->nationality
+            ];
+        }
+
+        // Add gender
+        if ($this->person->gender) {
+            $personSchema["gender"] = $this->person->gender;
+        }
+
+        // Add additional personal information
+        if ($this->person->height) {
+            $personSchema["height"] = $this->person->height;
+        }
+
+        return json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getBreadcrumbStructuredData()
+    {
+        $breadcrumbSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "BreadcrumbList",
+            "itemListElement" => [
+                [
+                    "@type" => "ListItem",
+                    "position" => 1,
+                    "name" => "Home",
+                    "item" => url('/')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 2,
+                    "name" => "People",
+                    "item" => url('/people')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 3,
+                    "name" => $this->person->name,
+                    "item" => LaravelURL::route('people.people.show', $this->personSlug)
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 4,
+                    "name" => "Latest Updates",
+                    "item" => LaravelURL::route('people.updates.index', ['personSlug' => $this->personSlug])
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 5,
+                    "name" => $this->update->title,
+                    "item" => $this->getCanonicalUrl()
+                ]
+            ]
+        ];
+
+        return json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getArticleStructuredData()
+    {
+        $personName = $this->person->name;
+        $primaryProfession = $this->person->primary_profession;
+
+        $articleSchema = [
             "@context" => "https://schema.org",
             "@type" => "Article",
             "headline" => $this->update->title,
@@ -324,6 +457,7 @@ class Details extends Component
             "dateModified" => $this->update->updated_at->toIso8601String(),
             "author" => [
                 "@type" => "Person",
+                "@id" => LaravelURL::route('people.people.show', $this->personSlug) . "#person",
                 "name" => $personName,
                 "url" => LaravelURL::route('people.people.show', $this->personSlug)
             ],
@@ -332,7 +466,7 @@ class Details extends Component
                 "name" => config('app.name', 'WikiLife'),
                 "logo" => [
                     "@type" => "ImageObject",
-                    "url" => asset('images/logo.png'),
+                    "url" => site_logo(180, 60),
                     "width" => "180",
                     "height" => "60"
                 ]
@@ -353,60 +487,101 @@ class Details extends Component
 
         // Add profession to author if available
         if ($primaryProfession) {
-            $schema["author"]["jobTitle"] = $primaryProfession;
+            $articleSchema["author"]["jobTitle"] = $primaryProfession;
         }
 
         // Add image if available
         $image = $this->update->image_url ?? $this->person->profile_image_url;
         if ($image) {
-            $schema["image"] = [
+            $articleSchema["image"] = [
                 "@type" => "ImageObject",
                 "url" => $image,
                 "width" => "800",
                 "height" => "600",
                 "caption" => "{$this->update->title} - {$personName}"
             ];
-            $schema["thumbnailUrl"] = $image;
+            $articleSchema["thumbnailUrl"] = $image;
         }
 
         // Add article body if content is available
         if ($this->update->content) {
-            $schema["articleBody"] = Str::limit(strip_tags($this->update->content), 5000);
+            $articleSchema["articleBody"] = Str::limit(strip_tags($this->update->content), 5000);
         }
 
-        // Add breadcrumb schema
-        $schema["breadcrumb"] = [
+        return json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getWebPageStructuredData()
+    {
+        $webPageSchema = [
             "@context" => "https://schema.org",
-            "@type" => "BreadcrumbList",
-            "itemListElement" => [
-                [
-                    "@type" => "ListItem",
-                    "position" => 1,
-                    "name" => "Home",
-                    "item" => url('/')
-                ],
-                [
-                    "@type" => "ListItem",
-                    "position" => 2,
-                    "name" => $personName,
-                    "item" => LaravelURL::route('people.people.show', $this->personSlug)
-                ],
-                [
-                    "@type" => "ListItem",
-                    "position" => 3,
-                    "name" => "Latest Updates",
-                    "item" => LaravelURL::route('people.updates.index', ['personSlug' => $this->personSlug])
-                ],
-                [
-                    "@type" => "ListItem",
-                    "position" => 4,
-                    "name" => $this->update->title,
-                    "item" => $this->getCanonicalUrl()
-                ]
+            "@type" => "WebPage",
+            "@id" => $this->getCanonicalUrl() . "#webpage",
+            "name" => $this->update->title . " - " . $this->person->name,
+            "description" => $this->update->excerpt ?: Str::limit(strip_tags($this->update->content), 160),
+            "url" => $this->getCanonicalUrl(),
+            "primaryImageOfPage" => $this->update->image_url ?? $this->person->profile_image_url,
+            "datePublished" => $this->update->created_at->toIso8601String(),
+            "dateModified" => $this->update->updated_at->toIso8601String(),
+            "lastReviewed" => $this->update->updated_at->toIso8601String(),
+            "author" => [
+                "@type" => "Person",
+                "@id" => LaravelURL::route('people.people.show', $this->personSlug) . "#person",
+                "name" => $this->person->name
+            ],
+            "publisher" => [
+                "@type" => "Organization",
+                "name" => config('app.name', 'WikiLife')
+            ],
+            "inLanguage" => app()->getLocale(),
+            "breadcrumb" => [
+                "@type" => "BreadcrumbList",
+                "itemListElement" => $this->getBreadcrumbItemsForWebPage()
             ]
         ];
 
-        return json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        return json_encode($webPageSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getBreadcrumbItemsForWebPage()
+    {
+        return [
+            [
+                "@type" => "ListItem",
+                "position" => 1,
+                "name" => "Home",
+                "item" => url('/')
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 2,
+                "name" => $this->person->name,
+                "item" => LaravelURL::route('people.people.show', $this->personSlug)
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 3,
+                "name" => "Latest Updates",
+                "item" => LaravelURL::route('people.updates.index', ['personSlug' => $this->personSlug])
+            ],
+            [
+                "@type" => "ListItem",
+                "position" => 4,
+                "name" => $this->update->title,
+                "item" => $this->getCanonicalUrl()
+            ]
+        ];
+    }
+
+    private function getPersonSameAsLinks()
+    {
+        $sameAs = [];
+
+        foreach ($this->person->socialLinks as $socialLink) {
+            $sameAs[] = $socialLink->url;
+        }
+
+        return $sameAs;
     }
 
     public function render()
@@ -416,6 +591,7 @@ class Details extends Component
 
         return view('livewire.front.person.latest-update.details', [
             'relatedUpdates' => $this->getRelatedUpdates(),
+            'structuredData' => $this->getStructuredData()
         ]);
     }
 }

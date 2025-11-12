@@ -120,7 +120,7 @@ class Index extends Component
     protected function setMetaImages()
     {
         // Use person's profile image if available
-        $image = $this->person->profile_image_url ?: asset('images/person-updates-og.jpg');
+        $image = $this->person->profile_image_url ?: default_image(1200, 630);
 
         Meta::set('og:image', $image)
             ->set('twitter:image', $image)

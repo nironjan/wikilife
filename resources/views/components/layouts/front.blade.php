@@ -6,6 +6,7 @@
         {!! app('meta')->toHtml() !!}
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
+        {!! header_scripts() !!}
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @fluxAppearance
         @stack('scripts')
@@ -16,6 +17,7 @@
         {{ $slot }}
         <!-- Footer Section -->
         <livewire:front.footer-section lazy="on-load" />
+        {!! footer_scripts() !!}
     </body>
 </html>
 

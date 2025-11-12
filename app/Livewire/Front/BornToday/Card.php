@@ -26,7 +26,7 @@ class Card extends Component
 
     public function loadPeopleBornToday()
     {
-        $today = now();
+        $today = now('Asia/Kolkata');
 
         $this->peopleBornToday = People::active()
             ->verified()

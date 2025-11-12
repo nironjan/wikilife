@@ -414,9 +414,19 @@ class People extends Model
         return $this->hasMany(Entrepreneur::class, 'person_id')->orderBy('sort_order');
     }
 
+    public function literatureCareer()
+    {
+        return $this->hasMany(LiteratureCareer::class, 'person_id')->orderBy('sort_order');
+    }
+
     public function creator()
     {
         return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function feedbacks()
+    {
+        return $this->hasMany(Feedback::class, 'people_id');
     }
 
 

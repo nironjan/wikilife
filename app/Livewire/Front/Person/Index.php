@@ -118,8 +118,7 @@ class Index extends Component
 
     protected function setMetaImages()
     {
-        // You can set a default image for person listing pages
-        $defaultImage = asset('images/person-listing-og.jpg'); // Create this image
+        $defaultImage = default_image(1200, 630);
 
         Meta::set('og:image', $defaultImage)
             ->set('twitter:image', $defaultImage)

@@ -178,6 +178,62 @@
                                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                         @enderror
                                     </div>
+
+                                    <!-- Slug with Auto-generation -->
+                                    <div>
+                                        <div class="flex items-center justify-between mb-2">
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                                                Slug *
+                                            </label>
+                                            <div class="flex items-center space-x-2">
+                                                @if (!$autoSlug)
+                                                    <x-flux::button type="button" wire:click="resetSlug"
+                                                        class="cursor-pointer" size="sm">↻ Reset to Auto
+                                                    </x-flux::button>
+                                                @endif
+                                                <span
+                                                    class="text-xs px-2 py-1 rounded-full {{ $autoSlug ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' }}">
+                                                    {{ $autoSlug ? 'Auto' : 'Manual' }}
+                                                </span>
+                                            </div>
+                                        </div>
+
+                                        <div class="relative">
+                                            <x-flux::input wire:model="slug" placeholder="URL-friendly identifier"
+                                                required class="pr-10" />
+
+                                            @if ($autoSlug && !empty($title) && empty($slug))
+                                                <div class="absolute inset-y-0 right-0 flex items-center pr-3">
+                                                    <div
+                                                        class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600">
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </div>
+
+                                        @if (!empty($slug))
+                                            <div class="mt-2 p-2 bg-gray-50 dark:bg-gray-700 rounded text-sm">
+                                                <span class="text-gray-600 dark:text-gray-400">Preview URL:</span>
+                                                <span class="font-mono text-blue-600 dark:text-blue-400 ml-2">
+                                                    /literature/{{ $slug }}
+                                                </span>
+                                            </div>
+                                        @endif
+
+                                        @if ($autoSlug)
+                                            <p class="mt-1 text-sm text-green-600 dark:text-green-400">
+                                                ✓ Slug auto-generates from role
+                                            </p>
+                                        @else
+                                            <p class="mt-1 text-sm text-blue-600 dark:text-blue-400">
+                                                ⚡ Manual mode - you can customize the slug
+                                            </p>
+                                        @endif
+
+                                        @error('slug')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                    </div>
                                 </div>
                             @endif
 

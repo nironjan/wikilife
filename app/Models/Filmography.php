@@ -13,6 +13,7 @@ class Filmography extends Model
     protected $fillable = [
         'person_id',
         'movie_title',
+        'slug',
         'release_date',
         'role',
         'profession_type',

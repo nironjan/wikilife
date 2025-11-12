@@ -7,6 +7,8 @@ use App\Models\People;
 use App\Models\PersonAward;
 use Exception;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
@@ -14,10 +16,13 @@ class Manage extends Component
 {
     public ?int $editingId = null;
     public int $currentStep = 1;
+    public bool $autoSlug = true;
 
     // Filmography fields
     public $person_id = '';
     public $movie_title = '';
+
+    public$slug = '';
     public $release_date = '';
     public $role = '';
     public $profession_type = 'actor';
@@ -46,6 +51,7 @@ class Manage extends Component
         return [
             'person_id' => 'required|exists:people,id',
             'movie_title' => 'required|string|max:255',
+            'slug' => 'required|string|unique:filmographies,slug',
             'release_date' => 'nullable|date',
             'role' => 'nullable|string|max:255',
             'profession_type' => 'required|in:actor,director,producer,writer,cinematographer,editor,composer,other',
@@ -69,9 +75,11 @@ class Manage extends Component
         if ($id) {
             $this->editingId = $id;
             $this->loadFilmography($id);
+            $this->autoSlug = false;
         } else {
             $this->genres = [''];
             $this->award_ids = [];
+            $this->autoSlug = true;
         }
     }
 
@@ -81,6 +89,7 @@ class Manage extends Component
 
         $this->person_id = $filmography->person_id;
         $this->movie_title = $filmography->movie_title;
+        $this->slug = $filmography->slug;
         $this->release_date = optional($filmography->release_date)->format('Y-m-d');
         $this->role = $filmography->role;
         $this->profession_type = $filmography->profession_type;
@@ -172,6 +181,77 @@ class Manage extends Component
             return collect();
         }
         return PersonAward::whereIn('id', $this->award_ids)->get();
+    }
+
+    /**
+     * Auto-generate slug when movie title change
+     */
+    public function updatedMovieTitle($value)
+    {
+        if ($this->autoSlug && !empty($value) && !empty($this->movie_title)) {
+            $this->generateSlug();
+        }
+    }
+
+    /**
+     * Generate slug from political party and position
+     */
+    public function generateSlug()
+    {
+        if ($this->autoSlug && !empty($this->movie_title)) {
+            $baseSlug = Str::slug($this->movie_title);
+            $this->slug = $baseSlug;
+
+            // Check uniqueness
+            $this->ensureUniqueSlug();
+        }
+    }
+
+         /**
+     * Ensure the generated slug is unique
+     */
+    protected function ensureUniqueSlug()
+    {
+        $baseSlug = $this->slug;
+        $counter = 1;
+
+        while (
+            Filmography::where('slug', $this->slug)
+                ->when($this->editingId, fn($q) => $q->where('id', '!=', $this->editingId))
+                ->exists()
+        ) {
+            $this->slug = $baseSlug . '-' . $counter;
+            $counter++;
+
+            if ($counter > 100)
+                break;
+        }
+    }
+
+     /**
+     * When user manually edits slug, disable auto-generation
+     */
+    public function updatedSlug($value)
+    {
+        $expectedSlug = Str::slug($this->movie_title);
+        if (!empty($value) && $value !== $expectedSlug) {
+            $this->autoSlug = false;
+        }
+
+        if (empty($value)) {
+            $this->autoSlug = true;
+            $this->generateSlug();
+        }
+    }
+
+     /**
+     * Reset to auto-generated slug
+     */
+    public function resetSlug()
+    {
+        $this->autoSlug = true;
+        $this->generateSlug();
+        Toaster::success('Slug reset to auto-generated value.');
     }
 
 
@@ -300,6 +380,11 @@ class Manage extends Component
 
     public function nextStep()
     {
+        // Ensure slug is generated before validation
+        if ($this->currentStep === 1 && $this->autoSlug && empty($this->slug) && !empty($this->movie_title)) {
+            $this->generateSlug();
+        }
+
         $this->validateCurrentStep();
 
         if ($this->currentStep < 3) {
@@ -320,6 +405,7 @@ class Manage extends Component
             1 => [
                 'person_id' => 'required|exists:people,id',
                 'movie_title' => 'required|string|max:255',
+                'slug' => ['required', 'string', Rule::unique('filmographies', 'slug')->ignore($this->editingId)],
                 'release_date' => 'nullable|date',
                 'role' => 'nullable|string|max:255',
                 'profession_type' => 'required|in:actor,director,producer,writer,cinematographer,editor,composer,other',
@@ -348,12 +434,19 @@ class Manage extends Component
 
     public function save()
     {
-        $this->validate();
+        $rules = $this->rules();
+
+        if ($this->editingId) {
+            $rules['slug'] = 'required|string|unique:filmographies,slug,' . $this->editingId;
+        }
+
+        $this->validate($rules);
 
         try {
             $data = [
                 'person_id' => $this->person_id,
                 'movie_title' => $this->movie_title,
+                'slug' => Str::slug($this->slug),
                 'release_date' => $this->release_date ?: null,
                 'role' => $this->role,
                 'profession_type' => $this->profession_type,

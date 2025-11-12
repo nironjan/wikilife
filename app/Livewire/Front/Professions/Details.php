@@ -254,8 +254,8 @@ class Details extends Component
 
     protected function setMetaImages()
     {
-        // You can set category-specific images or use a default
-        $defaultImage = asset('images/profession-listing-og.jpg'); // Create this image
+
+        $defaultImage = default_image(1200, 630);
 
         // Optionally set category-specific images
         if ($this->category && isset($this->category['icon'])) {

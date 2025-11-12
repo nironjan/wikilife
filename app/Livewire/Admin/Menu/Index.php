@@ -12,7 +12,7 @@ class Index extends Component
     public $activeTab = 'header';
     public $search = '';
     public $confirmingDelete = null;
-    public $expandedMenus = []; 
+    public $expandedMenus = [];
 
     public function mount(): void
     {
@@ -47,7 +47,7 @@ class Index extends Component
     public function updatedActiveTab(): void
     {
         $this->loadMenus();
-        $this->expandedMenus = []; // Reset expanded menus when tab changes
+        $this->expandedMenus = [];
     }
 
     // Toggle expand/collapse of parent menu

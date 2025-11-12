@@ -167,9 +167,9 @@ class Details extends Component
         // Career-specific meta
         Meta::set('career:type', $this->careerType)
             ->set('career:status', $dateInfo['is_current'] ? 'current' : 'past')
-            ->set('career:start_date', $dateInfo['start']?->format('Y-m-d'))
-            ->set('career:end_date', $dateInfo['end']?->format('Y-m-d'))
-            ->set('content_category', 'career');
+            ->set('career:start_date', $dateInfo['start']?->format('Y-m-d') ?? "")
+            ->set('career:end_date', $dateInfo['end']?->format('Y-m-d') ?? "")
+            ->set('content_category', 'career' ?? "");
 
         // Location and profession specific tags
         if ($this->person->nationality) {
@@ -188,7 +188,7 @@ class Details extends Component
     protected function setMetaImages()
     {
         // Use person's profile image for career
-        $image = $this->person->profile_image_url ?? asset('images/career-og.jpg');
+        $image = $this->person->profile_image_url ?? default_image(1200, 630);
 
         $imageWidth = 1200;
         $imageHeight = 630;
@@ -405,13 +405,142 @@ class Details extends Component
 
     public function getStructuredData()
     {
+        $schemas = [
+            $this->getPersonStructuredData(),
+            $this->getBreadcrumbStructuredData(),
+            $this->getArticleStructuredData(),
+            $this->getOccupationStructuredData()
+        ];
+
+        // Remove empty schemas and decode/re-encode to ensure valid JSON
+        $validSchemas = [];
+        foreach ($schemas as $schema) {
+            if (!empty($schema)) {
+                $decoded = json_decode($schema, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $validSchemas[] = $decoded;
+                }
+            }
+        }
+
+        // If multiple schemas, output as array, otherwise as single object
+        if (count($validSchemas) > 1) {
+            return json_encode($validSchemas, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        } elseif (count($validSchemas) === 1) {
+            return json_encode($validSchemas[0], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        }
+
+        return '';
+    }
+
+    private function getPersonStructuredData()
+    {
+        $personName = $this->person->display_name;
+        $primaryProfession = $this->person->primary_profession;
+
+        $personSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "Person",
+            "@id" => LaravelURL::route('people.people.show', $this->slug) . "#person",
+            "name" => $personName,
+            "description" => $this->person->about ? strip_tags($this->person->about) : "Professional {$primaryProfession}",
+            "url" => LaravelURL::route('people.people.show', $this->slug),
+            "image" => $this->person->profile_image_url ?: default_image(400, 400),
+            "mainEntityOfPage" => LaravelURL::route('people.people.show', $this->slug)
+        ];
+
+        // Add profession/occupation
+        if ($primaryProfession) {
+            $personSchema["hasOccupation"] = [
+                "@type" => "Occupation",
+                "name" => $primaryProfession
+            ];
+
+            $personSchema["jobTitle"] = $primaryProfession;
+        }
+
+        // Add birth details
+        if ($this->person->birth_date) {
+            $personSchema["birthDate"] = $this->person->birth_date->format('Y-m-d');
+        }
+
+        if ($this->person->birth_place) {
+            $personSchema["birthPlace"] = [
+                "@type" => "Place",
+                "name" => $this->person->birth_place
+            ];
+        }
+
+        // Add nationality
+        if ($this->person->nationality) {
+            $personSchema["nationality"] = [
+                "@type" => "Country",
+                "name" => $this->person->nationality
+            ];
+        }
+
+        // Add gender
+        if ($this->person->gender) {
+            $personSchema["gender"] = $this->person->gender;
+        }
+
+        return json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getBreadcrumbStructuredData()
+    {
+        $breadcrumbSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "BreadcrumbList",
+            "itemListElement" => [
+                [
+                    "@type" => "ListItem",
+                    "position" => 1,
+                    "name" => "Home",
+                    "item" => url('/')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 2,
+                    "name" => "People",
+                    "item" => url('/people')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 3,
+                    "name" => $this->person->display_name,
+                    "item" => LaravelURL::route('people.people.show', $this->slug)
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 4,
+                    "name" => "Career",
+                    "item" => LaravelURL::route('people.details.tab', [
+                        'slug' => $this->slug,
+                        'tab' => 'career'
+                    ])
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 5,
+                    "name" => $this->getCareerTitle(),
+                    "item" => $this->getCanonicalUrl()
+                ]
+            ]
+        ];
+
+        return json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getArticleStructuredData()
+    {
         $personName = $this->person->display_name;
         $primaryProfession = $this->person->primary_profession;
         $careerTitle = $this->getCareerTitle();
         $careerMeta = $this->getCareerMetaInfo();
         $dateInfo = $this->getDateInfo();
 
-        $schema = [
+        $articleSchema = [
             "@context" => "https://schema.org",
             "@type" => "Article",
             "headline" => $careerTitle,
@@ -419,16 +548,15 @@ class Details extends Component
             "datePublished" => $this->careerData->created_at->toIso8601String(),
             "dateModified" => $this->careerData->updated_at->toIso8601String(),
             "author" => [
-                "@type" => "Person",
-                "name" => $personName,
-                "url" => LaravelURL::route('people.people.show', $this->slug)
+                "@type" => "Organization",
+                "name" => config('app.name', 'WikiLife')
             ],
             "publisher" => [
                 "@type" => "Organization",
                 "name" => config('app.name', 'WikiLife'),
                 "logo" => [
                     "@type" => "ImageObject",
-                    "url" => asset('images/logo.png'),
+                    "url" => site_logo(180, 60),
                     "width" => "180",
                     "height" => "60"
                 ]
@@ -445,34 +573,23 @@ class Details extends Component
             "isFamilyFriendly" => true
         ];
 
-        // Add profession to author if available
-        if ($primaryProfession) {
-            $schema["author"]["jobTitle"] = $primaryProfession;
-        }
-
-        // Add career-specific properties
-        $schema["about"] = [
+        // Add about property referencing the person
+        $articleSchema["about"] = [
             "@type" => "Person",
+            "@id" => LaravelURL::route('people.people.show', $this->slug) . "#person",
             "name" => $personName,
-            "hasOccupation" => [
-                "@type" => "Occupation",
-                "name" => $careerTitle,
-                "description" => $this->getCareerDescription()
-            ]
+            "url" => LaravelURL::route('people.people.show', $this->slug)
         ];
 
-        // Add duration information
-        if ($dateInfo['start']) {
-            $schema["about"]["hasOccupation"]["startDate"] = $dateInfo['start']->format('Y-m-d');
-        }
-        if ($dateInfo['end']) {
-            $schema["about"]["hasOccupation"]["endDate"] = $dateInfo['end']->format('Y-m-d');
+        // Add profession to about if available
+        if ($primaryProfession) {
+            $articleSchema["about"]["jobTitle"] = $primaryProfession;
         }
 
         // Add image if available
         $image = $this->person->profile_image_url;
         if ($image) {
-            $schema["image"] = [
+            $articleSchema["image"] = [
                 "@type" => "ImageObject",
                 "url" => $image,
                 "width" => "800",
@@ -481,7 +598,130 @@ class Details extends Component
             ];
         }
 
-        return json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        return json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getOccupationStructuredData()
+    {
+        $personName = $this->person->display_name;
+        $careerTitle = $this->getCareerTitle();
+        $careerMeta = $this->getCareerMetaInfo();
+        $dateInfo = $this->getDateInfo();
+
+        $occupationSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "Occupation",
+            "name" => $careerTitle,
+            "description" => $this->getCareerDescription(),
+            "occupationLocation" => [
+                "@type" => "Country",
+                "name" => $this->person->nationality ?? "International"
+            ],
+            "estimatedSalary" => [
+                "@type" => "MonetaryAmountDistribution",
+                "currency" => "USD",
+                "name" => "Industry Standard"
+            ],
+            "responsibilities" => $this->getCareerResponsibilities(),
+            "skills" => $this->getCareerSkills()
+        ];
+
+        // Add duration information
+        if ($dateInfo['start']) {
+            $occupationSchema["startDate"] = $dateInfo['start']->format('Y-m-d');
+        }
+        if ($dateInfo['end']) {
+            $occupationSchema["endDate"] = $dateInfo['end']->format('Y-m-d');
+        } elseif ($dateInfo['is_current']) {
+            $occupationSchema["endDate"] = null;
+        }
+
+        // Add specific fields based on career type
+        if ($careerMeta['primary_field']) {
+            $occupationSchema["industry"] = $careerMeta['primary_field'];
+        }
+        if ($careerMeta['secondary_field']) {
+            $occupationSchema["qualifications"] = $careerMeta['secondary_field'];
+        }
+
+        return json_encode($occupationSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getCareerResponsibilities()
+    {
+        // This would be customized based on your career data structure
+        $responsibilities = [
+            "Professional duties and responsibilities",
+            "Industry-specific tasks and projects",
+            "Leadership and management activities"
+        ];
+
+        // Add specific responsibilities based on career type
+        switch ($this->careerType) {
+            case 'politics':
+                $responsibilities[] = "Public service and governance";
+                $responsibilities[] = "Policy making and implementation";
+                break;
+            case 'film':
+                $responsibilities[] = "Entertainment and creative work";
+                $responsibilities[] = "Performance and production";
+                break;
+            case 'sports':
+                $responsibilities[] = "Athletic performance and competition";
+                $responsibilities[] = "Team collaboration and sportsmanship";
+                break;
+            case 'business':
+                $responsibilities[] = "Business management and strategy";
+                $responsibilities[] = "Corporate leadership and innovation";
+                break;
+            case 'literature':
+                $responsibilities[] = "Writing and creative expression";
+                $responsibilities[] = "Literary contribution and publication";
+                break;
+        }
+
+        return $responsibilities;
+    }
+
+    private function getCareerSkills()
+    {
+        // This would be customized based on your career data structure
+        $skills = [
+            "Professional expertise",
+            "Industry knowledge",
+            "Leadership abilities"
+        ];
+
+        // Add specific skills based on career type
+        switch ($this->careerType) {
+            case 'politics':
+                $skills[] = "Public speaking";
+                $skills[] = "Policy analysis";
+                $skills[] = "Diplomacy";
+                break;
+            case 'film':
+                $skills[] = "Acting/Directing";
+                $skills[] = "Creative expression";
+                $skills[] = "Performance arts";
+                break;
+            case 'sports':
+                $skills[] = "Athletic ability";
+                $skills[] = "Teamwork";
+                $skills[] = "Competitive spirit";
+                break;
+            case 'business':
+                $skills[] = "Strategic planning";
+                $skills[] = "Management";
+                $skills[] = "Innovation";
+                break;
+            case 'literature':
+                $skills[] = "Writing proficiency";
+                $skills[] = "Creative thinking";
+                $skills[] = "Literary analysis";
+                break;
+        }
+
+        return $skills;
     }
 
     // ============ ORIGINAL METHODS FROM YOUR COMPONENT ============

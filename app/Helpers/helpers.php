@@ -55,3 +55,14 @@ if (!function_exists('social_links')) {
         return SiteSettingsHelper::socialLinks();
     }
 }
+
+if(!function_exists('header_scripts')) {
+    function header_scripts() {
+        return SiteSettingsHelper::headerScripts();
+    }
+}
+if(!function_exists('footer_scripts')) {
+    function footer_scripts() {
+        return SiteSettingsHelper::footerScripts();
+    }
+}

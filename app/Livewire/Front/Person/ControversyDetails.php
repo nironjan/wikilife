@@ -147,7 +147,7 @@ class ControversyDetails extends Component
     protected function setMetaImages()
     {
         // Use person's profile image for controversy
-        $image = $this->person->profile_image_url ?? asset('images/controversy-og.jpg');
+        $image = $this->person->profile_image_url ?? default_image(1200, 630);
 
         $imageWidth = 1200;
         $imageHeight = 630;
@@ -358,10 +358,138 @@ class ControversyDetails extends Component
 
     public function getStructuredData()
     {
+        $schemas = [
+            $this->getPersonStructuredData(),
+            $this->getBreadcrumbStructuredData(),
+            $this->getArticleStructuredData()
+        ];
+
+        // Remove empty schemas and decode/re-encode to ensure valid JSON
+        $validSchemas = [];
+        foreach ($schemas as $schema) {
+            if (!empty($schema)) {
+                $decoded = json_decode($schema, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $validSchemas[] = $decoded;
+                }
+            }
+        }
+
+        // If multiple schemas, output as array, otherwise as single object
+        if (count($validSchemas) > 1) {
+            return json_encode($validSchemas, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        } elseif (count($validSchemas) === 1) {
+            return json_encode($validSchemas[0], JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        }
+
+        return '';
+    }
+
+    private function getPersonStructuredData()
+    {
         $personName = $this->person->display_name;
         $primaryProfession = $this->person->primary_profession;
 
-        $schema = [
+        $personSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "Person",
+            "@id" => LaravelURL::route('people.people.show', $this->personSlug) . "#person",
+            "name" => $personName,
+            "description" => $this->person->about ? strip_tags($this->person->about) : "Professional {$primaryProfession}",
+            "url" => LaravelURL::route('people.people.show', $this->personSlug),
+            "image" => $this->person->profile_image_url ?: default_image(400, 400),
+            "mainEntityOfPage" => LaravelURL::route('people.people.show', $this->personSlug)
+        ];
+
+        // Add profession/occupation
+        if ($primaryProfession) {
+            $personSchema["hasOccupation"] = [
+                "@type" => "Occupation",
+                "name" => $primaryProfession
+            ];
+
+            $personSchema["jobTitle"] = $primaryProfession;
+        }
+
+        // Add birth details
+        if ($this->person->birth_date) {
+            $personSchema["birthDate"] = $this->person->birth_date->format('Y-m-d');
+        }
+
+        if ($this->person->birth_place) {
+            $personSchema["birthPlace"] = [
+                "@type" => "Place",
+                "name" => $this->person->birth_place
+            ];
+        }
+
+        // Add nationality
+        if ($this->person->nationality) {
+            $personSchema["nationality"] = [
+                "@type" => "Country",
+                "name" => $this->person->nationality
+            ];
+        }
+
+        // Add gender
+        if ($this->person->gender) {
+            $personSchema["gender"] = $this->person->gender;
+        }
+
+        return json_encode($personSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getBreadcrumbStructuredData()
+    {
+        $breadcrumbSchema = [
+            "@context" => "https://schema.org",
+            "@type" => "BreadcrumbList",
+            "itemListElement" => [
+                [
+                    "@type" => "ListItem",
+                    "position" => 1,
+                    "name" => "Home",
+                    "item" => url('/')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 2,
+                    "name" => "People",
+                    "item" => url('/people')
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 3,
+                    "name" => $this->person->display_name,
+                    "item" => LaravelURL::route('people.people.show', $this->personSlug)
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 4,
+                    "name" => "Controversies",
+                    "item" => LaravelURL::route('people.details.tab', [
+                        'slug' => $this->personSlug,
+                        'tab'  => 'controversies'
+                    ])
+                ],
+                [
+                    "@type" => "ListItem",
+                    "position" => 5,
+                    "name" => $this->controversy->title,
+                    "item" => $this->getCanonicalUrl()
+                ]
+            ]
+        ];
+
+        return json_encode($breadcrumbSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+    }
+
+    private function getArticleStructuredData()
+    {
+        $personName = $this->person->display_name;
+        $primaryProfession = $this->person->primary_profession;
+
+        $articleSchema = [
             "@context" => "https://schema.org",
             "@type" => "Article",
             "headline" => $this->controversy->title,
@@ -377,7 +505,7 @@ class ControversyDetails extends Component
                 "name" => config('app.name', 'WikiLife'),
                 "logo" => [
                     "@type" => "ImageObject",
-                    "url" => asset('images/logo.png'),
+                    "url" => site_logo(180, 60),
                     "width" => "180",
                     "height" => "60"
                 ]
@@ -394,22 +522,23 @@ class ControversyDetails extends Component
             "isFamilyFriendly" => false
         ];
 
-        // Add about property for the person
-        $schema["about"] = [
+        // Add about property referencing the person
+        $articleSchema["about"] = [
             "@type" => "Person",
+            "@id" => LaravelURL::route('people.people.show', $this->personSlug) . "#person",
             "name" => $personName,
             "url" => LaravelURL::route('people.people.show', $this->personSlug)
         ];
 
         // Add profession to about if available
         if ($primaryProfession) {
-            $schema["about"]["jobTitle"] = $primaryProfession;
+            $articleSchema["about"]["jobTitle"] = $primaryProfession;
         }
 
         // Add image if available
         $image = $this->person->profile_image_url;
         if ($image) {
-            $schema["image"] = [
+            $articleSchema["image"] = [
                 "@type" => "ImageObject",
                 "url" => $image,
                 "width" => "800",
@@ -420,10 +549,10 @@ class ControversyDetails extends Component
 
         // Add controversy status
         if ($this->controversy->is_resolved) {
-            $schema["creativeWorkStatus"] = "Resolved";
+            $articleSchema["creativeWorkStatus"] = "Resolved";
         }
 
-        return json_encode($schema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+        return json_encode($articleSchema, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
     }
 
     public function render()

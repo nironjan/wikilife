@@ -1,250 +1,324 @@
 <div>
-    <div class="min-h-screen bg-gray-50 py-8">
-        <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <!-- Breadcrumb -->
-            <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-6">
-                <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
-                <span class="text-gray-400">›</span>
-                <a href="{{ route('people.people.show', $person->slug) }}" class="hover:text-blue-600 transition-colors">
+            <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-8">
+                <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors duration-200 flex items-center">
+                    <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
+                    </svg>
+                    Home
+                </a>
+                <span class="text-gray-300">›</span>
+                <a href="{{ route('people.people.show', $person->slug) }}" class="hover:text-blue-600 transition-colors duration-200 truncate max-w-[120px]">
                     {{ $person->display_name }}
                 </a>
-                <span class="text-gray-400">›</span>
-                <a href="{{ route('people.people.show', [$person->slug, 'tab' => 'career']) }}" class="hover:text-blue-600 transition-colors">
+                <span class="text-gray-300">›</span>
+                <a href="{{ route('people.details.tab', ['slug' => $person->slug, 'tab' => 'career']) }}" class="hover:text-blue-600 transition-colors duration-200">
                     Career
                 </a>
-                <span class="text-gray-400">›</span>
-                <span class="text-gray-900 font-medium truncate">{{ Str::limit($this->getCareerTitle(), 50) }}</span>
+                <span class="text-gray-300">›</span>
+                <span class="text-gray-900 font-semibold truncate max-w-[150px]">{{ Str::limit($this->getCareerTitle(), 40) }}</span>
             </nav>
 
-            <!-- Main Content Card -->
-            <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
-                <!-- Header -->
-                <div class="bg-gradient-to-r from-{{ $meta['color'] }}-50 to-{{ $meta['color'] }}-100 border-b border-{{ $meta['color'] }}-200 p-6 lg:p-8">
-                    <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                        <div class="flex-1">
-                            <!-- Person Info -->
-                            <div class="flex items-center space-x-4 mb-4">
-                                <a href="{{ route('people.people.show', $person->slug) }}" class="flex-shrink-0">
-                                    <div class="w-16 h-16 rounded-full bg-gray-200 overflow-hidden border-2 border-white shadow-sm">
-                                        @if($person->profile_image_url)
-                                            <img src="{{ $person->imageSize(100, 100) }}"
-                                                 alt="{{ $person->display_name }}"
-                                                 class="w-full h-full object-cover">
-                                        @else
-                                            <div class="w-full h-full bg-gray-300 flex items-center justify-center">
-                                                <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                                </svg>
-                                            </div>
-                                        @endif
-                                    </div>
-                                </a>
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+                <!-- Main Content -->
+                <div class="lg:col-span-8 space-y-8">
+                    <!-- Main Content Card -->
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
+                        <!-- Header Section -->
+                        <div class="bg-gradient-to-r from-{{ $meta['color'] }}-50 via-{{ $meta['color'] }}-100 to-{{ $meta['color'] }}-200 border-b border-{{ $meta['color'] }}-200 p-6 lg:p-8">
+                            <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
+                                <!-- Person Info & Title -->
                                 <div class="flex-1">
-                                    <a href="{{ route('people.people.show', $person->slug) }}"
-                                       class="text-xl font-bold text-gray-900 hover:text-blue-600 transition-colors block">
-                                        {{ $person->display_name }}
-                                    </a>
-                                    <div class="flex flex-wrap items-center gap-2 mt-2">
-                                        @foreach($person->professions as $profession)
-                                            <span class="px-2 py-1 bg-blue-100 text-blue-800 text-xs rounded-full font-medium">
-                                                {{ $profession }}
-                                            </span>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Career Title -->
-                            <h1 class="text-3xl font-bold text-gray-900 mb-4 leading-tight flex items-center">
-                                <span class="text-2xl mr-3">{{ $meta['icon'] }}</span>
-                                {{ $this->getCareerTitle() }}
-                            </h1>
-
-                            <!-- Meta Information -->
-                            <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600">
-                                <!-- Career Type -->
-                                <div class="flex items-center">
-                                    <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-{{ $meta['color'] }}-100 text-{{ $meta['color'] }}-800">
-                                        {{ $meta['type_name'] }}
-                                    </span>
-                                </div>
-
-                                <!-- Primary Field -->
-                                @if($meta['primary_field'])
-                                    <div class="flex items-center">
-                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ $meta['primary_field'] }}
-                                    </div>
-                                @endif
-
-                                <!-- Secondary Field -->
-                                @if($meta['secondary_field'])
-                                    <div class="flex items-center">
-                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
-                                        </svg>
-                                        {{ $meta['secondary_field'] }}
-                                    </div>
-                                @endif
-
-                                <!-- Duration -->
-                                @if($dateInfo['duration'])
-                                    <div class="flex items-center">
-                                        <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                                        </svg>
-                                        {{ $dateInfo['duration'] }}
-                                    </div>
-                                @endif
-
-                                <!-- Status -->
-                                @if($dateInfo['is_current'] !== null)
-                                    <div class="flex items-center">
-                                        <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium {{ $dateInfo['is_current'] ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800' }}">
-                                            <span class="w-1.5 h-1.5 rounded-full {{ $dateInfo['is_current'] ? 'bg-green-500' : 'bg-gray-500' }} mr-1.5"></span>
-                                            {{ $dateInfo['is_current'] ? 'Current' : 'Former' }}
-                                        </span>
-                                    </div>
-                                @endif
-                            </div>
-
-                            <!-- Date Information -->
-                            @if($dateInfo['start'])
-                                <div class="mt-4 p-3 bg-white rounded-lg border border-{{ $meta['color'] }}-100">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
-                                        <div>
-                                            <span class="font-medium text-gray-700">Start:</span>
-                                            <span class="text-gray-900 ml-2">
-                                                {{ $dateInfo['start']->format('F j, Y') }}
-                                            </span>
-                                        </div>
-                                        @if($dateInfo['end'])
-                                            <div>
-                                                <span class="font-medium text-gray-700">End:</span>
-                                                <span class="text-gray-900 ml-2">
-                                                    {{ $dateInfo['end']->format('F j, Y') }}
+                                    <!-- Person Card -->
+                                    <div class="flex items-start space-x-4 mb-6">
+                                        <a href="{{ route('people.people.show', $person->slug) }}" class="flex-shrink-0 transform hover:scale-105 transition-transform duration-200">
+                                            <div class="relative">
+                                                <div class="w-20 h-20 rounded-2xl bg-gradient-to-br from-gray-200 to-gray-300 overflow-hidden border-4 border-white shadow-lg">
+                                                    @if($person->profile_image_url)
+                                                    <img src="{{ $person->imageSize(100, 100) }}" alt="{{ $person->display_name }}" class="w-full h-full object-cover">
+                                                    @else
+                                                    <div class="w-full h-full bg-gradient-to-br from-gray-300 to-gray-400 flex items-center justify-center">
+                                                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                                        </svg>
+                                                    </div>
+                                                    @endif
+                                                </div>
+                                                <div class="absolute -bottom-1 -right-1 w-6 h-6 bg-{{ $meta['color'] }}-500 rounded-full border-2 border-white flex items-center justify-center">
+                                                    <span class="text-xs text-white font-bold">{{ $meta['icon'] }}</span>
+                                                </div>
+                                            </div>
+                                        </a>
+                                        <div class="flex-1 min-w-0">
+                                            <a href="{{ route('people.people.show', $person->slug) }}" class="group block">
+                                                <h2 class="text-2xl font-bold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 leading-tight mb-2">
+                                                    {{ $person->display_name }}
+                                                </h2>
+                                            </a>
+                                            <div class="flex flex-wrap gap-2">
+                                                @foreach($person->professions as $profession)
+                                                <span class="inline-flex items-center px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r from-blue-50 to-blue-100 text-blue-700 border border-blue-200">
+                                                    {{ $profession }}
                                                 </span>
+                                                @endforeach
                                             </div>
-                                        @else
-                                            <div>
-                                                <span class="font-medium text-gray-700">Status:</span>
-                                                <span class="text-green-600 ml-2 font-medium">Ongoing</span>
-                                            </div>
-                                        @endif
+                                        </div>
                                     </div>
-                                </div>
-                            @endif
-                        </div>
 
-                        <!-- Action Buttons -->
-                        <div class="flex flex-col sm:flex-row lg:flex-col gap-2">
-                            @if($careerData->source_url ?? $careerData->website_url ?? $careerData->link)
-                                <a href="{{ $careerData->source_url ?? $careerData->website_url ?? $careerData->link }}" target="_blank"
-                                   class="inline-flex items-center justify-center px-4 py-2 border border-{{ $meta['color'] }}-300 text-sm font-medium rounded-lg text-{{ $meta['color'] }}-700 bg-white hover:bg-{{ $meta['color'] }}-50 transition-colors duration-200">
-                                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
-                                    </svg>
-                                    {{ $careerType === 'business' ? 'Visit Website' : 'View Source' }}
-                                </a>
-                            @endif
+                                    <!-- Career Title -->
+                                    <h1 class="text-xl lg:text-2xl font-bold text-gray-900 mb-6 leading-tight tracking-tight flex items-center">
+                                        <span class="text-2xl mr-4">{{ $meta['icon'] }}</span>
+                                        {{ $this->getCareerTitle() }}
+                                    </h1>
 
-                            <a href="{{ route('people.people.show', $person->slug) }}"
-                               class="inline-flex items-center justify-center px-4 py-2 border border-gray-300 text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 transition-colors duration-200">
-                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
-                                </svg>
-                                View Profile
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Content -->
-                <div class="p-6 lg:p-8">
-                    <!-- Dynamic Content Based on Career Type -->
-                    @switch($careerType)
-                        @case('politics')
-                            @include('livewire.front.person.career.partials.politics')
-                        @break
-
-                        @case('film')
-                            @include('livewire.front.person.career.partials.film')
-                        @break
-
-                        @case('sports')
-                            @include('livewire.front.person.career.partials.sports')
-                        @break
-
-                        @case('business')
-                            @include('livewire.front.person.career.partials.business')
-                        @break
-
-                        @case('literature')
-                            @include('livewire.front.person.career.partials.literature')
-                        @break
-                    @endswitch
-
-                    <!-- Awards Section (Common for all types) -->
-                    @if($careerData->awards_count > 0)
-                        <div class="mt-8">
-                            <h2 class="text-2xl font-bold text-gray-900 mb-4">Awards & Recognitions</h2>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                @foreach($careerData->awards as $award)
-                                    <div class="p-4 bg-yellow-50 rounded-lg border border-yellow-200">
-                                        <h3 class="font-semibold text-yellow-900 mb-1">{{ $award->award_name }}</h3>
-                                        @if($award->organization)
-                                            <p class="text-yellow-700 text-sm">{{ $award->organization }}</p>
-                                        @endif
-                                        @if($award->awarded_at)
-                                            <p class="text-yellow-600 text-xs mt-1">
-                                                {{ $award->awarded_at->format('F Y') }}
-                                            </p>
-                                        @endif
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    @endif
-                </div>
-            </div>
-
-            <!-- Related Careers -->
-            @if($relatedCareers->count() > 0)
-                <div class="mt-8">
-                    <h2 class="text-2xl font-bold text-gray-900 mb-6">Other {{ $meta['type_name'] }} by {{ $person->display_name }}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        @foreach($relatedCareers as $related)
-                            <a href="{{ route('people.career.show', ['personSlug' => $person->slug, 'slug' => $related->slug]) }}"
-                               class="block bg-white rounded-lg border border-gray-200 hover:border-{{ $meta['color'] }}-300 hover:shadow-md transition-all duration-200 overflow-hidden">
-                                <div class="p-4">
-                                    <h3 class="font-semibold text-gray-900 mb-2 line-clamp-2">
-                                        {{ $this->getRelatedCareerTitle($related) }}
-                                    </h3>
-                                    <div class="space-y-2 text-sm text-gray-600">
-                                        <div class="flex items-center justify-between">
-                                            <span>{{ $this->getRelatedCareerDate($related) }}</span>
-                                            <span class="px-2 py-1 rounded-full text-xs bg-{{ $meta['color'] }}-100 text-{{ $meta['color'] }}-800">
+                                    <!-- Meta Information -->
+                                    <div class="flex flex-wrap items-center gap-4 text-sm">
+                                        <!-- Career Type -->
+                                        <div class="flex items-center">
+                                            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold bg-gradient-to-r from-{{ $meta['color'] }}-50 to-{{ $meta['color'] }}-100 text-{{ $meta['color'] }}-700 border border-{{ $meta['color'] }}-200 shadow-sm">
                                                 {{ $meta['type_name'] }}
                                             </span>
                                         </div>
+
+                                        <!-- Primary Field -->
+                                        @if($meta['primary_field'])
+                                        <div class="flex items-center text-gray-600 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
+                                            <svg class="w-4 h-4 mr-2 text-{{ $meta['color'] }}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            {{ $meta['primary_field'] }}
+                                        </div>
+                                        @endif
+
+                                        <!-- Secondary Field -->
+                                        @if($meta['secondary_field'])
+                                        <div class="flex items-center text-gray-600 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
+                                            <svg class="w-4 h-4 mr-2 text-{{ $meta['color'] }}-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"></path>
+                                            </svg>
+                                            {{ $meta['secondary_field'] }}
+                                        </div>
+                                        @endif
+
+                                        <!-- Duration -->
+                                        @if($dateInfo['duration'])
+                                        <div class="flex items-center text-gray-600 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
+                                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                            </svg>
+                                            {{ $dateInfo['duration'] }}
+                                        </div>
+                                        @endif
+
+                                        <!-- Status -->
+                                        @if($dateInfo['is_current'] !== null)
+                                        <div class="flex items-center">
+                                            <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm {{ $dateInfo['is_current'] ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200' : 'bg-gradient-to-r from-gray-50 to-gray-100 text-gray-700 border border-gray-200' }}">
+                                                <span class="w-2 h-2 rounded-full {{ $dateInfo['is_current'] ? 'bg-green-500' : 'bg-gray-500' }} mr-2 {{ $dateInfo['is_current'] ? 'animate-pulse' : '' }}"></span>
+                                                {{ $dateInfo['is_current'] ? 'Current' : 'Former' }}
+                                            </span>
+                                        </div>
+                                        @endif
+                                    </div>
+
+                                    <!-- Date Information -->
+                                    @if($dateInfo['start'])
+                                    <div class="mt-6 p-4 bg-white rounded-xl border border-{{ $meta['color'] }}-200 shadow-sm">
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <div>
+                                                    <span class="font-semibold text-gray-700">Start Date:</span>
+                                                    <span class="text-gray-900 ml-2 block">
+                                                        {{ $dateInfo['start']->format('F j, Y') }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @if($dateInfo['end'])
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                                </svg>
+                                                <div>
+                                                    <span class="font-semibold text-gray-700">End Date:</span>
+                                                    <span class="text-gray-900 ml-2 block">
+                                                        {{ $dateInfo['end']->format('F j, Y') }}
+                                                    </span>
+                                                </div>
+                                            </div>
+                                            @else
+                                            <div class="flex items-center">
+                                                <svg class="w-4 h-4 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path>
+                                                </svg>
+                                                <div>
+                                                    <span class="font-semibold text-gray-700">Status:</span>
+                                                    <span class="text-green-600 ml-2 font-semibold">Ongoing</span>
+                                                </div>
+                                            </div>
+                                            @endif
+                                        </div>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                <!-- Action Buttons -->
+                                <div class="flex flex-col sm:flex-row lg:flex-col gap-3">
+                                    @if($careerData->source_url ?? $careerData->website_url ?? $careerData->link)
+                                    <a href="{{ $careerData->source_url ?? $careerData->website_url ?? $careerData->link }}" target="_blank" class="group inline-flex items-center justify-center px-5 py-3 border border-{{ $meta['color'] }}-200 text-sm font-semibold rounded-xl text-{{ $meta['color'] }}-700 bg-white hover:bg-{{ $meta['color'] }}-50 hover:border-{{ $meta['color'] }}-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                                        <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                        </svg>
+                                        {{ $careerType === 'business' ? 'Website' : 'Source' }}
+                                    </a>
+                                    @endif
+
+                                    <a href="{{ route('people.people.show', $person->slug) }}" class="group inline-flex items-center justify-center px-5 py-3 border border-gray-200 text-sm font-semibold rounded-xl text-gray-700 bg-white hover:bg-gray-50 hover:border-gray-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                                        <svg class="w-4 h-4 mr-2 group-hover:scale-110 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
+                                        </svg>
+                                        Full Profile
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Structured Data -->
+                        <script type="application/ld+json">
+                            {!! $structuredData !!}
+                        </script>
+
+                        <!-- Content Section -->
+                        <div class="p-6 lg:p-8">
+                            <!-- Dynamic Content Based on Career Type -->
+                            @switch($careerType)
+                                @case('politics')
+                                    @include('livewire.front.person.career.partials.politics')
+                                @break
+
+                                @case('film')
+                                    @include('livewire.front.person.career.partials.film')
+                                @break
+
+                                @case('sports')
+                                    @include('livewire.front.person.career.partials.sports')
+                                @break
+
+                                @case('business')
+                                    @include('livewire.front.person.career.partials.business')
+                                @break
+
+                                @case('literature')
+                                    @include('livewire.front.person.career.partials.literature')
+                                @break
+                            @endswitch
+
+                            <!-- Awards Section (Common for all types) -->
+                            @if($careerData->awards_count > 0)
+                            <div class="mt-12 p-6 bg-gradient-to-r from-yellow-50 to-amber-50 rounded-2xl border border-yellow-200 shadow-sm">
+                                <div class="flex items-center mb-6">
+                                    <div class="w-12 h-12 bg-yellow-100 rounded-xl flex items-center justify-center mr-4">
+                                        <svg class="w-6 h-6 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"></path>
+                                        </svg>
+                                    </div>
+                                    <h2 class="text-2xl font-bold text-gray-900">Awards & Recognitions</h2>
+                                </div>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                    @foreach($careerData->awards as $award)
+                                    <div class="p-4 bg-white rounded-xl border border-yellow-200 shadow-sm hover:shadow-md transition-shadow duration-200">
+                                        <h3 class="font-semibold text-yellow-900 mb-2 text-lg">{{ $award->award_name }}</h3>
+                                        @if($award->organization)
+                                        <p class="text-yellow-700 text-sm mb-2 flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                                            </svg>
+                                            {{ $award->organization }}
+                                        </p>
+                                        @endif
+                                        @if($award->awarded_at)
+                                        <p class="text-yellow-600 text-sm flex items-center">
+                                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                            </svg>
+                                            {{ $award->awarded_at->format('F Y') }}
+                                        </p>
+                                        @endif
+                                    </div>
+                                    @endforeach
+                                </div>
+                            </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <!-- Related Careers -->
+                    @if($relatedCareers->count() > 0)
+                    <div class="bg-white rounded-2xl shadow-sm border border-gray-100 p-6 lg:p-8">
+                        <div class="flex items-center justify-between mb-8">
+                            <h2 class="text-2xl font-bold text-gray-900">More {{ $meta['type_name'] }} by {{ $person->display_name }}</h2>
+                            <a href="{{ route('people.details.tab', ['slug' => $person->slug, 'tab' => 'career']) }}" class="text-blue-600 hover:text-blue-800 font-semibold text-sm flex items-center group">
+                                View All
+                                <svg class="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
+                                </svg>
+                            </a>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                            @foreach($relatedCareers as $related)
+                            <a href="{{ route('people.career.show', ['personSlug' => $person->slug, 'slug' => $related->slug]) }}" class="group block bg-gradient-to-br from-white to-gray-50 rounded-xl border border-gray-200 hover:border-{{ $meta['color'] }}-300 hover:shadow-lg transition-all duration-300 transform hover:-translate-y-1 overflow-hidden">
+                                <div class="p-5">
+                                    <div class="flex items-start justify-between mb-3">
+                                        <span class="px-2.5 py-1 rounded-full text-xs font-semibold bg-{{ $meta['color'] }}-100 text-{{ $meta['color'] }}-700">
+                                            {{ $meta['type_name'] }}
+                                        </span>
+                                        <svg class="w-4 h-4 text-gray-400 group-hover:text-{{ $meta['color'] }}-500 transition-colors" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
+                                        </svg>
+                                    </div>
+                                    <h3 class="font-semibold text-gray-900 group-hover:text-{{ $meta['color'] }}-600 transition-colors duration-200 line-clamp-3 leading-relaxed mb-3">
+                                        {{ $this->getRelatedCareerTitle($related) }}
+                                    </h3>
+                                    <div class="flex items-center text-sm text-gray-500">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                                        </svg>
+                                        {{ $this->getRelatedCareerDate($related) }}
                                     </div>
                                 </div>
                             </a>
-                        @endforeach
+                            @endforeach
+                        </div>
+                    </div>
+                    @endif
+                </div>
+
+                <!-- Sidebar -->
+                <div class="lg:col-span-4">
+                    <div class="sticky top-6 space-y-6">
+                        <livewire:partials.profession-category-list />
                     </div>
                 </div>
-            @endif
+            </div>
         </div>
     </div>
 
     <style>
-    .line-clamp-2 {
-        overflow: hidden;
-        display: -webkit-box;
-        -webkit-box-orient: vertical;
-        -webkit-line-clamp: 2;
-    }
+        .line-clamp-2 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+        .line-clamp-3 {
+            overflow: hidden;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+        }
     </style>
 </div>

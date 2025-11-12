@@ -130,6 +130,30 @@
         </div>
     </div>
 
+    <!-- Suggestion Banner -->
+    <div class="bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-blue-200">
+        <div class="max-w-6xl mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <svg class="w-5 h-5 text-blue-600 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 15.5c-.77.833.192 2.5 1.732 2.5z"/>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-blue-900">Help improve this profile</p>
+                        <p class="text-xs text-blue-700">Found something that needs correction?</p>
+                    </div>
+                </div>
+                <a href="{{ route('people.suggest-edit', $person->slug) }}"
+                class="inline-flex items-center px-2 py-1 bg-white border border-blue-300 text-blue-700 text-sm font-medium rounded-lg hover:bg-blue-50 hover:border-blue-400 transition-colors shadow-sm">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                    </svg>
+                    Suggest an Edit
+                </a>
+            </div>
+        </div>
+    </div>
+
     <!-- Main Content -->
     <div class="max-w-6xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
@@ -137,7 +161,6 @@
             <div class="lg:col-span-1 hidden lg:block">
                 @include('livewire.front.person.partials.details-sidebar')
             </div>
-
             <!-- Main Content Area -->
             <div class="lg:col-span-3">
                 <div class="bg-white rounded-lg shadow-sm border border-gray-200">

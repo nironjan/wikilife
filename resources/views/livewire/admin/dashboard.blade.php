@@ -53,6 +53,11 @@
             <div class="lg:col-span-1">
                 @include('livewire.admin.partials.dashboard-widgets.top-viewed', ['stats' => $stats])
             </div>
+
+            <!-- Upcoming Birthday -->
+            <div class="lg:col-span-2">
+                <livewire:admin.person.upcoming-birthday />
+            </div>
         </div>
 
         <!-- Quick Actions -->

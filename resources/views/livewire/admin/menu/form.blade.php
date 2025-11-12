@@ -48,7 +48,7 @@
                             <!-- URL -->
                             <div>
                                 <flux:input type="text" id="url" wire:model="url" label="URL*"
-                                    placeholder="/page or https://example.com" />
+                                    placeholder="/p/page or https://example.com" />
                                 @error('url')
                                     <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                 @enderror

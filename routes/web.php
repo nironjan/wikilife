@@ -10,6 +10,7 @@ use App\Livewire\Settings\Profile;
 use App\Livewire\Settings\TwoFactor;
 use App\Services\SitemapService;
 use Illuminate\Support\Facades\App;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Route;
 use Laravel\Fortify\Features;
 
@@ -31,10 +32,12 @@ Route::get('/sitemap.xml', function(){
 // Admin Routes
 Route::prefix('webmaster')->name('webmaster.')->middleware(['auth', 'verified', 'admin'])->group(function () {
 
+    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    
     // Site Setting
     Route::get('/site-seetings', \App\Livewire\Settings\SiteSetting::class)->name('site-setting');
 
-    Route::get('/dashboard', Dashboard::class)->name('dashboard');
+    // Menu
     Route::get('/menu-list', \App\Livewire\Admin\Menu\Index::class)->name('menus');
     Route::get('/menu-list/manage/{id?}', \App\Livewire\Admin\Menu\Form::class)->name('menus.manage');
 
@@ -106,8 +109,19 @@ Route::prefix('webmaster')->name('webmaster.')->middleware(['auth', 'verified', 
         Route::get('/{id}/edit', \App\Livewire\Admin\Pages\Manage::class)->name('edit');
     });
 
-});
+    // CMS
+    Route::prefix('users')->name('users.')->group(function () {
+        Route::get('/', \App\Livewire\Admin\Users\Index::class)->name('index');
+        Route::get('/create', \App\Livewire\Admin\Users\Manage::class)->name('manage');
+        Route::get('/{id}/edit', \App\Livewire\Admin\Users\Manage::class)->name('edit');
+    });
 
+    // Feedback
+    Route::prefix('feedback')->name('feedback.')->group(function () {
+    Route::get('/', \App\Livewire\Admin\Feedback\Index::class)->name('index');
+    Route::get('/review/{id}', \App\Livewire\Admin\Feedback\Manage::class)->name('review'); // Changed from 'manage' to 'review'
+});
+});
 
 
 Route::middleware(['auth'])->group(function () {
@@ -128,3 +142,7 @@ Route::middleware(['auth'])->group(function () {
         )
         ->name('two-factor.show');
 });
+
+
+
+

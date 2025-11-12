@@ -142,15 +142,15 @@ class LiteratureCareer extends Model
 
     public function getCareerDurationAttribute()
     {
-        if ($this->start_date && $this->end_date) {
-            $years = $this->start_date->diffInYears($this->end_date);
-            return "{$years} years";
-        } elseif ($this->start_date) {
-            $years = $this->start_date->diffInYears(now());
-            return "{$years} years (ongoing)";
+        if ($this->start_date) {
+            $start = $this->start_date->format('Y');
+            $end = $this->end_date ? $this->end_date->format('Y') : 'Present';
+            return "{$start} – {$end}";
         }
+
         return 'N/A';
     }
+
 
     public function getIsActiveAttribute()
     {

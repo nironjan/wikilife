@@ -93,7 +93,7 @@ class Index extends Component
 
     protected function setMetaImages()
     {
-        $defaultImage = asset('images/professions-og.jpg');
+        $defaultImage = default_image(1200, 630);
 
         Meta::set('og:image', $defaultImage)
             ->set('twitter:image', $defaultImage)

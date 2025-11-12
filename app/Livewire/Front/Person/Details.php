@@ -42,6 +42,7 @@ class Details extends Component
                 'politicalCareers',
                 'sportsCareers',
                 'entrepreneurs',
+                'literatureCareer',
                 'controversies',
                 'lesserKnownFacts',
                 'speechesInterviews',
@@ -56,15 +57,27 @@ class Details extends Component
         $this->setProfessionalMetaTags();
     }
 
+    // Add this method to your App\Livewire\Front\Person\Details component
+
+    public function setActiveTab($tab)
+    {
+        $this->tab = $tab;
+
+        // Update URL if needed (optional)
+        if (request()->has('tab')) {
+            $this->dispatch('url-changed', tab: $this->getTabSlug($tab));
+        }
+    }
+
     private function setProfessionalMetaTags()
     {
         $seo = $this->person->seo;
         $person = $this->person;
 
         // Base meta data
-        $baseTitle = $seo->meta_title ?: $this->generateProfessionalTitle();
-        $baseDescription = $seo->meta_description ?: $this->generateProfessionalDescription();
-        $keywords = $seo->meta_keywords ?: $this->generateKeywords();
+        $baseTitle = $seo?->meta_title ?: $this->generateProfessionalTitle();
+        $baseDescription = $seo?->meta_description ?: $this->generateProfessionalDescription();
+        $keywords = $seo?->meta_keywords ?: $this->generateKeywords();
 
         // Tab-specific optimizations
         $tabData = $this->getTabSpecificMetaData($baseTitle, $baseDescription);
@@ -79,6 +92,7 @@ class Details extends Component
         $this->setTwitterTags($currentTitle, $currentDescription);
         $this->setStructuredData();
         $this->setAdditionalMetaTags();
+        $this->setBreadcrumbStructuredData();
     }
 
     private function generateProfessionalTitle()
@@ -230,7 +244,8 @@ class Details extends Component
 
     private function setStructuredData()
     {
-        $structuredData = [
+        // Person structured data
+        $personStructuredData = [
             '@context' => 'https://schema.org',
             '@type' => 'Person',
             'name' => $this->person->name,
@@ -245,7 +260,7 @@ class Details extends Component
 
         // Add profession if available
         if ($this->person->profession) {
-            $structuredData['hasOccupation'] = [
+            $personStructuredData['hasOccupation'] = [
                 '@type' => 'Occupation',
                 'name' => $this->person->profession
             ];
@@ -258,10 +273,114 @@ class Details extends Component
         }
 
         if (!empty($sameAs)) {
-            $structuredData['sameAs'] = $sameAs;
+            $personStructuredData['sameAs'] = $sameAs;
         }
 
-        meta()->set('script:ld+json', json_encode($structuredData));
+        // Article structured data for biography/content pages
+        $articleStructuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'Article',
+            'headline' => $this->generateProfessionalTitle(),
+            'description' => $this->generateProfessionalDescription(),
+            'image' => $this->person->profile_image ?: $this->getDefaultImage(),
+            'author' => [
+                '@type' => 'Person',
+                'name' => $this->person->name
+            ],
+            'publisher' => [
+                '@type' => 'Organization',
+                'name' => config('app.name'),
+                'logo' => [
+                    '@type' => 'ImageObject',
+                    'url' => asset('images/logo.png') // Update with your logo path
+                ]
+            ],
+            'datePublished' => $this->person->created_at?->toIso8601String(),
+            'dateModified' => $this->person->updated_at?->toIso8601String(),
+            'mainEntityOfPage' => $this->getCanonicalUrl(),
+            'articleSection' => 'Biography'
+        ];
+
+        // WebPage structured data
+        $webPageStructuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'WebPage',
+            'name' => $this->generateProfessionalTitle(),
+            'description' => $this->generateProfessionalDescription(),
+            'url' => $this->getCanonicalUrl(),
+            'primaryImageOfPage' => $this->person->profile_image ?: $this->getDefaultImage(),
+            'datePublished' => $this->person->created_at?->toIso8601String(),
+            'dateModified' => $this->person->updated_at?->toIso8601String(),
+            'breadcrumb' => [
+                '@type' => 'BreadcrumbList',
+                'itemListElement' => $this->generateBreadcrumbItems()
+            ]
+        ];
+
+        // Set all structured data
+        meta()
+            ->set('script:ld+json-person', json_encode($personStructuredData))
+            ->set('script:ld+json-article', json_encode($articleStructuredData))
+            ->set('script:ld+json-webpage', json_encode($webPageStructuredData));
+    }
+
+    private function setBreadcrumbStructuredData()
+    {
+        $breadcrumbStructuredData = [
+            '@context' => 'https://schema.org',
+            '@type' => 'BreadcrumbList',
+            'itemListElement' => $this->generateBreadcrumbItems()
+        ];
+
+        meta()->set('script:ld+json-breadcrumb', json_encode($breadcrumbStructuredData));
+    }
+
+    private function generateBreadcrumbItems()
+    {
+        $baseUrl = config('app.url');
+        $position = 1;
+
+        $breadcrumbs = [
+            [
+                '@type' => 'ListItem',
+                'position' => $position++,
+                'name' => 'Home',
+                'item' => $baseUrl
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => $position++,
+                'name' => 'People',
+                'item' => $baseUrl . '/people'
+            ],
+            [
+                '@type' => 'ListItem',
+                'position' => $position++,
+                'name' => $this->person->name,
+                'item' => $this->getCanonicalUrl()
+            ]
+        ];
+
+        // Add current tab as breadcrumb if not overview
+        if ($this->tab !== 'overview') {
+            $tabTitles = [
+                'biography' => 'Biography',
+                'career' => 'Career',
+                'personal_life' => 'Personal Life',
+                'awards' => 'Awards',
+                'gallery' => 'Gallery',
+                'controversies' => 'Controversies',
+            ];
+
+            $breadcrumbs[] = [
+                '@type' => 'ListItem',
+                'position' => $position++,
+                'name' => $tabTitles[$this->tab] ?? ucfirst(str_replace('_', ' ', $this->tab)),
+                'item' => $this->getCanonicalUrl()
+            ];
+        }
+
+        return $breadcrumbs;
     }
 
     private function setAdditionalMetaTags()
@@ -304,7 +423,6 @@ class Details extends Component
         ]);
     }
 
-    // ... rest of your existing methods remain the same
     private function getTabFromSlug($slug)
     {
         $tabMapping = [
@@ -334,22 +452,6 @@ class Details extends Component
 
         return $tabSlugs[$tab] ?? $tab;
     }
-
-    //     private function getTabSlug($tab)
-    // {
-    //     $tabSlugs = [
-    //         'overview' => 'overview',
-    //         'biography' => 'biography',
-    //         'career' => 'career',
-    //         'personal_life' => 'personal-life',
-    //         'awards' => 'awards',
-    //         'gallery' => 'gallery',
-    //         'controversies' => 'controversies',
-    //     ];
-
-    //     return $tabSlugs[$tab] ?? $tab;
-    // }
-
 
     public function hydrate(){
         if($this->slug && (!$this->person || !$this->person->exists)){
@@ -411,19 +513,18 @@ class Details extends Component
     }
 
     public function isActiveTab($tab)
-{
-    // Debug logging
-    Log::info("isActiveTab check", [
-        'requested_tab' => $tab,
-        'current_tab' => $this->tab,
-        'is_equal' => $this->tab === $tab
-    ]);
+    {
+        // Debug logging
+        Log::info("isActiveTab check", [
+            'requested_tab' => $tab,
+            'current_tab' => $this->tab,
+            'is_equal' => $this->tab === $tab
+        ]);
 
-    return $this->tab === $tab;
-}
+        return $this->tab === $tab;
+    }
 
-
-public function shouldShowTab($tab)
+    public function shouldShowTab($tab)
     {
         $counts = [
             'biography' => $this->person->about ? 1 : 0,
@@ -444,6 +545,7 @@ public function shouldShowTab($tab)
         $count += $this->person->politicalCareers->count();
         $count += $this->person->sportsCareers->count();
         $count += $this->person->entrepreneurs->count();
+        $count += $this->person->literatureCareer->count();
         return $count;
     }
 
@@ -456,13 +558,11 @@ public function shouldShowTab($tab)
         return $count;
     }
 
-
-
-private function getYearsActive()
-{
-    // TODO
-    return null;
-}
+    private function getYearsActive()
+    {
+        // TODO
+        return null;
+    }
 
     public function render()
     {
