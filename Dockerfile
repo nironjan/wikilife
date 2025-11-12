@@ -14,19 +14,18 @@ COPY --from=composer:2 /usr/bin/composer /usr/bin/composer
 # Set working directory
 WORKDIR /var/www/html
 
-# Copy project files Here
+# Copy project files
 COPY . .
 
 # Install PHP dependencies
 RUN composer install --no-dev --optimize-autoloader
 
-# Ensure .env exists and app key is set
-RUN php -r "if (!file_exists('.env')) copy('.env.example', '.env');" \
-    && php artisan key:generate --force
-
 # Expose port 8080
 EXPOSE 8080
 
-# Run migrations on startup and start the server
-CMD php artisan migrate --force || true && \
-    php artisan serve --host=0.0.0.0 --port=8080
+# Run app setup and start server
+CMD php artisan key:generate --force \
+    && php artisan migrate --force \
+    && php artisan config:clear \
+    && php artisan cache:clear \
+    && php artisan serve --host=0.0.0.0 --port=8080
