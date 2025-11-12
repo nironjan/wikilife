@@ -62,45 +62,55 @@ class SiteSettingsHelper
         return self::getSettings()->site_address ?? null;
     }
 
-    /**
-     * Scripts
-     */
-    public static function headerScripts(): ?string
-    {
-        $scripts = self::getSettings()->header_scripts;
-
-        if (is_string($scripts)) {
-            $decoded = json_decode($scripts, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $scripts = $decoded;
-            }
-        }
-
-        if (is_array($scripts)) {
-            return implode("\n", $scripts);
-        }
-
-        return $scripts;
+   public static function headerScripts(): ?string
+{
+    $settings = self::getSettings();
+    
+    // Check if settings exists and has the property
+    if (!$settings || !property_exists($settings, 'header_scripts')) {
+        return null;
     }
 
+    $scripts = $settings->header_scripts;
 
-    public static function footerScripts(): ?string
-    {
-        $scripts = self::getSettings()->footer_scripts;
-
-        if (is_string($scripts)) {
-            $decoded = json_decode($scripts, true);
-            if (json_last_error() === JSON_ERROR_NONE) {
-                $scripts = $decoded;
-            }
+    if (is_string($scripts)) {
+        $decoded = json_decode($scripts, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $scripts = $decoded;
         }
-
-        if (is_array($scripts)) {
-            return implode("\n", $scripts);
-        }
-
-        return $scripts; // in case it's already a string
     }
+
+    if (is_array($scripts)) {
+        return implode("\n", $scripts);
+    }
+
+    return $scripts;
+}
+
+public static function footerScripts(): ?string
+{
+    $settings = self::getSettings();
+    
+    // Check if settings exists and has the property
+    if (!$settings || !property_exists($settings, 'footer_scripts')) {
+        return null;
+    }
+
+    $scripts = $settings->footer_scripts;
+
+    if (is_string($scripts)) {
+        $decoded = json_decode($scripts, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            $scripts = $decoded;
+        }
+    }
+
+    if (is_array($scripts)) {
+        return implode("\n", $scripts);
+    }
+
+    return $scripts;
+}
 
     /**
      * Images & Media
