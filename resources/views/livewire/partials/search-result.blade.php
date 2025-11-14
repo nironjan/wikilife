@@ -8,15 +8,24 @@
                     <h1 class="text-3xl font-bold text-gray-900 mb-2">Search Results</h1>
 
                     @if($searchPerformed && $query)
-                        <p class="text-gray-600">
-                            @if($totalResults > 0)
+                        @if(strlen(trim($query)) < 4)
+                            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                                <p class="text-yellow-800">
+                                    Please enter at least <span class="font-semibold">4 characters</span> to search.
+                                    Currently you entered <span class="font-semibold">{{ strlen(trim($query)) }}</span> character{{ strlen(trim($query)) !== 1 ? 's' : '' }}.
+                                </p>
+                            </div>
+                        @elseif($totalResults > 0)
+                            <p class="text-gray-600">
                                 Found <span class="font-semibold text-red-600">{{ $totalResults }}</span>
                                 result{{ $totalResults > 1 ? 's' : '' }} for
                                 "<span class="font-semibold">{{ $query }}</span>"
-                            @else
+                            </p>
+                        @else
+                            <p class="text-gray-600">
                                 No results found for "<span class="font-semibold">{{ $query }}</span>"
-                            @endif
-                        </p>
+                            </p>
+                        @endif
                     @else
                         <p class="text-gray-600">Enter a search term to find biographies</p>
                     @endif
@@ -28,7 +37,7 @@
                         <input
                             type="text"
                             wire:model="query"
-                            placeholder="Search biographies..."
+                            placeholder="Search biographies... (min. 4 chars)"
                             class="w-full pl-4 pr-10 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-red-500 transition duration-200"
                         >
                         <button
@@ -45,9 +54,16 @@
         </div>
 
         <!-- Search Results -->
-        @if($searchPerformed)
-            @if($totalResults > 0)
-                <div class="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+        @if($searchPerformed && $query)
+            @if(strlen(trim($query)) < 4)
+                <!-- Show trending or popular people when search is too short -->
+                <div class="bg-white rounded-lg border border-gray-200 p-6">
+                    <h3 class="text-lg font-semibold text-gray-900 mb-4">Popular Biographies</h3>
+                    <p class="text-gray-600 mb-4">Enter at least 4 characters to search, or browse popular biographies:</p>
+                    <!-- You can add trending people here -->
+                </div>
+            @elseif($totalResults > 0)
+                <div class="grid gap-6 grid-cols-1 md:grid-cols-4 lg:grid-cols-5">
                     @foreach($searchResults as $person)
                         <div class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition duration-200 overflow-hidden">
                             <a href="{{ route('people.people.show', $person->slug) }}" class="block">
@@ -76,12 +92,6 @@
                                 @if($person->primary_profession)
                                     <p class="text-sm text-gray-600 mb-3">
                                         {{ $person->primary_profession }}
-                                    </p>
-                                @endif
-
-                                @if($person->about)
-                                    <p class="text-sm text-gray-500 line-clamp-2">
-                                        {{ Str::limit(strip_tags($person->about), 120) }}
                                     </p>
                                 @endif
 
@@ -116,10 +126,10 @@
                     <div class="space-y-4">
                         <p class="text-sm text-gray-500">Suggestions:</p>
                         <ul class="text-sm text-gray-500 list-disc list-inside space-y-1">
-                            <li>Try different keywords</li>
+                            <li>Try different keywords (at least 4 characters)</li>
                             <li>Check the spelling</li>
                             <li>Search by profession (e.g., "scientist", "actor")</li>
-                            <li>Browse by <a href="{{ route('people.index') }}" class="text-red-600 hover:text-red-700">categories</a></li>
+                            <li>Browse by <a href="{{ route('people.people.index') }}" class="text-red-600 hover:text-red-700">categories</a></li>
                         </ul>
                     </div>
                 </div>
@@ -131,7 +141,7 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                 </svg>
                 <h3 class="text-xl font-semibold text-gray-900 mb-2">Search WikiLife Biographies</h3>
-                <p class="text-gray-600">Enter a name, profession, or keyword to find biographies</p>
+                <p class="text-gray-600">Enter at least 4 characters to search for names, professions, or keywords</p>
             </div>
         @endif
     </div>

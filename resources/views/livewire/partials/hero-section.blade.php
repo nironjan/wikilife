@@ -26,14 +26,11 @@
                     </div>
 
                     <!-- Search Box -->
-                    <div class="max-w-md relative">
-                        <livewire:front.search-box
-                            variant="default"
-                            placeholder="Search people, professions..."
-                            :show-trending="true"
-                        />
-
-                    </div>
+                    <livewire:front.search-box
+                        variant="hero"
+                        input-class="bg-gray-900 text-black border-gray-700 placeholder-gray-400"
+                        button-class="text-black hover:text-red-400"
+                    />
 
                     <!-- Quick Stats -->
                     <div class="flex justify-center md:justify-start gap-6 pt-4">

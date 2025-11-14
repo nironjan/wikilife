@@ -13,11 +13,23 @@ class SearchBox extends Component
     public $placeholder = 'Search names, professions...';
     public $variant = 'default';
     public $showTrending = true;
+    public $inputClass = '';
+    public $showButton = true;
+    public $buttonClass = '';
 
-    public function mount($variant = 'default', $showTrending = true, $placeholder = null)
-    {
+    public function mount(
+        $variant = 'default',
+        $showTrending = true,
+        $placeholder = null,
+        $inputClass = '',
+        $showButton = true,
+        $buttonClass = ''
+    ) {
         $this->variant = $variant;
         $this->showTrending = $showTrending;
+        $this->inputClass = $inputClass;
+        $this->showButton = $showButton;
+        $this->buttonClass = $buttonClass;
 
         if ($placeholder) {
             $this->placeholder = $placeholder;
@@ -131,7 +143,7 @@ class SearchBox extends Component
     public function performSearch()
     {
         if (!empty(trim($this->search))) {
-            return redirect()->route('people.people.search', ['query' => $this->search]);
+            return redirect()->route('people.people.search', ['q' => $this->search]);
         }
     }
 
