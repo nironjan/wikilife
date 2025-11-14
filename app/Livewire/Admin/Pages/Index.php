@@ -133,12 +133,15 @@ class Index extends Component
             ->mapWithKeys(fn($template) => [$template => ucfirst($template)])
             ->toArray();
 
-        $years = Page::selectRaw('YEAR(published_at) as year')
-            ->whereNotNull('published_at')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
+        $years = Page::whereNotNull('published_at')
             ->get()
-            ->pluck('year')
+            ->pluck('published_at')
+            ->map(function ($date) {
+                return $date->format('Y');
+            })
+            ->unique()
+            ->sortDesc()
+            ->values()
             ->toArray();
 
         $statuses = [

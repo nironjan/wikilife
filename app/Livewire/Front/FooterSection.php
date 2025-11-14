@@ -12,6 +12,7 @@ use Livewire\Component;
 class FooterSection extends Component
 {
     public $footerMenus = [];
+    public $footerBarMenus = [];
     public $siteSettings;
     public $socialLinks = [];
     public $menuIcons = [];
@@ -32,6 +33,7 @@ class FooterSection extends Component
         $this->loadMenuIcons();
         $this->loadSocialIcons();
         $this->loadFooterMenus();
+        $this->loadFooterBarMenus();
         $this->loadSiteSettings();
     }
 
@@ -63,6 +65,23 @@ class FooterSection extends Component
             })
             ->toArray();
     }
+
+    public function loadFooterBarMenus()
+    {
+        $this->footerBarMenus = Menu::with(['children' => function($query) {
+                $query->active()->ordered();
+            }])
+            ->where('type', 'footer_bar') // Filter by footer_bar type
+            ->active()
+            ->root()
+            ->ordered()
+            ->get()
+            ->map(function($menu) {
+                return $this->formatMenuData($menu);
+            })
+            ->toArray();
+    }
+
 
     protected function formatMenuData($menu)
     {

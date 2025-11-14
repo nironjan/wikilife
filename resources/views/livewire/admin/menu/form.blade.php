@@ -59,7 +59,15 @@
                                 <flux:select id="type" label="Menu Type*" wire:model="type"
                                     wire:change="onTypeChange" placeholder="Choose Menu Type">
                                     @foreach ($menuTypes as $menuType)
-                                        <flux:select.option value="{{ $menuType }}">{{ ucfirst($menuType) }}
+                                        <flux:select.option value="{{ $menuType }}">
+                                            {{ match($menuType) {
+                                                'header' => 'Header Menu',
+                                                'footer' => 'Footer Menu',
+                                                'sidebar' => 'Sidebar Menu',
+                                                'top_header' => 'Top Header',
+                                                'footer_bar' => 'Footer Bar',
+                                                default => ucfirst($menuType)
+                                            } }}
                                         </flux:select.option>
                                     @endforeach
                                 </flux:select>

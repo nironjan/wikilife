@@ -33,7 +33,7 @@ Route::get('/sitemap.xml', function(){
 Route::prefix('webmaster')->name('webmaster.')->middleware(['auth', 'verified', 'admin'])->group(function () {
 
     Route::get('/dashboard', Dashboard::class)->name('dashboard');
-    
+
     // Site Setting
     Route::get('/site-seetings', \App\Livewire\Settings\SiteSetting::class)->name('site-setting');
 
@@ -119,8 +119,14 @@ Route::prefix('webmaster')->name('webmaster.')->middleware(['auth', 'verified', 
     // Feedback
     Route::prefix('feedback')->name('feedback.')->group(function () {
     Route::get('/', \App\Livewire\Admin\Feedback\Index::class)->name('index');
-    Route::get('/review/{id}', \App\Livewire\Admin\Feedback\Manage::class)->name('review'); // Changed from 'manage' to 'review'
-});
+    Route::get('/review/{id}', \App\Livewire\Admin\Feedback\Manage::class)->name('review');
+    });
+
+    // Contact Messages
+    Route::prefix('contact')->name('contact.')->group(function () {
+        Route::get('/', \App\Livewire\Admin\Contact\Index::class)->name('index');
+        Route::get('/review/{id}', \App\Livewire\Admin\Contact\Manage::class)->name('review');
+    });
 });
 
 

@@ -66,3 +66,37 @@ if(!function_exists('footer_scripts')) {
         return SiteSettingsHelper::footerScripts();
     }
 }
+
+// Quill list conversion helper
+if (!function_exists('convertQuillLists')) {
+    function convertQuillLists($content) {
+        $dom = new DOMDocument();
+        @$dom->loadHTML(mb_convert_encoding($content, 'HTML-ENTITIES', 'UTF-8'), LIBXML_HTML_NOIMPLIED | LIBXML_HTML_NODEFDTD);
+
+        $xpath = new DOMXPath($dom);
+
+        // Remove Quill UI elements
+        $uiElements = $xpath->query('//span[contains(@class, "ql-ui")]');
+        foreach ($uiElements as $element) {
+            $element->parentNode->removeChild($element);
+        }
+
+        // Remove data-list attributes and Quill classes
+        $listItems = $xpath->query('//li[@data-list]');
+        foreach ($listItems as $item) {
+            $item->removeAttribute('data-list');
+            $classes = $item->getAttribute('class');
+            if ($classes) {
+                $newClasses = preg_replace('/\bql-indent-\d+\b/', '', $classes);
+                $newClasses = trim(preg_replace('/\s+/', ' ', $newClasses));
+                if ($newClasses) {
+                    $item->setAttribute('class', $newClasses);
+                } else {
+                    $item->removeAttribute('class');
+                }
+            }
+        }
+
+        return $dom->saveHTML();
+    }
+}

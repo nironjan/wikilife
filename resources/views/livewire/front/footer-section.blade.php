@@ -161,9 +161,31 @@
             <!-- Bottom Bar -->
             <div class="border-t border-gray-200 mt-12 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
+                    <!-- Copyright Text -->
                     <div class="text-gray-500 text-sm text-center md:text-left">
                         &copy; {{ date('Y') }} {{ $siteSettings->site_name ?? 'WikiLife' }}. All rights reserved.
                     </div>
+
+                    <!-- Footer Bar Menu -->
+                    @if(!empty($footerBarMenus))
+                        <div class="flex flex-wrap justify-center md:justify-end items-center gap-4 md:gap-6">
+                            @foreach($footerBarMenus as $menu)
+                                <a
+                                    href="{{ $menu['url'] }}"
+                                    target="{{ $menu['target'] }}"
+                                    rel="{{ $menu['rel'] }}"
+                                    class="text-gray-500 hover:text-red-600 text-sm transition-colors duration-200 flex items-center space-x-1 group"
+                                >
+                                    @if($menu['svg_path'])
+                                        <svg class="w-3 h-3 text-gray-400 group-hover:text-red-600 transition-colors duration-200 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="{{ $menu['svg_path'] }}"/>
+                                        </svg>
+                                    @endif
+                                    <span>{{ $menu['name'] }}</span>
+                                </a>
+                            @endforeach
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>

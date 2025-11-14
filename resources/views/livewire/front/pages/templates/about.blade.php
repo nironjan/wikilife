@@ -24,10 +24,16 @@
                 <!-- Main Content (3 columns) -->
                 <div class="lg:col-span-4">
                     <!-- About Us Content -->
-                    <article class="mb-12">
-                        <div class="prose prose-lg max-w-none dark:prose-invert prose-headings:font-bold prose-h2:text-2xl prose-h3:text-xl prose-a:text-primary-600 hover:prose-a:text-primary-700 prose-img:rounded-lg">
-                            {!! $page->content !!}
-                        </div>
+                    <article class="py-6 max-w-none text-[16.5px] sm:text-[17px] leading-relaxed text-gray-800 dark:text-gray-200 [&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:leading-snug [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:leading-snug [&_h2]:mt-3 [&_h2]:mb-2 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1.5 [&_p]:my-1.5 [&_p]:text-gray-700 dark:[&_p]:text-gray-300 [&_a]:text-rose-600 dark:[&_a]:text-rose-400 [&_a]:underline [&_a]:decoration-rose-400/70 [&_a]:decoration-[0.5px] [&_a]:underline-offset-[3px] hover:[&_a]:text-rose-700
+                        dark:hover:[&_a]:text-rose-300 hover:[&_a]:decoration-rose-500/90 transition-colors duration-200 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-gray-100 [&_em]:italic
+                        [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-2 [&_li]:my-0.5 [&_li]:leading-snug [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-blue-500/70 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-2 [&_img]:rounded-xl [&_img]:shadow-md [&_img]:mx-auto [&_img]:my-3 [&_img]:transition-all hover:[&_img]:scale-[1.015]
+                        [&_pre]:bg-gray-900 dark:[&_pre]:bg-gray-800 [&_pre]:text-gray-100 [&_pre]:p-3 [&_pre]:rounded-lg [&_pre]:my-3 [&_pre]:overflow-x-auto
+                        [&_code]:bg-gray-100 dark:[&_code]:bg-gray-800 [&_code]:px-1.5 [&_code]:py-0.5 [&_code]:rounded-md [&_code]:text-[0.9em]
+                        [&_hr]:my-4 [&_hr]:border-gray-300 dark:[&_hr]:border-gray-700
+                        [&_table]:w-full [&_table]:border [&_table]:border-gray-200 dark:[&_table]:border-gray-700 [&_table]:rounded-lg [&_th]:bg-gray-50 dark:[&_th]:bg-gray-800 [&_th]:p-2 [&_td]:p-2 [&_td]:border-t [&_td]:border-gray-100 dark:[&_td]:border-gray-800">
+                        {!! $page->content !!}
+                     </article>
+
                     </article>
 
                     <!-- What We Offer Section -->

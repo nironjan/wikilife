@@ -4,13 +4,14 @@ namespace App\Livewire\Admin\Menu;
 
 use App\Models\Menu;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
 use Livewire\Component;
 use Masmerise\Toaster\Toaster;
 
 class Form extends Component
 {
     public ?int $editingId = null;
-    public array $menuTypes = ['header', 'footer', 'sidebar'];
+    public array $menuTypes = ['header', 'footer', 'sidebar', 'top_header', 'footer_bar'];
     public array $icons;
 
     // Form fields
@@ -32,10 +33,15 @@ class Form extends Component
     {
         return [
             'name' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:menus,slug,' . $this->editingId,
+            'slug' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('menus', 'slug')->ignore($this->editingId ?: null)
+        ],
             'url' => 'required|string|max:500',
             'icon' => 'nullable|string|max:50',
-            'type' => 'required|in:header,footer,sidebar',
+            'type' => 'required|in:header,footer,sidebar,top_header,footer_bar',
             'parent_id' => 'nullable|integer|exists:menus,id',
             'description' => 'nullable|string|max:500',
             'meta_title' => 'nullable|string|max:255',
@@ -129,7 +135,7 @@ class Form extends Component
         $this->slug = Str::slug($this->name);
     }
 
-    public function save(): void
+   public function save(): void
 {
     $this->validate();
 

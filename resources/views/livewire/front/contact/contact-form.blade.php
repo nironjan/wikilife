@@ -4,11 +4,7 @@
         <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8">
             <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
             <span class="text-gray-400">›</span>
-            <a href="{{ route('people.people.index') }}" class="hover:text-blue-600 transition-colors">People</a>
-            <span class="text-gray-400">›</span>
-            <a href="{{ route('people.people.show', $person->slug) }}" class="hover:text-blue-600 transition-colors">{{ $person->name }}</a>
-            <span class="text-gray-400">›</span>
-            <span class="text-gray-900 font-medium">Suggest Edit</span>
+            <span class="text-gray-900 font-medium">Contact Us</span>
         </nav>
 
         <!-- Main Card -->
@@ -19,13 +15,13 @@
                     <div class="flex-shrink-0">
                         <div class="w-12 h-12 bg-white/20 rounded-full flex items-center justify-center">
                             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                             </svg>
                         </div>
                     </div>
                     <div>
-                        <h1 class="text-2xl font-bold mb-2">Suggest an Edit for {{ $person->name }}</h1>
-                        <p class="text-blue-100 text-md">Help us keep this profile accurate and up-to-date</p>
+                        <h1 class="text-2xl font-bold mb-2">Get in Touch</h1>
+                        <p class="text-blue-100 text-md">We'd love to hear from you. Send us a message and we'll respond as soon as possible.</p>
                     </div>
                 </div>
             </div>
@@ -53,7 +49,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Basic Info -->
+                        <!-- Step 2: Contact Info -->
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 2 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 2
@@ -65,26 +61,14 @@
                             </div>
                         </div>
 
-                        <!-- Step 3: Feedback -->
+                        <!-- Step 3: Message -->
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 3 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 3
                             </div>
                             <div>
                                 <span class="text-sm font-medium {{ $currentStep >= 3 ? 'text-blue-900' : 'text-gray-600' }}">
-                                    Your Feedback
-                                </span>
-                            </div>
-                        </div>
-
-                        <!-- Step 4: Suggestions -->
-                        <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 4 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
-                            <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 4 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
-                                4
-                            </div>
-                            <div>
-                                <span class="text-sm font-medium {{ $currentStep >= 4 ? 'text-blue-900' : 'text-gray-600' }}">
-                                    Suggested Changes
+                                    Your Message
                                 </span>
                             </div>
                         </div>
@@ -94,18 +78,31 @@
                     <div class="mt-8">
                         <div class="flex justify-between text-sm text-gray-600 mb-2">
                             <span>Progress</span>
-                            <span>{{ round(($currentStep / 4) * 100) }}%</span>
+                            <span>{{ round(($currentStep / 3) * 100) }}%</span>
                         </div>
                         <div class="w-full bg-gray-200 rounded-full h-2">
                             <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                 style="width: {{ ($currentStep / 4) * 100 }}%"></div>
+                                 style="width: {{ ($currentStep / 3) * 100 }}%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="mt-8">
+                        <h3 class="text-sm font-semibold text-gray-900 mb-3">Other Ways to Reach Us</h3>
+                        <div class="space-y-2 text-sm text-gray-600">
+                            <div class="flex items-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                                </svg>
+                                <span>contact@example.com</span>
+                            </div>
                         </div>
                     </div>
                 </div>
 
                 <!-- Right Content - Form Steps -->
                 <div class="lg:w-3/4 p-6 lg:p-8">
-                    <!-- Success Message -->
+                    {{-- Success Message --}}
                     @if (session()->has('success_message'))
                         <div class="mb-8 p-6 bg-green-50 border border-green-200 rounded-xl">
                             <div class="flex items-center">
@@ -155,26 +152,16 @@
                         </div>
                     @endif
 
-                    <form wire:submit.prevent="submitFeedback">
+
+                    <form wire:submit.prevent="submitMessage">
 
                         <!-- Step 1: Email Verification -->
                         @if ($currentStep == 1)
                             <div class="space-y-4">
                                 <div>
                                     <h2 class="text-lg font-bold text-gray-900 mb-1">Verify Your Email</h2>
-                                    <p class="text-gray-600 text-sm">We'll send a verification code to ensure you're a real person.</p>
+                                    <p class="text-gray-600 text-sm">We'll send a verification code to ensure you're a real person and to prevent spam.</p>
 
-                                    <!-- Session Status -->
-                                    @if ($hasValidSession)
-                                        <div class="mt-2 p-2 bg-green-50 border border-green-200 rounded">
-                                            <div class="flex items-center">
-                                                <svg class="w-4 h-4 text-green-500 mr-2" fill="currentColor" viewBox="0 0 20 20">
-                                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
-                                                </svg>
-                                                <span class="text-green-700 text-xs">Your email is verified for 1 hour. Please refresh the page.</span>
-                                            </div>
-                                        </div>
-                                    @endif
                                 </div>
 
                                 @if (!$otpSent)
@@ -183,7 +170,7 @@
                                         <input type="email" id="email" wire:model="email" wire:change="updateOTPRateLimitInfo"
                                             class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                             placeholder="your.email@example.com"
-                                            {{ $sendingOtp ? 'disabled' : '' }}> <!-- Removed $isEmailBlocked from disabled -->
+                                            {{ $sendingOtp ? 'disabled' : '' }}>
                                         @error('email') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
 
                                         <!-- Blocked Email Warning -->
@@ -196,7 +183,7 @@
                                                     <div>
                                                         <p class="text-red-700 font-medium text-sm">Too many verification attempts</p>
                                                         <p class="text-red-600 text-xs mt-1">
-                                                            {{ \App\Helpers\FeedbackHelper::getRateLimitMessage($email) }}
+                                                            {{ \App\Helpers\ContactHelper::getRateLimitMessage($email) }}
                                                         </p>
                                                     </div>
                                                 </div>
@@ -204,7 +191,7 @@
                                         @elseif ($email && $remainingOTPRequests < 3)
                                             <!-- Rate Limit Info -->
                                             <div class="mt-2 text-xs text-{{ $remainingOTPRequests > 0 ? 'blue' : 'orange' }}-600">
-                                                {{ \App\Helpers\FeedbackHelper::getRateLimitMessage($email) }}
+                                                {{ \App\Helpers\ContactHelper::getRateLimitMessage($email) }}
                                             </div>
                                         @endif
                                     </div>
@@ -219,6 +206,7 @@
                                             <div></div>
                                         @endif
 
+                                        <!-- Fixed Send Verification Code Button -->
                                         <button type="button"
                                             wire:click="sendOTP"
                                             wire:loading.attr="disabled"
@@ -226,16 +214,17 @@
                                             class="px-4 py-2 text-xs font-medium text-white bg-blue-600 border border-transparent rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-1 focus:ring-offset-1 focus:ring-blue-500 transition-colors flex items-center space-x-1 disabled:opacity-50 disabled:cursor-not-allowed"
                                             {{ $sendingOtp || !$email ? 'disabled' : '' }}>
 
-                                            <span wire:loading.remove wire:target="sendOTP" class="flex items-center gap-1">
+                                            <span wire:loading.remove wire:target="sendOTP" class="flex gap-1 items-center">
                                                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
                                                 </svg>
                                                 <span>Send Verification Code</span>
                                             </span>
 
-                                            <span wire:loading wire:target="sendOTP" class="flex items-center gap-2"><div class="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div><span>Sending...</span></span>
-                                        </button>
-
+                                            <span wire:loading wire:target="sendOTP" class="flex items-center">
+                                                <div class="animate-spin rounded-full h-3 w-3 border-b-2 border-white"></div>
+                                                <span>Sending...</span>
+                                            </span>
                                         </button>
                                     </div>
                                 @else
@@ -308,7 +297,7 @@
                             </div>
                         @endif
 
-                        <!-- Step 2: Basic Information -->
+                        <!-- Step 2: Contact Information -->
                         @if ($currentStep == 2)
                             <div class="space-y-6">
                                 <div class="flex justify-end">
@@ -323,7 +312,7 @@
                                 </div>
                                 <div>
                                     <h2 class="text-xl font-bold text-gray-900 mb-2">Your Information</h2>
-                                    <p class="text-gray-600">Tell us a bit about yourself.</p>
+                                    <p class="text-gray-600">Tell us how we can reach you and identify your inquiry.</p>
                                 </div>
 
                                 <div>
@@ -335,9 +324,22 @@
                                 </div>
 
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-3">Type of Feedback *</label>
-                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3">
-                                        @foreach(['correction' => 'Correction', 'addition' => 'Addition', 'update' => 'Update', 'suggestion' => 'Suggestion'] as $value => $label)
+                                    <label for="subject" class="block text-sm font-semibold text-gray-700 mb-2">Subject *</label>
+                                    <input type="text" id="subject" wire:model="subject"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                                        placeholder="Brief description of your inquiry">
+                                    @error('subject') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
+                                </div>
+
+                                <div>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-3">Inquiry Type *</label>
+                                    <div class="grid grid-cols-2 md:grid-cols-3 gap-3">
+                                        @foreach([
+                                            'general' => 'General Inquiry',
+                                            'support' => 'Support',
+                                            'advertise' => 'Advertise',
+                                            'other' => 'Other'
+                                        ] as $value => $label)
                                             <label class="flex items-center p-4 border-2 border-gray-200 rounded-xl cursor-pointer hover:border-blue-300 hover:bg-blue-50 transition-colors {{ $type === $value ? 'border-blue-500 bg-blue-50' : '' }}">
                                                 <input type="radio" wire:model="type" value="{{ $value }}" class="text-blue-600 focus:ring-blue-500">
                                                 <span class="ml-3 text-sm font-medium text-gray-700">{{ $label }}</span>
@@ -349,7 +351,7 @@
                             </div>
                         @endif
 
-                        <!-- Step 3: Feedback Details -->
+                        <!-- Step 3: Message Details -->
                         @if ($currentStep == 3)
                             <div class="space-y-6">
                                 <div class="flex justify-end">
@@ -363,98 +365,26 @@
                                         @endif
                                 </div>
                                 <div>
-                                    <h2 class="text-xl font-bold text-gray-900 mb-2">Your Feedback</h2>
-                                    <p class="text-gray-600">Provide detailed feedback about what needs to be changed or added.</p>
+                                    <h2 class="text-xl font-bold text-gray-900 mb-2">Your Message</h2>
+                                    <p class="text-gray-600">Please provide detailed information about your inquiry.</p>
                                 </div>
 
-                                <!-- Content with Quill Editor -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Feedback *
-                                        </label>
-
-                                        <x-quill-editor
-                                            wire:model="message"
-                                            placeholder="Write your feedback here..."
-                                            height="400px"
-                                            toolbar="basic"
-                                        />
-
-                                        <!-- Hidden field for validation -->
-                                        <input type="hidden" wire:model="content" />
-
-                                        @error('content')
-                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
-                                        @enderror
-                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                            Use the toolbar above to format your content with rich text editing.
-                                        </p>
-                                    </div>
-                            </div>
-                        @endif
-
-                        <!-- Step 4: Suggested Changes -->
-                        @if ($currentStep == 4)
-                            <div class="space-y-6">
-                                <div class="flex justify-end">
-                                    @if ($hasValidSession)
-                                            <button type="button" wire:click="clearSession"
-                                                class="px-3 py-1.5 text-xs cursor-pointer text-gray-600 bg-gray-100 border border-gray-300 rounded hover:bg-gray-200 transition-colors">
-                                                Use Different Email
-                                            </button>
-                                        @else
-                                            <div></div>
-                                        @endif
-                                </div>
                                 <div>
-                                    <h2 class="text-xl font-bold text-gray-900 mb-2">Suggested Changes (Optional)</h2>
-                                    <p class="text-gray-600">Provide specific corrections or additions to help us improve this profile.</p>
-                                </div>
-
-                                <div class="bg-gray-50 rounded-xl p-6 space-y-4">
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="suggestedName" class="block text-sm font-medium text-gray-700 mb-2">Name</label>
-                                            <input type="text" id="suggestedName" wire:model="suggestedName"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                placeholder="Correct name if different">
-                                        </div>
-                                        <div>
-                                            <label for="suggestedProfession" class="block text-sm font-medium text-gray-700 mb-2">Profession</label>
-                                            <input type="text" id="suggestedProfession" wire:model="suggestedProfession"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                                placeholder="Correct profession">
-                                        </div>
-                                    </div>
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                        <div>
-                                            <label for="suggestedBirthDate" class="block text-sm font-medium text-gray-700 mb-2">Birth Date</label>
-                                            <input type="date" id="suggestedBirthDate" wire:model="suggestedBirthDate"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
-                                        </div>
-                                        <div>
-                                            <label for="suggestedDeathDate" class="block text-sm font-medium text-gray-700 mb-2">Death Date</label>
-                                            <input type="date" id="suggestedDeathDate" wire:model="suggestedDeathDate"
-                                                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500">
-                                        </div>
-                                    </div>
-                                    <div>
-                                        <label for="suggestedNationality" class="block text-sm font-medium text-gray-700 mb-2">Nationality</label>
-                                        <input type="text" id="suggestedNationality" wire:model="suggestedNationality"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                            placeholder="Correct nationality">
-                                    </div>
-                                    <div>
-                                        <label for="suggestedAbout" class="block text-sm font-medium text-gray-700 mb-2">Additional Information</label>
-                                        <textarea id="suggestedAbout" wire:model="suggestedAbout" rows="3"
-                                            class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500"
-                                            placeholder="Any other corrections or additional information..."></textarea>
+                                    <label for="message" class="block text-sm font-semibold text-gray-700 mb-2">Message *</label>
+                                    <textarea id="message" wire:model="message" rows="8"
+                                        class="w-full px-4 py-3 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-vertical"
+                                        placeholder="Please provide as much detail as possible about your inquiry, question, or feedback..."></textarea>
+                                    @error('message') <span class="text-red-500 text-sm mt-1">{{ $message }}</span> @enderror
+                                    <div class="mt-1 text-xs text-gray-500 flex justify-between">
+                                        <span>Minimum 10 characters</span>
+                                        <span>{{ strlen($message) }}/5000 characters</span>
                                     </div>
                                 </div>
                             </div>
                         @endif
 
-                        @if ($currentStep > 1 && $currentStep < 5)
+                        <!-- Navigation Buttons -->
+                        @if ($currentStep > 1 && $currentStep < 4)
                             <div class="flex justify-between pt-8 border-t border-gray-200 mt-8">
                                 @if ($currentStep > 1)
                                     <button type="button" wire:click="previousStep"
@@ -473,8 +403,8 @@
                                 @else
                                     <button type="submit"
                                         class="px-6 py-3 text-sm font-medium text-white bg-green-600 border border-transparent rounded-lg shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-colors flex items-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
-                                        {{ $submittingFeedback ? 'disabled' : '' }}>
-                                        @if($submittingFeedback)
+                                        {{ $submittingMessage ? 'disabled' : '' }}>
+                                        @if($submittingMessage)
                                             <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
                                             <span>Submitting...</span>
                                         @else
@@ -495,108 +425,8 @@
         <!-- Help Text -->
         <div class="mt-8 text-center">
             <p class="text-sm text-gray-600">
-                Your feedback helps us maintain accurate and up-to-date information.
-                We review all suggestions carefully.
+                We typically respond to all messages within 24-48 hours during business days.
             </p>
         </div>
     </div>
 </div>
-
-         {{-- ✅ Quill Editor Global --}}
-    @assets
-    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
-    @endassets
-
-    <script>
-        document.addEventListener('alpine:init', () => {
-    if (!Alpine.data('quillEditor')) {
-        Alpine.data('quillEditor', (livewireContent, placeholderText, editorHeight, toolbarType) => ({
-            quill: null,
-            initialized: false,
-            placeholder: placeholderText,
-            height: editorHeight,
-            toolbar: toolbarType,
-            livewireContent,
-
-            init() {
-                // 🧠 Prevent double initialization
-                if (this.initialized) return;
-                this.initialized = true;
-                this.$nextTick(() => this.initializeQuill());
-            },
-
-            initializeQuill() {
-                // 🧱 Create editor DOM node
-                const editorElement = document.createElement('div');
-                editorElement.style.height = this.height;
-                this.$refs.editorContainer.appendChild(editorElement);
-
-                // 🧰 Toolbar config
-                const toolbars = {
-                    full: [
-                        [{ 'font': [] }, { 'size': [] }],
-                        [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'color': [] }, { 'background': [] }],
-                        [{ 'script': 'sub'}, { 'script': 'super' }],
-                        [{ 'indent': '-1'}, { 'indent': '+1' }],
-                        [{ 'direction': 'rtl' }],
-                        [{ 'align': [] }],
-                        ['blockquote'],
-                        ['link',],
-                        ['clean']
-                    ],
-                    basic: [
-                        [{ 'header': [1, 2, 3, false] }],
-                        ['bold', 'italic', 'underline', 'strike'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        [{ 'color': [] }, { 'background': [] }],
-                        ['link', 'image'],
-                        ['clean']
-                    ],
-                    minimal: [
-                        ['bold', 'italic', 'underline'],
-                        [{ 'list': 'ordered'}, { 'list': 'bullet' }],
-                        ['link'],
-                        ['clean']
-                    ]
-                };
-                const toolbarConfig = toolbars[this.toolbar] || toolbars.full;
-
-                // 🪶 Initialize Quill
-                this.quill = new Quill(editorElement, {
-                    theme: 'snow',
-                    modules: {
-                        toolbar: toolbarConfig,
-                        clipboard: { matchVisual: false },
-                    },
-                    placeholder: this.placeholder,
-                });
-
-                // 🔄 Set initial content
-                if (this.livewireContent) {
-                    this.quill.root.innerHTML = this.livewireContent;
-                }
-
-                // 🧩 Livewire sync
-                this.quill.on('text-change', () => {
-                    const html = this.quill.root.innerHTML;
-                    this.livewireContent = html;
-                    this.$refs.hiddenTextarea.value = html;
-                    this.$refs.hiddenTextarea.dispatchEvent(new Event('input'));
-                });
-
-
-                // 🪄 React to external Livewire changes
-                this.$watch('livewireContent', value => {
-                    if (value && this.quill && value !== this.quill.root.innerHTML) {
-                        this.quill.root.innerHTML = value;
-                    }
-                });
-            },
-        }));
-    }
-});
-    </script>

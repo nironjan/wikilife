@@ -40,7 +40,13 @@
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <!-- Tabs -->
                         <div class="flex space-x-1 bg-gray-100 dark:bg-gray-700 rounded-lg p-1">
-                            @foreach (['header' => 'Header', 'footer' => 'Footer', 'sidebar' => 'Sidebar'] as $type => $label)
+                            @foreach ([
+                                'header' => 'Header',
+                                'footer' => 'Footer',
+                                'sidebar' => 'Sidebar',
+                                'top_header' => 'Top Header',
+                                'footer_bar' => 'Footer Bar'
+                                ] as $type => $label)
                                 <button wire:click="$set('activeTab', '{{ $type }}')"
                                     class="px-4 py-2 cursor-pointer text-sm font-medium rounded-md transition-colors duration-200 {{ $activeTab === $type ? 'bg-white dark:bg-gray-600 text-gray-900 dark:text-white shadow-sm' : 'text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white' }}">
                                     {{ $label }}
@@ -71,7 +77,14 @@
                 <div class="px-6 py-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
                     <div class="flex items-center justify-between">
                         <h2 class="text-lg font-semibold text-gray-900 dark:text-white">
-                            {{ ucfirst($activeTab) }} Menus
+                            {{ match($activeTab) {
+                            'header' => 'Header Menu',
+                            'footer' => 'Footer Menu',
+                            'sidebar' => 'Sidebar Menu',
+                            'top_header' => 'Top Header',
+                            'footer_bar' => 'Footer Bar',
+                            default => ucfirst($activeTab)
+                        } }}
                         </h2>
                         <p class="text-sm text-gray-600 dark:text-gray-400">
                             Use arrows to reorder menus • Click to expand/collapse

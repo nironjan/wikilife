@@ -1,11 +1,10 @@
 <?php
 
-namespace App\Livewire\Front\Person;
+namespace App\Livewire\Front\Contact;
 
-use App\Models\Feedback;
-use App\Models\FeedbackOTP;
-use App\Models\People;
-use App\Helpers\FeedbackHelper;
+use App\Models\ContactMessage;
+use App\Models\ContactOTP;
+use App\Helpers\ContactHelper;
 use Illuminate\Support\Facades\Mail;
 use Livewire\Component;
 use Illuminate\Support\Facades\Log;
@@ -13,15 +12,15 @@ use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 
 #[Layout('components.layouts.front')]
-class FeedbackForm extends Component
+#[Title('Contact Us - Get in Touch')]
+class ContactForm extends Component
 {
-    public $person;
     public $currentStep = 1;
     public $otpSent = false;
     public $emailVerified = false;
     public $sendingOtp = false;
     public $verifyingOtp = false;
-    public $submittingFeedback = false;
+    public $submittingMessage = false;
     public $remainingOTPRequests = 3;
     public $timeUntilNextOTP = 0;
     public $isEmailBlocked = false;
@@ -30,69 +29,44 @@ class FeedbackForm extends Component
     public $email = '';
     public $otp = '';
 
-    // Step 2: Basic Information
+    // Step 2: Contact Information
     public $name = '';
-    public $type = 'suggestion';
+    public $subject = '';
+    public $type = 'general';
 
-    // Step 3: Feedback Details
+    // Step 3: Message Details
     public $message = '';
 
-    // Step 4: Suggested Changes
-    public $suggestedName = '';
-    public $suggestedProfession = '';
-    public $suggestedBirthDate = '';
-    public $suggestedDeathDate = '';
-    public $suggestedNationality = '';
-    public $suggestedAbout = '';
-
     protected $rules = [
-        // Step 1
         'email' => 'required|email|max:255',
-
-        // Step 2
         'name' => 'required|string|max:255',
-        'type' => 'required|in:correction,addition,update,suggestion',
-
-        // Step 3
-        'message' => 'required|string|min:10|max:2000',
+        'subject' => 'required|string|max:255',
+        'type' => 'required|in:general,support,advertise,other',
+        'message' => 'required|string|min:10|max:5000',
     ];
 
     protected $otpRules = [
         'otp' => 'required|digits:6'
     ];
 
-    public function mount($slug)
+    public function mount()
     {
-        $this->person = People::active()
-            ->verified()
-            ->where('slug', $slug)
-            ->first();
-
-        if (!$this->person) {
-            abort(404, 'Person not found');
-        }
-
-        // Check if user has a valid session
-        if (FeedbackHelper::isSessionValid()) {
-            $this->email = FeedbackHelper::getVerifiedEmail();
+        if (ContactHelper::isSessionValid()) {
+            $this->email = ContactHelper::getVerifiedEmail();
             $this->emailVerified = true;
             $this->currentStep = 2;
-            session()->flash('success', 'Welcome back! Your email is already verified.');
         }
 
         $this->updateOTPRateLimitInfo();
         $this->setMetaTags();
     }
 
-    /**
-     * Update OTP rate limit information
-     */
     public function updateOTPRateLimitInfo()
     {
         if ($this->email) {
-            $this->remainingOTPRequests = FeedbackHelper::getRemainingOTPRequests($this->email);
-            $this->timeUntilNextOTP = FeedbackHelper::getTimeUntilNextOTP($this->email);
-            $this->isEmailBlocked = FeedbackHelper::isEmailBlocked($this->email);
+            $this->remainingOTPRequests = ContactHelper::getRemainingOTPRequests($this->email);
+            $this->timeUntilNextOTP = ContactHelper::getTimeUntilNextOTP($this->email);
+            $this->isEmailBlocked = ContactHelper::isEmailBlocked($this->email);
         } else {
             $this->remainingOTPRequests = 3;
             $this->timeUntilNextOTP = 0;
@@ -100,9 +74,6 @@ class FeedbackForm extends Component
         }
     }
 
-    /**
-     * When email changes, update rate limit info
-     */
     public function updatedEmail($value)
     {
         $this->updateOTPRateLimitInfo();
@@ -112,7 +83,7 @@ class FeedbackForm extends Component
             $this->emailVerified = true;
             $this->currentStep = 2;
             // Restore the session for this email
-            FeedbackHelper::setVerifiedSession($value);
+            ContactHelper::setVerifiedSession($value);
             session()->flash('success', 'Email automatically verified. Welcome back!');
         }
     }
@@ -122,24 +93,17 @@ class FeedbackForm extends Component
      */
     private function isEmailRecentlyVerified($email)
     {
-        // Check if there's a feedback with this email verified in the last hour
-        return Feedback::where('email', $email)
+        // Check if there's a contact message with this email verified in the last hour
+        return ContactMessage::where('email', $email)
             ->where('email_verified_at', '>=', now()->subHour())
             ->exists();
     }
 
     private function setMetaTags()
     {
-        if (!$this->person || !is_object($this->person)) {
-            return;
-        }
-
-        $personName = $this->person->name ?? 'Unknown Person';
-        $personSlug = $this->person->slug ?? 'unknown';
-
-        $title = "Suggest Edit for {$personName} - Help Improve Profile";
-        $description = "Help us keep {$personName}'s profile accurate and up-to-date. Suggest corrections, additions, or updates to improve this biography.";
-        $url = route('people.suggest-edit', $personSlug);
+        $title = "Contact Us - Get in Touch";
+        $description = "Have questions or feedback? Reach out to us through our contact form. We're here to help and would love to hear from you.";
+        $url = route('contact');
 
         meta()
             ->set('title', $title)
@@ -163,7 +127,7 @@ class FeedbackForm extends Component
     {
         $this->validateCurrentStep();
 
-        if ($this->currentStep < 4) {
+        if ($this->currentStep < 3) {
             $this->currentStep++;
         }
     }
@@ -181,9 +145,10 @@ class FeedbackForm extends Component
             1 => ['email' => 'required|email|max:255'],
             2 => [
                 'name' => 'required|string|max:255',
-                'type' => 'required|in:correction,addition,update,suggestion',
+                'subject' => 'required|string|max:255',
+                'type' => 'required|in:general,support,advertise,other',
             ],
-            3 => ['message' => 'required|string|min:10|max:2000'],
+            3 => ['message' => 'required|string|min:10|max:5000'],
         ];
 
         if (isset($stepRules[$this->currentStep])) {
@@ -191,15 +156,12 @@ class FeedbackForm extends Component
         }
     }
 
-    /**
-     * Change email and reset session
-     */
     public function changeEmail()
     {
         $currentEmail = $this->email;
 
         // Clear the session but keep the email
-        FeedbackHelper::clearSession();
+        ContactHelper::clearSession();
         $this->resetForm();
         $this->email = $currentEmail; // Keep the email filled in
 
@@ -207,7 +169,7 @@ class FeedbackForm extends Component
         if ($this->isEmailRecentlyVerified($currentEmail)) {
             $this->emailVerified = true;
             $this->currentStep = 2;
-            FeedbackHelper::setVerifiedSession($currentEmail);
+            ContactHelper::setVerifiedSession($currentEmail);
             session()->flash('success', 'Email automatically verified. Welcome back!');
         } else {
             session()->flash('success', 'Email verification cleared. You can now enter a different email address.');
@@ -222,33 +184,30 @@ class FeedbackForm extends Component
         $this->sendingOtp = true;
 
         // Check if the specific email is blocked using database
-        if (FeedbackHelper::isEmailBlocked($this->email)) {
+        if (ContactHelper::isEmailBlocked($this->email)) {
             $this->updateOTPRateLimitInfo();
-            session()->flash('error', FeedbackHelper::getRateLimitMessage($this->email));
+            session()->flash('error', ContactHelper::getRateLimitMessage($this->email));
             $this->sendingOtp = false; // Re-enable button
             return;
         }
 
         // Check rate limiting for current request using database
-        if (!FeedbackHelper::canRequestOTP($this->email)) {
+        if (!ContactHelper::canRequestOTP($this->email)) {
             $this->updateOTPRateLimitInfo();
-            session()->flash('error', FeedbackHelper::getRateLimitMessage($this->email));
+            session()->flash('error', ContactHelper::getRateLimitMessage($this->email));
             $this->sendingOtp = false; // Re-enable button
             return;
         }
 
-        $this->sendingOtp = true;
-
         try {
-            // Generate OTP first
+            // Generate OTP
             $otpCode = str_pad(random_int(0, 999999), 6, '0', STR_PAD_LEFT);
 
-            // Store OTP with default type - THIS CREATES THE RECORD IN DATABASE
-            $otp = FeedbackOTP::create([
+            // Store OTP
+            $otp = ContactOTP::create([
                 'email' => $this->email,
                 'otp_code' => $otpCode,
-                'people_id' => $this->person->id,
-                'type' => 'suggestion',
+                'type' => 'contact',
                 'expires_at' => now()->addMinutes(30),
                 'ip_address' => request()->ip(),
             ]);
@@ -256,25 +215,24 @@ class FeedbackForm extends Component
             // Update rate limit info after creating the record
             $this->updateOTPRateLimitInfo();
 
-            // Send OTP email using Google SMTP
-            Mail::send('emails.feedback-otp', [
+            // Send OTP email
+            Mail::send('emails.contact-otp', [
                 'otp' => $otpCode,
-                'person' => $this->person,
                 'expires_at' => $otp->expires_at,
             ], function ($message) {
                 $message->to($this->email)
-                        ->subject('Verify Your Email - ' . config('app.name'));
+                        ->subject('Verify Your Email - Contact Form - ' . config('app.name'));
             });
 
             $this->otpSent = true;
-            $this->sendingOtp = false;
+            $this->sendingOtp = false; // Re-enable button after successful send
 
             $this->dispatch('otp-sent');
             session()->flash('otp_message', 'Verification code sent to your email. Please check your inbox.');
 
         } catch (\Exception $e) {
             Log::error('Failed to send OTP email: ' . $e->getMessage());
-            $this->sendingOtp = false;
+            $this->sendingOtp = false; // Re-enable button on error
             session()->flash('error', 'Failed to send verification code. Please try again.');
         }
     }
@@ -285,7 +243,7 @@ class FeedbackForm extends Component
         $this->verifyingOtp = true;
 
         try {
-            $otpRecord = FeedbackOTP::where('email', $this->email)
+            $otpRecord = ContactOTP::where('email', $this->email)
                 ->where('otp_code', $this->otp)
                 ->where('is_used', false)
                 ->where('expires_at', '>', now())
@@ -301,7 +259,7 @@ class FeedbackForm extends Component
             $otpRecord->update(['is_used' => true]);
 
             // Set session for 1 hour
-            FeedbackHelper::setVerifiedSession($this->email);
+            ContactHelper::setVerifiedSession($this->email);
 
             $this->emailVerified = true;
             $this->currentStep = 2;
@@ -325,93 +283,65 @@ class FeedbackForm extends Component
         session()->flash('otp_message', 'New verification code sent to your email.');
     }
 
-    public function submitFeedback()
+    public function submitMessage()
     {
         $this->validate();
-        $this->submittingFeedback = true;
+        $this->submittingMessage = true;
 
         try {
-            // Create feedback record
-            Feedback::create([
-                'people_id' => $this->person->id,
+            ContactMessage::create([
                 'name' => $this->name,
                 'email' => $this->email,
+                'subject' => $this->subject,
                 'type' => $this->type,
                 'message' => $this->message,
-                'suggested_changes' => $this->getSuggestedChanges(),
                 'email_verified_at' => now(),
                 'ip_address' => request()->ip(),
                 'user_agent' => request()->userAgent(),
             ]);
 
-            $this->submittingFeedback = false;
-            $this->dispatch('feedback-submitted');
-            session()->flash('success', 'Thank you for your feedback! We will review your suggestion and update the information accordingly.');
-
-            // Reset form but keep session
+            $this->submittingMessage = false;
+            $this->dispatch('message-submitted');
             $this->resetForm();
+            session()->flash('success_message', 'Thank you for your message! We will get back to you as soon as possible.');
 
         } catch (\Exception $e) {
-            Log::error('Feedback submission error: ' . $e->getMessage());
-            $this->submittingFeedback = false;
-            session()->flash('error', 'Failed to submit feedback. Please try again.');
+            Log::error('Contact message submission error: ' . $e->getMessage());
+            $this->submittingMessage = false;
+            session()->flash('error', 'Failed to submit your message. Please try again.');
         }
     }
 
-    /**
-     * Clear session and start over
-     */
     public function clearSession()
     {
-        FeedbackHelper::clearSession();
+        ContactHelper::clearSession();
         $this->resetForm();
         session()->flash('success', 'Session cleared. Please verify your email again.');
-    }
-
-    private function getSuggestedChanges()
-    {
-        $changes = [];
-
-        if ($this->suggestedName) $changes['name'] = $this->suggestedName;
-        if ($this->suggestedProfession) $changes['profession'] = $this->suggestedProfession;
-        if ($this->suggestedBirthDate) $changes['birth_date'] = $this->suggestedBirthDate;
-        if ($this->suggestedDeathDate) $changes['death_date'] = $this->suggestedDeathDate;
-        if ($this->suggestedNationality) $changes['nationality'] = $this->suggestedNationality;
-        if ($this->suggestedAbout) $changes['about'] = $this->suggestedAbout;
-
-        return !empty($changes) ? $changes : null;
     }
 
     private function resetForm()
     {
         $this->reset([
-            'otp', 'name', 'type', 'message',
-            'suggestedName', 'suggestedProfession', 'suggestedBirthDate',
-            'suggestedDeathDate', 'suggestedNationality', 'suggestedAbout'
+            'otp', 'name', 'subject', 'type', 'message'
         ]);
-        $this->currentStep = 1;
+        $this->currentStep = 2;
         $this->otpSent = false;
-        $this->emailVerified = false;
+        $this->emailVerified = true;
         $this->sendingOtp = false;
         $this->verifyingOtp = false;
-        $this->submittingFeedback = false;
+        $this->submittingMessage = false;
 
-        // Don't reset email if session is valid
-        if (!FeedbackHelper::isSessionValid()) {
+        if (!ContactHelper::isSessionValid()) {
             $this->reset(['email']);
+            $this->emailVerified = false;
+            $this->currentStep = 1;
         }
     }
 
     public function render()
     {
-        if (!$this->person) {
-            return view('livewire.front.person.feedback-error', [
-                'message' => 'Person data is invalid. Please try again.'
-            ]);
-        }
-
-        return view('livewire.front.person.feedback-form', [
-            'hasValidSession' => FeedbackHelper::isSessionValid()
+        return view('livewire.front.contact.contact-form', [
+            'hasValidSession' => ContactHelper::isSessionValid()
         ]);
     }
 }

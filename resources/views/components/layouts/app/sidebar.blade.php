@@ -266,6 +266,30 @@
                 </div>
             </div>
 
+            {{-- Contact Management --}}
+            <div x-data="{ open: false }" class="mb-2">
+                <button @click="open = !open"
+                    class="flex items-center cursor-pointer justify-between w-full text-left font-semibold text-gray-700 hover:text-primary-600">
+                    <span>{{ __('Contact Management') }}</span>
+                    <svg x-show="!open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 9l7 7 7-7" />
+                    </svg>
+                    <svg x-show="open" xmlns="http://www.w3.org/2000/svg" class="w-4 h-4" fill="none"
+                        viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 15l-7-7-7 7" />
+                    </svg>
+                </button>
+                <div x-show="open" x-collapse>
+                    <flux:navlist.group class="grid mb-2">
+                        <flux:navlist.item icon="envelope" :href="route('webmaster.contact.index')"
+                            :current="request()->routeIs('webmaster.contact.*')" wire:navigate>
+                            {{ __('Contact Inbox') }}
+                        </flux:navlist.item>
+                    </flux:navlist.group>
+                </div>
+            </div>
+
         </flux:navlist>
         @endif
 
@@ -401,11 +425,11 @@
                 // 🧰 Toolbar config
                 const toolbars = {
                     full: [
-                        [{ 'font': [] }, { 'size': [] }],
                         [{ 'header': [1, 2, 3, 4, 5, 6, false] }],
                         ['bold', 'italic', 'underline', 'strike'],
                         [{ 'color': [] }, { 'background': [] }],
                         [{ 'script': 'sub'}, { 'script': 'super' }],
+                        [{ 'list': 'ordered'}, { 'list': 'bullet' }, { 'list': 'check' }], // ← ADD THIS LINE
                         [{ 'indent': '-1'}, { 'indent': '+1' }],
                         [{ 'direction': 'rtl' }],
                         [{ 'align': [] }],

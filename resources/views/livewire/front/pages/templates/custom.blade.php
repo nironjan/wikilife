@@ -46,7 +46,7 @@
                     </div>
 
                     @if($page->description)
-                        <p class="mt-4 text-lg text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl">
+                        <p class="mt-4 text-sm text-gray-600 dark:text-gray-300 leading-relaxed max-w-3xl">
                             {{ $page->description }}
                         </p>
                     @endif
@@ -56,30 +56,34 @@
     </header>
 
     <!-- Main Content -->
-    <main class="py-8">
+    <main class="py-2">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <article class="prose prose-lg max-w-none
-                          prose-headings:font-bold prose-headings:text-gray-900 dark:prose-headings:text-white prose-headings:leading-tight
-                          prose-p:text-gray-700 dark:prose-p:text-gray-300 prose-p:leading-relaxed prose-p:text-lg
-                          prose-a:text-blue-600 dark:prose-a:text-blue-400 prose-a:no-underline hover:prose-a:underline prose-a:font-medium prose-a:transition-all
-                          prose-strong:text-gray-900 dark:prose-strong:text-white prose-strong:font-semibold
-                          prose-blockquote:border-l-4 prose-blockquote:border-blue-500 dark:prose-blockquote:border-blue-400
-                          prose-blockquote:bg-blue-50 dark:prose-blockquote:bg-blue-900/20 prose-blockquote:px-6 prose-blockquote:py-4 prose-blockquote:rounded-r-xl
-                          prose-blockquote:text-gray-700 dark:prose-blockquote:text-gray-300
-                          prose-img:rounded-2xl prose-img:shadow-lg prose-img:mx-auto prose-img:transition-transform hover:prose-img:scale-[1.02]
-                          prose-ul:my-6 prose-li:my-2 prose-li:leading-relaxed prose-ul:text-gray-700 dark:prose-ul:text-gray-300
-                          prose-ol:my-6 prose-li:my-2 prose-li:leading-relaxed prose-ol:text-gray-700 dark:prose-ol:text-gray-300
-                          prose-pre:bg-gray-900 dark:prose-pre:bg-gray-800 prose-pre:text-gray-100 prose-pre:rounded-xl prose-pre:border prose-pre:border-gray-700
-                          prose-code:bg-gray-100 dark:prose-code:bg-gray-800 prose-code:px-2 prose-code:py-1 prose-code:rounded prose-code:text-sm
-                          prose-code:text-gray-800 dark:prose-code:text-gray-200 prose-code:font-mono
-                          prose-hr:border-gray-200 dark:prose-hr:border-gray-700 prose-hr:my-8
-                          prose-table:shadow-sm prose-table:rounded-lg prose-table:overflow-hidden prose-table:border prose-table:border-gray-200 dark:prose-table:border-gray-700
-                          prose-th:bg-gray-50 dark:prose-th:bg-gray-800 prose-th:text-gray-900 dark:prose-th:text-white prose-th:font-semibold
-                          prose-td:border-t prose-td:border-gray-200 dark:prose-td:border-gray-700
-                          prose-lead:text-gray-600 dark:prose-lead:text-gray-400 prose-lead:text-xl prose-lead:font-medium
-                          prose-figure:mx-auto">
-                {!! $page->content !!}
-            </article>
+            <article class="ql-editor prose prose-gray max-w-none
+                prose-headings:text-gray-900 prose-headings:mb-4
+                prose-p:text-gray-600 prose-p:leading-7
+                prose-strong:text-gray-900
+                prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4
+                prose-ul:text-gray-600 prose-ol:text-gray-600
+                prose-img:rounded-lg
+                prose-table:border prose-table:border-gray-200
+                prose-th:bg-gray-50
+                prose-pre:bg-gray-900 prose-pre:text-white
+                prose-code:bg-gray-100 prose-code:text-gray-800
+                [&_a]:text-rose-600 [&_a]:underline [&_a]:decoration-rose-400/70
+                [&_a]:decoration-[0.5px] [&_a]:underline-offset-[3px]
+                [&_a]:transition-colors [&_a]:duration-200
+                [&_a:hover]:text-rose-700 [&_a:hover]:decoration-rose-500/90
+                dark:[&_a]:text-rose-400
+                dark:[&_a:hover]:text-rose-300
+                dark:prose-invert dark:prose-headings:text-white dark:prose-p:text-gray-300
+                dark:prose-blockquote:border-gray-600
+                dark:prose-code:bg-gray-800 dark:prose-code:text-gray-200">
+    {!! $page->content !!}
+</article>
+
+
+
+
 
             <!-- Reading Progress (Optional) -->
             <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
@@ -96,4 +100,6 @@
 
         </div>
     </main>
+
 </div>
+

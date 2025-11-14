@@ -126,14 +126,12 @@
                                         @enderror
                                     </div>
 
-                                    <!-- Subtitle -->
+                                    <!-- description -->
                                     <div class="space-y-2">
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                                            Subtitle
-                                        </label>
-                                        <x-flux::input wire:model="subtitle"
-                                                       placeholder="Optional subtitle for the page..." />
-                                        @error('subtitle')
+
+                                        <x-flux::textarea wire:model="description" label="Description"
+                                                       placeholder="Optional description for the page..." />
+                                        @error('description')
                                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                         @enderror
                                     </div>

@@ -5,6 +5,7 @@
 
         {!! app('meta')->toHtml() !!}
         <meta name="csrf-token" content="{{ csrf_token() }}">
+        <link href="https://cdn.jsdelivr.net/npm/quill@2.0.3/dist/quill.snow.css" rel="stylesheet" />
 
         {!! header_scripts() !!}
         @vite(['resources/css/app.css', 'resources/js/app.js'])

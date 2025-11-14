@@ -85,6 +85,18 @@
     }
 }
 
+/* @layer base {
+  a {
+    @apply text-rose-600 dark:text-rose-400 underline decoration-rose-400/70 decoration-1 underline-offset-[3px] transition-all duration-200;
+  }
+
+  a:hover {
+    @apply text-rose-700 dark:text-rose-300 decoration-rose-500 decoration-[1.5px];
+  }
+} */
+
+
+
 [data-flux-field]:not(ui-radio, ui-checkbox) {
     @apply grid gap-2;
 }
@@ -184,4 +196,37 @@ select:focus[data-flux-control] {
         }
 
 
+@layer base {
+  /* .ql-editor {
+    padding: 0 !important;
+    line-height: 1.65 !important;
+  } */
+
+  .ql-editor p {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .ql-editor ul,
+  .ql-editor ol {
+    margin-top: 0.25rem !important;
+    margin-bottom: 0.25rem !important;
+  }
+
+  .ql-editor li {
+    margin-top: 0.125rem !important;
+    margin-bottom: 0.125rem !important;
+  }
+
+  .ql-editor blockquote {
+    margin: 0.5rem 0 !important;
+  }
+
+  .ql-editor h1,
+  .ql-editor h2,
+  .ql-editor h3 {
+    margin-top: 0.75rem !important;
+    margin-bottom: 0.5rem !important;
+  }
+}
 
