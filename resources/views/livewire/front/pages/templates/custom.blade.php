@@ -1,13 +1,13 @@
 <div class="min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300">
-    <!-- Simple Header -->
+    {{-- Simple Header --}}
     <header class="py-8 bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Structured Data -->
+            {{-- Structured Data --}}
             <script type="application/ld+json">
                 {!! json_encode($structuredData) !!}
             </script>
 
-            <!-- Enhanced Breadcrumb -->
+            {{-- Enhanced Breadcrumb --}}
             <nav class="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400 mb-6" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
                 <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                     <a href="{{ url('/') }}" class="hover:text-blue-600 dark:hover:text-blue-400 transition-colors duration-200 flex items-center space-x-1 group" itemprop="item">
@@ -29,7 +29,7 @@
                 </div>
             </nav>
 
-            <!-- Article Header -->
+            {{-- Article Header --}}
             <article>
                 <header class="space-y-4">
                     <h1 class="text-3xl sm:text-4xl font-bold text-gray-900 dark:text-white leading-tight tracking-tight">
@@ -55,7 +55,7 @@
         </div>
     </header>
 
-    <!-- Main Content -->
+    {{-- Main Content --}}
     <main class="py-2">
         <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             <article class="ql-editor prose prose-gray max-w-none
@@ -85,7 +85,7 @@
 
 
 
-            <!-- Reading Progress (Optional) -->
+            {{-- Reading Progress (Optional) --}}
             <div class="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div class="mx-auto text-sm text-gray-600 dark:text-gray-400 flex justify-end">
                     <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})"

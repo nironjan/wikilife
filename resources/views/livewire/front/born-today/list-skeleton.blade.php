@@ -1,5 +1,5 @@
 <div class="min-h-screen bg-white">
-    <!-- Breadcrumb Skeleton -->
+    {{-- Breadcrumb Skeleton --}}
     <div class="bg-gray-50 border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <div class="flex items-center space-x-2">
@@ -12,9 +12,9 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    {{-- Main Content --}}
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Header Skeleton -->
+        {{-- Header Skeleton --}}
         <div class="flex items-center justify-between mb-8">
             <div class="flex items-center space-x-3">
                 <div class="w-10 h-10 bg-gray-200 rounded-lg animate-pulse"></div>
@@ -29,11 +29,11 @@
         </div>
 
 
-        <!-- People Grid Skeleton -->
+        {{-- People Grid Skeleton --}}
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-8">
             @for($i = 0; $i < 4; $i++)
             <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
-                <!-- Image Skeleton -->
+                {{-- Image Skeleton --}}
                 <div class="w-full h-64 bg-gray-200 animate-pulse relative">
                     <div class="absolute top-3 right-3">
                         <div class="h-6 w-12 bg-gray-300 rounded-full animate-pulse"></div>
@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <!-- Content Skeleton -->
+                {{-- Content Skeleton --}}
                 <div class="p-4">
                     <div class="h-5 w-32 bg-gray-200 rounded animate-pulse mb-2"></div>
                     <div class="h-4 w-24 bg-gray-200 rounded animate-pulse mb-3"></div>
@@ -57,7 +57,7 @@
             @endfor
         </div>
 
-        <!-- Pagination Skeleton -->
+        {{-- Pagination Skeleton --}}
         <div class="flex justify-center mb-12">
             <div class="flex space-x-2">
                 <div class="h-10 w-10 bg-gray-200 rounded animate-pulse"></div>
@@ -68,7 +68,7 @@
             </div>
         </div>
 
-        <!-- Browse All Section Skeleton -->
+        {{-- Browse All Section Skeleton --}}
         <div class="bg-gray-100 rounded-2xl p-8 border border-gray-200">
             <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">

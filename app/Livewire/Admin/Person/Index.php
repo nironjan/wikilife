@@ -122,29 +122,30 @@ class Index extends Component
     public function render()
     {
         $people = People::with(['creator'])
-        ->when($this->search, function ($query) {
-            $query->where(function ($q) {
-                $searchTerm = $this->search;
-                $searchTermLower = strtolower($searchTerm);
-                $searchTermUpper = ucwords($searchTerm);
+            ->when($this->search, function ($query) {
+                $query->where(function ($q) {
+                    $searchTerm = $this->search;
+                    $searchTermLower = strtolower($searchTerm);
 
-                $q->where('name', 'like', "%{$searchTerm}%")
-                    ->orWhere('full_name', 'like', "%{$searchTerm}%")
-                    ->orWhereJsonContains('nicknames', $searchTerm)
-                    ->orWhereJsonContains('nicknames', $searchTermLower)
-                    ->orWhereJsonContains('nicknames', $searchTermUpper)
-                    // Profession search with multiple variations
-                    ->orWhereJsonContains('professions', $searchTerm)
-                    ->orWhereJsonContains('professions', $searchTermLower)
-                    ->orWhereJsonContains('professions', $searchTermUpper);
-            });
-        })
-        ->when($this->status, function ($query) {
-            $query->where('status', $this->status);
-        })
-        ->orderBy($this->sortField, $this->sortDirection)
-        ->paginate(10);
+                    $q->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                        ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"])
+                        ->orWhereJsonContains('nicknames', $searchTerm)
+                        ->orWhereJsonContains('nicknames', $searchTermLower)
+                        ->orWhereJsonContains('nicknames', ucwords($searchTermLower));
+                        // Profession search with multiple variations
+                    $q->orWhere(function ($professionQuery) use ($searchTerm, $searchTermLower) {
+                        $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                    ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                    ->orWhereRaw('professions::text LIKE ?', ["%".ucwords($searchTermLower)."%"]);
+                    });
 
+                });
+            })
+            ->when($this->status, function ($query) {
+                $query->where('status', $this->status);
+            })
+            ->orderBy($this->sortField, $this->sortDirection)
+            ->paginate(10);
 
         return view('livewire.admin.person.index', compact('people'));
     }

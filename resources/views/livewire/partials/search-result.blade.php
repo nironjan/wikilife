@@ -1,7 +1,7 @@
 <div>
     <div class="min-h-screen bg-gray-50">
     <div class="max-w-7xl mx-auto py-8 px-4 sm:px-6 lg:px-8">
-        <!-- Search Header -->
+        {{-- Search Header --}}
         <div class="mb-8">
             <div class="flex items-center justify-between mb-6">
                 <div>
@@ -31,7 +31,7 @@
                     @endif
                 </div>
 
-                <!-- Search Box -->
+                {{-- Search Box --}}
                 <div class="w-80">
                     <form wire:submit.prevent="performSearch" class="relative">
                         <input
@@ -53,14 +53,14 @@
             </div>
         </div>
 
-        <!-- Search Results -->
+        {{-- Search Results --}}
         @if($searchPerformed && $query)
             @if(strlen(trim($query)) < 4)
-                <!-- Show trending or popular people when search is too short -->
+                {{-- Show trending or popular people when search is too short --}}
                 <div class="bg-white rounded-lg border border-gray-200 p-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Popular Biographies</h3>
                     <p class="text-gray-600 mb-4">Enter at least 4 characters to search, or browse popular biographies:</p>
-                    <!-- You can add trending people here -->
+                    {{-- You can add trending people here --}}
                 </div>
             @elseif($totalResults > 0)
                 <div class="grid gap-6 grid-cols-1 md:grid-cols-4 lg:grid-cols-5">
@@ -108,7 +108,7 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
+                {{-- Pagination --}}
                 @if($searchResults->hasPages())
                     <div class="mt-8">
                         {{ $searchResults->links() }}
@@ -116,7 +116,7 @@
                 @endif
 
             @else
-                <!-- No Results -->
+                {{-- No Results --}}
                 <div class="text-center py-12">
                     <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -135,7 +135,7 @@
                 </div>
             @endif
         @else
-            <!-- Search Prompt -->
+            {{-- Search Prompt --}}
             <div class="text-center py-12">
                 <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>

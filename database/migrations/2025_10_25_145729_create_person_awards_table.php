@@ -18,6 +18,7 @@ return new class extends Migration {
             $table->text('description')->nullable();
             $table->date('awarded_at')->nullable();
             $table->string('award_image')->nullable();
+            $table->string('image_caption')->nullable();
             $table->string('award_image_file_id')->nullable();
             $table->string('category')->nullable();
             $table->string('organization')->nullable();

@@ -1,4 +1,4 @@
-<!-- Sport Details -->
+{{-- Sport Details --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Sports Details</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -59,7 +59,7 @@
     </div>
 </div>
 
-<!-- Statistics -->
+{{-- Statistics --}}
 @if($careerData->stats && count($careerData->stats) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Career Statistics</h2>
@@ -76,7 +76,7 @@
     </div>
 @endif
 
-<!-- Achievements -->
+{{-- Achievements --}}
 @if($careerData->achievements && count($careerData->achievements) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Career Achievements</h2>
@@ -93,7 +93,7 @@
     </div>
 @endif
 
-<!-- Notable Events -->
+{{-- Notable Events --}}
 @if($careerData->notable_events && count($careerData->notable_events) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Notable Events</h2>
@@ -110,7 +110,7 @@
     </div>
 @endif
 
-<!-- Leagues Participated -->
+{{-- Leagues Participated --}}
 @if($careerData->leagues_participated && count($careerData->leagues_participated) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Leagues & Tournaments</h2>

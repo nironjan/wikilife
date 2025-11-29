@@ -1,7 +1,7 @@
 <div>
   <section class="py-12 bg-white">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 animate-pulse">
-      <!-- Section Header -->
+      {{-- Section Header --}}
       <div class="flex items-center justify-between mb-8">
         <div class="flex items-center space-x-3">
           <div class="w-10 h-10 bg-gray-200 rounded-lg"></div>
@@ -14,9 +14,9 @@
       </div>
 
       <div class="space-y-8">
-        <!-- First Row -->
+        {{-- First Row --}}
         <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-          <!-- Left: Featured Blog -->
+          {{-- Left: Featured Blog --}}
           <div class="bg-white rounded-lg shadow overflow-hidden flex flex-col">
             <div class="bg-gray-200 h-64 lg:h-48 w-full"></div>
             <div class="p-4 flex flex-col flex-1">
@@ -37,9 +37,9 @@
             </div>
           </div>
 
-          <!-- Right Column -->
+          {{-- Right Column --}}
           <div class="grid grid-cols-1 gap-6">
-            <!-- Top Right Single Post -->
+            {{-- Top Right Single Post --}}
             <div class="bg-white rounded-lg shadow overflow-hidden flex">
               <div class="w-1/3 bg-gray-200 h-40"></div>
               <div class="w-2/3 p-4 flex flex-col justify-between">
@@ -55,7 +55,7 @@
               </div>
             </div>
 
-            <!-- Bottom Right: Two Cards -->
+            {{-- Bottom Right: Two Cards --}}
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               @for ($i = 0; $i < 2; $i++)
               <div class="bg-white rounded-lg shadow overflow-hidden flex flex-row md:flex-col">
@@ -75,7 +75,7 @@
           </div>
         </div>
 
-        <!-- Second Row: 4 Column Grid -->
+        {{-- Second Row: 4 Column Grid --}}
         <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
           @for ($i = 0; $i < 4; $i++)
           <div class="bg-white rounded-xl shadow overflow-hidden flex flex-col border border-gray-100">
@@ -97,7 +97,7 @@
         </div>
       </div>
 
-      <!-- Mobile View All -->
+      {{-- Mobile View All --}}
       <div class="sm:hidden text-center mt-6">
         <div class="inline-flex h-3 bg-gray-200 rounded w-28 mx-auto"></div>
       </div>

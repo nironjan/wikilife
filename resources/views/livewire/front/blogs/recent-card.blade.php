@@ -1,7 +1,7 @@
 <div>
     <section class="py-12 bg-white">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
+            {{-- Section Header --}}
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-3">
                     <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg">
@@ -17,7 +17,7 @@
                     </div>
                 </div>
 
-                <!-- View All Link -->
+                {{-- View All Link --}}
                 <a href="{{ route('articles.index') }}"
                     class="hidden sm:flex items-center text-red-600 hover:text-red-700 font-medium text-sm">
                     View All
@@ -27,18 +27,18 @@
                 </a>
             </div>
 
-            <!-- Hierarchical Grid Layout -->
+            {{-- Hierarchical Grid Layout --}}
             <div class="space-y-8">
-                <!-- First Row: 2-column layout -->
+                {{-- First Row: 2-column layout --}}
                 @if($recentPosts->count() >= 3)
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                    <!-- Left: Featured Blog Post -->
+                    {{-- Left: Featured Blog Post --}}
                     <article class="bg-linear-to-br from-gray-50 to-white rounded-lg shadow overflow-hidden group">
                         @php $featuredPost = $recentPosts[0]; @endphp
                         <a href="{{ route('articles.show', $featuredPost->slug) }}" class="block h-full"
                             aria-label="Read blog post: {{ $featuredPost->title }}">
                             <div class="flex flex-col">
-                                <!-- Image Section -->
+                                {{-- Image Section --}}
                                 <div class="relative overflow-hidden">
                                     @if($featuredPost->featured_image_url)
                                     <img src="{{ $featuredPost->imageSize(400, 500, 85) }}"
@@ -57,7 +57,7 @@
                                     @endif
                                 </div>
 
-                                <!-- Content Section -->
+                                {{-- Content Section --}}
                                 <div class="p-4  flex flex-col justify-center flex-1">
                                     <header class="mb-2">
                                         <h2
@@ -65,7 +65,7 @@
                                             {{ $featuredPost->title }}
                                         </h2>
 
-                                        <!-- Meta Information -->
+                                        {{-- Meta Information --}}
                                         <div class="flex items-center text-gray-600 text-xs mb-2 space-x-4">
                                             @if($featuredPost->published_at)
                                             <div class="flex items-center bg-gray-100 px-3 py-1.5 rounded-full">
@@ -82,7 +82,7 @@
                                             </div>
                                             @endif
 
-                                            <!-- Category Badge -->
+                                            {{-- Category Badge --}}
                                             @if($featuredPost->blogCategory)
                                             <span
                                                 class=" text-gray-800 text-xs bg-gray-100 px-3 py-1.5 rounded-full font-medium">
@@ -93,7 +93,7 @@
                                         </div>
                                     </header>
 
-                                    <!-- Excerpt -->
+                                    {{-- Excerpt --}}
                                     @if($featuredPost->excerpt)
                                     <p class="text-gray-700 text-sm leading-relaxed mb-2 line-clamp-3 font-light">
                                         {{ $featuredPost->excerpt }}
@@ -104,7 +104,7 @@
                                     </p>
                                     @endif
 
-                                    <!-- Read More -->
+                                    {{-- Read More --}}
                                     <footer class="flex items-center justify-between pt-2 border-t border-gray-200/60">
                                         <span class="text-emerald-600 font-semibold text-sm">
                                             Read Full Article →
@@ -118,16 +118,16 @@
                         </a>
                     </article>
 
-                    <!-- Right Column: Secondary Posts -->
+                    {{-- Right Column: Secondary Posts --}}
                     <div class="grid grid-cols-1 gap-6">
-                        <!-- Top Right: Single Post -->
+                        {{-- Top Right: Single Post --}}
                         @if(isset($recentPosts[1]))
                         @php $topRightPost = $recentPosts[1]; @endphp
                         <article class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                             <a href="{{ route('articles.show', $topRightPost->slug) }}" class="block"
                                 aria-label="Read blog post: {{ $topRightPost->title }}">
                                 <div class="flex">
-                                    <!-- Image Section -->
+                                    {{-- Image Section --}}
                                     <div class="w-1/3 shrink-0 relative">
                                         @if($topRightPost->featured_image_url)
                                         <img src="{{ $topRightPost->imageSize(280, 200, 85) }}"
@@ -146,7 +146,7 @@
                                         @endif
                                     </div>
 
-                                    <!-- Content Section -->
+                                    {{-- Content Section --}}
                                     <div class="w-2/3 p-4 flex flex-col justify-between">
                                         <header class="mb-2">
                                             <h2
@@ -154,7 +154,7 @@
                                                 {{ $topRightPost->title }}
                                             </h2>
 
-                                            <!-- Meta Information -->
+                                            {{-- Meta Information --}}
                                             <div class="flex items-center text-gray-600 text-xs mb-1 space-x-3">
                                                 @if($topRightPost->published_at)
                                                 <div class="flex items-center">
@@ -165,7 +165,7 @@
                                                 </div>
                                                 @endif
                                             </div>
-                                            <!-- Excerpt -->
+                                            {{-- Excerpt --}}
                                             @if($topRightPost->excerpt)
                                             <p
                                                 class="text-gray-700 text-sm leading-relaxed mb-2 line-clamp-2 font-light hidden sm:block">
@@ -179,7 +179,7 @@
                                             @endif
                                         </header>
 
-                                        <!-- Category & Stats -->
+                                        {{-- Category & Stats --}}
                                         <div class="flex items-center justify-between mt-auto">
                                             @if($topRightPost->blogCategory)
                                             <span class="text-gary-600 text-xs font-semibold">
@@ -199,14 +199,14 @@
                         </article>
                         @endif
 
-                        <!-- Bottom Right: Two Posts Side by Side -->
+                        {{-- Bottom Right: Two Posts Side by Side --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($recentPosts->slice(2, 2) as $index => $post)
                             <article class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                                 <a href="{{ route('articles.show', $post->slug) }}" class="block h-full"
                                     aria-label="Read blog post: {{ $post->title }}">
                                     <div class="flex flex-row md:flex-col h-full">
-                                        <!-- Image - Left on mobile, full width on desktop -->
+                                        {{-- Image - Left on mobile, full width on desktop --}}
                                         <div class="w-1/3 md:w-full relative overflow-hidden shrink-0">
                                             @if($post->featured_image_url)
                                             <img src="{{ $post->imageSize(120, 120, 85) }}" alt="{{ $post->title }}"
@@ -225,7 +225,7 @@
                                             @endif
                                         </div>
 
-                                        <!-- Content - Right on mobile, below image on desktop -->
+                                        {{-- Content - Right on mobile, below image on desktop --}}
                                         <div class="w-2/3 md:w-full p-4 flex flex-col flex-1">
                                             <header class="mb-2">
                                                 <h3
@@ -234,7 +234,7 @@
                                                 </h3>
                                             </header>
 
-                                            <!-- Meta Information -->
+                                            {{-- Meta Information --}}
                                             <div class="space-y-2 mb-1 flex-1">
                                                 @if($post->published_at)
                                                 <div class="flex items-center text-gray-500 text-xs">
@@ -243,7 +243,7 @@
                                                 @endif
                                             </div>
 
-                                            <!-- Footer -->
+                                            {{-- Footer --}}
                                             <footer
                                                 class="flex items-center justify-between text-xs text-gray-500 pt-1 border-t border-gray-100">
                                                 @if($post->blogCategory)
@@ -265,7 +265,7 @@
                 </div>
                 @endif
 
-                <!-- Second Row: 4-column grid -->
+                {{-- Second Row: 4-column grid --}}
                 @if($recentPosts->count() > 4)
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                     @foreach($recentPosts->slice(4, 4) as $post)
@@ -273,7 +273,7 @@
                         class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                         <a href="{{ route('articles.show', $post->slug) }}" class="block h-full"
                             aria-label="Read blog post: {{ $post->title }}">
-                            <!-- Image Section -->
+                            {{-- Image Section --}}
                             <div class="relative overflow-hidden">
                                 @if($post->featured_image_url)
                                 <img src="{{ $post->imageSize(300, 200, 85) }}" alt="{{ $post->title }}"
@@ -290,13 +290,13 @@
                                 </div>
                                 @endif
 
-                                <!-- Gradient Overlay -->
+                                {{-- Gradient Overlay --}}
                                 <div
                                     class="absolute inset-0 bg-linear-to-t from-black/20 via-transparent to-transparent">
                                 </div>
                             </div>
 
-                            <!-- Content Section -->
+                            {{-- Content Section --}}
                             <div class="p-4">
                                 <header class="mb-1">
                                     <h3
@@ -305,7 +305,7 @@
                                     </h3>
                                 </header>
 
-                                <!-- Meta Information -->
+                                {{-- Meta Information --}}
                                 <div class="space-y-2 mb-4">
                                     <div class="flex items-center text-gray-600 text-xs italic justify-between">
                                         @if($post->published_at)
@@ -314,7 +314,7 @@
                                         </time>
                                         @endif
 
-                                         <!-- Category Badge -->
+                                         {{-- Category Badge --}}
                                          @if($post->blogCategory)
                                          <span class="font-medium">
                                              {{ $post->blogCategory->name }}
@@ -329,7 +329,7 @@
                 </div>
                 @endif
             </div>
-            <!-- Mobile View All Link -->
+            {{-- Mobile View All Link --}}
             <div class="sm:hidden text-center mt-6">
                 <a href="{{ route('articles.index') }}"
                     class="inline-flex items-center text-red-600 hover:text-red-700 font-medium text-sm">
@@ -340,7 +340,7 @@
                 </a>
             </div>
 
-             <!-- Empty State -->
+             {{-- Empty State --}}
             @if($recentPosts->count() === 0)
             <div class="text-center py-12">
                 <svg class="w-16 h-16 text-gray-300 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

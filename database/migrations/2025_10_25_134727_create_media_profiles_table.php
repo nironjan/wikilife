@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->string('official_website')->nullable();
             $table->text('description')->nullable();
             $table->string('banner_image')->nullable();
+            $table->string('banner_img_caption')->nullable();
             $table->string('banner_file_id')->nullable();
             $table->string('official_email')->nullable();
             $table->string('signature_url')->nullable();

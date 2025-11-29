@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-blue-50/30 py-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Structured Data -->
+        {{-- Structured Data --}}
         <script type="application/ld+json">
             {!! json_encode($structuredData['article']) !!}
         </script>
@@ -14,7 +14,7 @@
             {!! json_encode($structuredData['organization']) !!}
         </script>
 
-        <!-- Breadcrumb -->
+        {{-- Breadcrumb --}}
         <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8" aria-label="Breadcrumb" itemscope itemtype="https://schema.org/BreadcrumbList">
             <div itemprop="itemListElement" itemscope itemtype="https://schema.org/ListItem">
                 <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors duration-200 flex items-center space-x-1" itemprop="item">
@@ -61,9 +61,9 @@
         </nav>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Main Content -->
+            {{-- Main Content --}}
             <div class="lg:col-span-8">
-                <!-- Article Header -->
+                {{-- Article Header --}}
                 <article class="bg-white rounded-lg shadow overflow-hidden border border-gray-100/50" itemscope itemtype="https://schema.org/BlogPosting">
                     @if($article->featured_image_url)
                         <div class="relative" itemprop="image" itemscope itemtype="https://schema.org/ImageObject">
@@ -81,7 +81,7 @@
                     @endif
 
                     <div class="p-6 lg:p-8">
-                        <!-- Category & Date -->
+                        {{-- Category & Date --}}
                         <div class="flex flex-wrap items-center justify-between mb-6 gap-4">
                             <div class="flex items-center space-x-3">
                                 @if($article->blogCategory)
@@ -113,19 +113,19 @@
                             </div>
                         </div>
 
-                        <!-- Title -->
+                        {{-- Title --}}
                         <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight tracking-tight" itemprop="headline">
                             {{ $article->title }}
                         </h1>
 
-                        <!-- Excerpt -->
+                        {{-- Excerpt --}}
                         @if($article->excerpt)
                             <p class="text-xl text-gray-600 mb-8 leading-relaxed font-medium" itemprop="description">
                                 {{ $article->excerpt }}
                             </p>
                         @endif
 
-                        <!-- Author & Stats -->
+                        {{-- Author & Stats --}}
                         <div class="flex flex-wrap items-center justify-between gap-6 mb-8 pb-8 border-b border-gray-200">
                             <div class="flex items-center space-x-4" itemprop="author" itemscope itemtype="https://schema.org/Person">
                                 @if($article->author)
@@ -169,7 +169,7 @@
                             </div>
                         </div>
 
-                        <!-- Article Content -->
+                        {{-- Article Content --}}
                         <div class="prose prose-lg max-w-none
                                   prose-headings:font-bold prose-headings:text-gray-900 prose-headings:leading-tight
                                   prose-p:text-gray-700 prose-p:leading-relaxed prose-p:text-lg
@@ -189,7 +189,7 @@
                             {!! $article->content !!}
                         </div>
 
-                        <!-- Tags -->
+                        {{-- Tags --}}
                         @if($article->tags && count($article->tags) > 0)
                             <div class="mt-12 pt-8 border-t border-gray-200">
                                 <div class="flex flex-wrap items-center gap-3">
@@ -210,7 +210,7 @@
                             </div>
                         @endif
 
-                        <!-- Share Buttons -->
+                        {{-- Share Buttons --}}
                         <div class="mt-12 pt-8 border-t border-gray-200">
                             <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                                 <span class="text-lg font-semibold text-gray-900">Share this article:</span>
@@ -222,7 +222,7 @@
                     </div>
                 </article>
 
-                <!-- Related Articles -->
+                {{-- Related Articles --}}
                 @if($relatedArticles->count() > 0)
                     <section class="mt-12" aria-labelledby="related-articles-heading">
                         <h2 id="related-articles-heading" class="text-2xl lg:text-3xl font-bold text-gray-900 mb-8 flex items-center">
@@ -280,10 +280,10 @@
                 @endif
             </div>
 
-            <!-- Sidebar -->
+            {{-- Sidebar --}}
             <div class="lg:col-span-4">
                 <div class="sticky top-6 space-y-8">
-                    <!-- Blog Categories -->
+                    {{-- Blog Categories --}}
                     <div class="bg-white rounded-lg shadow p-6 border border-gray-100/50">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 flex items-center">
                             <svg class="w-5 h-5 text-blue-500 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -309,7 +309,7 @@
                         </div>
                     </div>
 
-                    <!-- Popular Articles -->
+                    {{-- Popular Articles --}}
                     <livewire:front.blogs.popular-articles
                         :limit="5"
                         :show-ranking="true"

@@ -112,16 +112,49 @@ class Manage extends Component
      */
     public function getPeopleProperty()
     {
-        return People::active()
-            ->when($this->person_search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('name', 'like', "%{$this->person_search}%")
-                        ->orWhere('full_name', 'like', "%{$this->person_search}%");
-                });
-            })
+        // Get all active people first
+        $allPeople = People::active()
             ->orderBy('name')
             ->limit(50)
             ->get();
+
+        // If no search term, return all people
+        if (empty($this->person_search)) {
+            return $allPeople;
+        }
+
+        $searchTerm = strtolower(trim($this->person_search));
+
+        // Apply the same PHP filtering logic as search suggestions
+        return $allPeople->filter(function($person) use ($searchTerm) {
+            // Check name (case insensitive)
+            if (stripos($person->name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check full_name (case insensitive)
+            if ($person->full_name && stripos($person->full_name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check nicknames (case insensitive)
+            $nicknames = $person->nicknames ?? [];
+            foreach ($nicknames as $nickname) {
+                if (stripos($nickname, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            // Check professions (case insensitive)
+            $professions = $person->professions ?? [];
+            foreach ($professions as $profession) {
+                if (stripos($profession, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
     }
 
     /**

@@ -1,9 +1,9 @@
 <div class="min-h-screen bg-gray-50 py-8 animate-pulse">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Main Content -->
+            {{-- Main Content --}}
             <div class="lg:col-span-8 space-y-8">
-                <!-- Header -->
+                {{-- Header --}}
                 <div class="flex items-center space-x-3 mb-6">
                     <div class="w-10 h-10 bg-blue-200 rounded-lg"></div>
                     <div>
@@ -12,7 +12,7 @@
                     </div>
                 </div>
 
-                <!-- Filters -->
+                {{-- Filters --}}
                 <div class="bg-white rounded-xl shadow-sm p-6 border border-gray-100">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
                         <div class="w-full lg:w-1/2 h-10 bg-gray-200 rounded-lg"></div>
@@ -23,15 +23,15 @@
                     </div>
                 </div>
 
-                <!-- Article Cards -->
+                {{-- Article Cards --}}
                 <div class="space-y-6">
                     @for ($i = 0; $i < 4; $i++)
                         <div class="bg-white rounded-xl overflow-hidden border border-gray-100 shadow-sm">
                             <div class="flex flex-col md:flex-row">
-                                <!-- Image Placeholder -->
+                                {{-- Image Placeholder --}}
                                 <div class="md:w-2/5 h-56 bg-gray-200"></div>
 
-                                <!-- Content -->
+                                {{-- Content --}}
                                 <div class="md:w-3/5 p-4 space-y-4">
                                     <div class="flex justify-between items-center">
                                         <div class="h-4 w-24 bg-gray-200 rounded"></div>
@@ -53,9 +53,9 @@
                 </div>
             </div>
 
-            <!-- Sidebar -->
+            {{-- Sidebar --}}
             <div class="lg:col-span-4 space-y-8">
-                <!-- Categories -->
+                {{-- Categories --}}
                 <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
                     <div class="h-5 w-40 bg-gray-200 rounded mb-6"></div>
                     <div class="space-y-3">
@@ -68,7 +68,7 @@
                     </div>
                 </div>
 
-                <!-- Popular Articles -->
+                {{-- Popular Articles --}}
                 <div class="bg-white rounded-lg shadow-sm p-6 border border-gray-100">
                     <div class="h-5 w-36 bg-gray-200 rounded mb-6"></div>
                     <div class="space-y-4">

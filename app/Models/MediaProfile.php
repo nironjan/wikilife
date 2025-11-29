@@ -15,6 +15,7 @@ class MediaProfile extends Model
         'official_website',
         'description',
         'banner_image',
+        'banner_img_caption',
         'banner_file_id',
         'official_email',
         'signature_url',

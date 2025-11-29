@@ -79,7 +79,7 @@ class SearchBox extends Component
         $allPeople = People::active()
             ->verified()
             ->orderBy('view_count', 'desc')
-            ->limit(50) // Get enough records to filter from
+            ->limit(50)
             ->get(['id', 'name', 'slug', 'professions', 'profile_image', 'full_name', 'nicknames']);
 
         return $allPeople->filter(function($person) use ($searchTerm) {

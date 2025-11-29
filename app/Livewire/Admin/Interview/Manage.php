@@ -22,6 +22,7 @@ class Manage extends Component
     public $type = 'interview';
     public $title = '';
     public $description = '';
+    public $content = '';
     public $location = '';
     public $date = '';
     public $url = '';
@@ -45,6 +46,7 @@ class Manage extends Component
             'type' => 'required|in:interview,speech',
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
+            'content' => 'nullable|string',
             'location' => 'nullable|string|max:255',
             'date' => 'nullable|date',
             'url' => 'nullable|url|max:500',
@@ -77,6 +79,7 @@ class Manage extends Component
         $this->type = $interview->type;
         $this->title = $interview->title;
         $this->description = $interview->description;
+        $this->content = $interview->content;
         $this->location = $interview->location;
         $this->date = optional($interview->date)->format('Y-m-d');
         $this->url = $interview->url;
@@ -93,16 +96,49 @@ class Manage extends Component
      */
     public function getPeopleProperty()
     {
-        return People::where('status', 'active')
-            ->when($this->person_search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('name', 'like', "%{$this->person_search}%")
-                        ->orWhere('full_name', 'like', "%{$this->person_search}%");
-                });
-            })
+        // Get all active people first
+        $allPeople = People::active()
             ->orderBy('name')
             ->limit(50)
             ->get();
+
+        // If no search term, return all people
+        if (empty($this->person_search)) {
+            return $allPeople;
+        }
+
+        $searchTerm = strtolower(trim($this->person_search));
+
+        // Apply the same PHP filtering logic as search suggestions
+        return $allPeople->filter(function($person) use ($searchTerm) {
+            // Check name (case insensitive)
+            if (stripos($person->name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check full_name (case insensitive)
+            if ($person->full_name && stripos($person->full_name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check nicknames (case insensitive)
+            $nicknames = $person->nicknames ?? [];
+            foreach ($nicknames as $nickname) {
+                if (stripos($nickname, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            // Check professions (case insensitive)
+            $professions = $person->professions ?? [];
+            foreach ($professions as $profession) {
+                if (stripos($profession, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
     }
 
     /**
@@ -172,6 +208,7 @@ class Manage extends Component
                 'type' => $this->type,
                 'title' => $this->title,
                 'description' => $this->description,
+                'content' => $this->content,
                 'location' => $this->location,
                 'date' => $this->date ?: null,
                 'url' => $this->url,

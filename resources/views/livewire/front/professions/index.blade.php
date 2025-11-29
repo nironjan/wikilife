@@ -1,6 +1,6 @@
 <div class="min-h-screen bg-gray-50 py-8">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Header Section -->
+        {{-- Header Section --}}
         <div class="text-center mb-12">
             <h1 class="text-4xl font-bold text-gray-900 mb-4">Professions & Categories</h1>
             <p class="text-xl text-gray-600 max-w-3xl mx-auto mb-6">
@@ -8,10 +8,10 @@
             </p>
         </div>
 
-        <!-- Search and Filter Section -->
+        {{-- Search and Filter Section --}}
         <div class="bg-white rounded-lg shadow-sm p-6 mb-8">
             <div class="flex flex-col md:flex-row gap-4">
-                <!-- Search Input -->
+                {{-- Search Input --}}
                 <div class="flex-1">
                     <input
                         type="text"
@@ -21,7 +21,7 @@
                     >
                 </div>
 
-                <!-- Category Filter -->
+                {{-- Category Filter --}}
                 <div class="flex-1">
                     <select
                         wire:model.live="selectedCategory"
@@ -34,7 +34,7 @@
                     </select>
                 </div>
 
-                <!-- Clear Filters -->
+                {{-- Clear Filters --}}
                 @if($search || $selectedCategory)
                     <button
                         wire:click="clearFilters"
@@ -45,7 +45,7 @@
                 @endif
             </div>
 
-            <!-- Active Filters -->
+            {{-- Active Filters --}}
             @if($search || $selectedCategory)
                 <div class="mt-4 text-sm text-gray-600">
                     Showing {{ $filteredCount }} of {{ $totalCategories }} categories
@@ -59,7 +59,7 @@
             @endif
         </div>
 
-        <!-- Popular Professions -->
+        {{-- Popular Professions --}}
         @if(count($popularProfessions) > 0 && empty($search) && empty($selectedCategory))
             <div class="mb-8">
                 <h2 class="text-2xl font-bold text-gray-900 mb-4">Popular Professions</h2>
@@ -82,7 +82,7 @@
             </div>
         @endif
 
-        <!-- Categories Grid -->
+        {{-- Categories Grid --}}
         @if(count($categories) > 0)
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
                 @foreach($categories as $key => $category)
@@ -94,14 +94,14 @@
                         class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 p-6 border border-gray-200 group"
                     >
                         <div class="flex items-start space-x-4">
-                            <!-- Icon -->
+                            {{-- Icon --}}
                             <div class="flex-shrink-0 text-blue-600 group-hover:text-blue-700 transition-colors duration-200">
                                 <div class="w-12 h-12 bg-blue-50 rounded-lg flex items-center justify-center">
                                     {!! $category['icon'] !!}
                                 </div>
                             </div>
 
-                            <!-- Content -->
+                            {{-- Content --}}
                             <div class="flex-1 min-w-0">
                                 <h3 class="text-xl font-semibold text-gray-900 mb-2 group-hover:text-blue-600 transition-colors duration-200 line-clamp-1">
                                     {{ $category['name'] }}
@@ -123,7 +123,7 @@
                                 </div>
                             </div>
 
-                            <!-- Arrow -->
+                            {{-- Arrow --}}
                             <div class="flex-shrink-0 text-gray-400 group-hover:text-blue-600 transition-colors duration-200">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
@@ -134,7 +134,7 @@
                 @endforeach
             </div>
         @else
-            <!-- Empty State -->
+            {{-- Empty State --}}
             <div class="text-center py-12">
                 <div class="w-24 h-24 mx-auto mb-4 text-gray-400">
                     <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -151,7 +151,7 @@
                 </button>
             </div>
         @endif
-                <!-- Pagination -->
+                {{-- Pagination --}}
         <div class="mt-10">
             {{ $categories->links('components.pagination') }}
         </div>
@@ -159,7 +159,7 @@
         <livewire:front.popular-person.index />
     </div>
 
-    <!-- JSON-LD Structured Data -->
+    {{-- JSON-LD Structured Data --}}
     @isset($structuredData)
         @foreach($structuredData as $data)
             <script type="application/ld+json">

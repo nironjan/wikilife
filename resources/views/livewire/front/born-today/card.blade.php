@@ -5,12 +5,12 @@
 
 <div>
     @if(!$loading && $peopleBornToday->count() > 0)
-    <!-- Add Swiper CSS and JS CDN -->
+    {{-- Add Swiper CSS and JS CDN --}}
 
 
     <section class="py-12 bg-white border-t border-gray-100">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Section Header -->
+            {{-- Section Header --}}
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-3">
                     <div class="flex items-center justify-center w-10 h-10 bg-red-100 rounded-lg">
@@ -25,7 +25,7 @@
                     </div>
                 </div>
 
-                <!-- View All Link -->
+                {{-- View All Link --}}
                 <a href="{{ route('people.born-today') }}"
                     class="hidden sm:flex items-center text-red-600 hover:text-red-700 font-medium text-sm">
                     View All
@@ -35,16 +35,16 @@
                 </a>
             </div>
 
-            <!-- Swiper Slider -->
+            {{-- Swiper Slider --}}
             <div class="relative born-today-slider">
-                <!-- Slider Container -->
+                {{-- Slider Container --}}
                 <div class="swiper born-today-swiper">
                     <div class="swiper-wrapper">
                         @foreach($peopleBornToday as $person)
                         <div class="swiper-slide">
                             <div
                                 class="bg-white rounded-lg border border-gray-200 shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group h-full">
-                                <!-- Image Section -->
+                                {{-- Image Section --}}
                                 <div class="relative overflow-hidden">
                                     <a href="{{ route('people.people.show', $person->slug) }}" class="block">
                                         @if($person->profile_image)
@@ -63,7 +63,7 @@
                                         @endif
                                     </a>
 
-                                    <!-- Birthday Badge -->
+                                    {{-- Birthday Badge --}}
                                     <div class="absolute top-3 left-3">
                                         <div
                                             class="flex items-center px-3 py-1.5 rounded-full text-xs font-semibold text-white
@@ -81,7 +81,7 @@
 
                                 </div>
 
-                                <!-- Content Section -->
+                                {{-- Content Section --}}
                                 <div class="p-4">
                                     <a href="{{ route('people.people.show', $person->slug) }}" class="block">
                                         <h3
@@ -110,7 +110,7 @@
                     </div>
                 </div>
 
-                <!-- Navigation Buttons -->
+                {{-- Navigation Buttons --}}
                 <div
                     class="born-today-swiper-button-prev absolute left-0 top-1/2 transform -translate-y-1/2 -translate-x-4 z-10 bg-white border border-gray-200 rounded-full p-2 shadow-lg hover:shadow-xl transition duration-200 hover:bg-gray-50 cursor-pointer hidden sm:flex items-center justify-center">
                     <svg class="w-5 h-5 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -125,11 +125,11 @@
                     </svg>
                 </div>
 
-                <!-- Pagination Dots -->
+                {{-- Pagination Dots --}}
                 <div class="born-today-swiper-pagination flex justify-center space-x-2"></div>
             </div>
 
-            <!-- Mobile View All Link -->
+            {{-- Mobile View All Link --}}
             <div class="sm:hidden text-center mt-6">
                 <a href="{{ route('people.born-today') }}"
                     class="inline-flex items-center text-red-600 hover:text-red-700 font-medium text-sm">

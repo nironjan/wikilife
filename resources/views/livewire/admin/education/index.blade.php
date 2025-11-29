@@ -118,9 +118,10 @@
                                         </div>
                                         @if ($education->field_of_study)
                                             <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $education->field_of_study }}
+                                                {{ \Illuminate\Support\Str::limit($education->field_of_study, 17) }}
                                             </div>
                                         @endif
+
                                         @if ($education->grade_or_honors)
                                             <div class="text-xs text-green-600 dark:text-green-400 font-medium">
                                                 {{ $education->grade_or_honors }}
@@ -164,14 +165,7 @@
                                         {{ $education->location }}
                                     </div>
                                 @endif
-                                @if ($education->field_of_study)
-                                    <div class="text-xs">
-                                        <span
-                                            class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-800 dark:bg-indigo-800 dark:text-indigo-100">
-                                            {{ $education->field_of_study }}
-                                        </span>
-                                    </div>
-                                @endif
+
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                 {{ $education->duration }}

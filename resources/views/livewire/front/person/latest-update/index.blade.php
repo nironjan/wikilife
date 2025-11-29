@@ -1,8 +1,8 @@
 <div class="min-h-screen bg-gray-50">
-    <!-- Header -->
+    {{-- Header --}}
     <div class="bg-white border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4 py-6">
-            <!-- Breadcrumb -->
+            {{-- Breadcrumb --}}
             <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-4">
                 <a href="{{ url('/') }}" class="hover:text-blue-600">Home</a>
                 <span class="text-gray-400">›</span>
@@ -13,7 +13,7 @@
                 <span class="text-gray-900 font-medium">Latest Updates</span>
             </nav>
 
-            <!-- Page Header -->
+            {{-- Page Header --}}
             <div class="flex items-center justify-between">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900">Latest Updates</h1>
@@ -26,13 +26,13 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    {{-- Main Content --}}
     <div class="max-w-6xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Sidebar -->
+            {{-- Sidebar --}}
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg border border-gray-200 p-6 sticky top-8">
-                    <!-- Filter by Type -->
+                    {{-- Filter by Type --}}
                     <div class="mb-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Filter by Type</h3>
                         <div class="flex flex-col space-y-2">
@@ -70,7 +70,7 @@
                             @endforeach
                         </div>
 
-                        <!-- Pagination -->
+                        {{-- Pagination --}}
                         @if($updates->hasPages())
                         <div class="mb-12">
                             {{ $updates->links('components.pagination') }}
@@ -78,7 +78,7 @@
                         @endif
                     </div>
 
-                    <!-- Quick Stats -->
+                    {{-- Quick Stats --}}
                     <div class="border-t border-gray-200 pt-6">
                         <h3 class="text-lg font-semibold text-gray-900 mb-4">Update Stats</h3>
                         <div class="space-y-3">
@@ -95,14 +95,14 @@
                 </div>
             </div>
 
-            <!-- Updates List -->
+            {{-- Updates List --}}
             <div class="lg:col-span-3">
                 @if($updates->count() > 0)
                     <div class="space-y-6">
                         @foreach($updates as $update)
                             <article class="bg-white rounded-xl border border-gray-200 shadow-sm hover:shadow-md transition-all duration-200 overflow-hidden">
                                 <div class="p-6">
-                                    <!-- Update Header -->
+                                    {{-- Update Header --}}
                                     <div class="flex items-start justify-between mb-4">
                                         <div>
                                             <div class="flex items-center gap-3 mb-2">
@@ -127,12 +127,12 @@
                                         </div>
                                     </div>
 
-                                    <!-- Update Content -->
+                                    {{-- Update Content --}}
                                     <div class="prose prose-gray max-w-none text-gray-700 mb-4">
                                         {!! Str::limit(strip_tags($update->safe_html_content), 200) !!}
                                     </div>
 
-                                    <!-- Update Footer -->
+                                    {{-- Update Footer --}}
                                     <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                                         <div class="flex items-center space-x-4 text-sm text-gray-500">
                                             <span class="flex items-center">
@@ -155,12 +155,12 @@
                         @endforeach
                     </div>
 
-                    <!-- Pagination -->
+                    {{-- Pagination --}}
                     <div class="mt-8">
                         {{ $updates->links() }}
                     </div>
                 @else
-                    <!-- Empty State -->
+                    {{-- Empty State --}}
                     <div class="bg-white rounded-xl border border-gray-200 p-12 text-center">
                         <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -194,7 +194,7 @@
         </div>
     </div>
 
-    <!-- JSON-LD Structured Data -->
+    {{-- JSON-LD Structured Data --}}
     @isset($structuredData)
         @foreach($structuredData as $data)
             <script type="application/ld+json">

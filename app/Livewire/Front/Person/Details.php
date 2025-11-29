@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Front\Person;
 
+use App\Models\Assets;
 use App\Models\People;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
@@ -13,6 +14,9 @@ use Livewire\Component;
 class Details extends Component
 {
     public People $person;
+    public $relatedPersons;
+
+    public ?Assets $asset = null;
     public $slug;
 
     #[Url]
@@ -23,6 +27,7 @@ class Details extends Component
         $this->slug = $slug;
         $this->tab = $this->getTabFromSlug($tab);
         $this->loadPerson();
+        $this->loadRelatedPersons();
 
         $this->dispatch('page-loaded', slug: $slug);
     }
@@ -48,8 +53,11 @@ class Details extends Component
                 'speechesInterviews',
                 'photos',
                 'latestUpdates',
+                'assets'
             ])
             ->firstOrFail();
+
+        $this->asset = $this->person->assets;
 
         // Increment view count
         $this->person->incrementViewCount();
@@ -57,7 +65,21 @@ class Details extends Component
         $this->setProfessionalMetaTags();
     }
 
-    // Add this method to your App\Livewire\Front\Person\Details component
+    public function loadRelatedPersons(){
+        $this->relatedPersons = People::active()
+            ->verified()
+            ->where('state_code', $this->person->state_code)
+            ->where('id', '!=', $this->person->id)
+            ->whereNotNull('state_code')
+            ->where('state_code', '!=', '')
+            ->select([
+                'id', 'name', 'slug', 'full_name', 'profile_image',
+                'professions', 'state_code', 'view_count'
+            ])
+            ->orderBy('view_count', 'desc')
+            ->limit(14)
+            ->get();
+    }
 
     public function setActiveTab($tab)
     {
@@ -317,11 +339,50 @@ class Details extends Component
             ]
         ];
 
+        // FAQ structured data for lesser known facts
+        $faqStructuredData = null;
+        if ($this->person->lesserKnownFacts && $this->person->lesserKnownFacts->count() > 0) {
+            $faqQuestions = [];
+
+            foreach ($this->person->lesserKnownFacts->take(10) as $fact) {
+                $faqQuestions[] = [
+                    '@type' => 'Question',
+                    'name' => $this->escapeJsonString($fact->title),
+                    'acceptedAnswer' => [
+                        '@type' => 'Answer',
+                        'text' => $this->escapeJsonString(strip_tags($fact->fact))
+                    ]
+                ];
+            }
+
+            $faqStructuredData = [
+                '@context' => 'https://schema.org',
+                '@type' => 'FAQPage',
+                'mainEntity' => $faqQuestions,
+                'about' => [
+                    '@type' => 'Person',
+                    'name' => $this->person->name
+                ]
+            ];
+        }
+
         // Set all structured data
         meta()
             ->set('script:ld+json-person', json_encode($personStructuredData))
             ->set('script:ld+json-article', json_encode($articleStructuredData))
             ->set('script:ld+json-webpage', json_encode($webPageStructuredData));
+
+        if ($faqStructuredData) {
+            meta()->set('script:ld+json-faq', json_encode($faqStructuredData));
+        }
+    }
+
+    /**
+     * Escape JSON string for proper encoding
+     */
+    private function escapeJsonString($string)
+    {
+        return html_entity_decode(strip_tags($string));
     }
 
     private function setBreadcrumbStructuredData()
@@ -433,6 +494,7 @@ class Details extends Component
             'awards' => 'awards',
             'gallery' => 'gallery',
             'controversies' => 'controversies',
+            'speeches-interviews' => 'speeches_interviews',
         ];
 
         return $tabMapping[$slug] ?? 'overview';
@@ -448,6 +510,7 @@ class Details extends Component
             'awards' => 'awards',
             'gallery' => 'gallery',
             'controversies' => 'controversies',
+            'speeches_interviews' => 'speeches-interviews',
         ];
 
         return $tabSlugs[$tab] ?? $tab;
@@ -497,6 +560,11 @@ class Details extends Component
                 'count' => $this->person->controversies->count(),
                 'slug' => 'controversies'
             ],
+            'speeches_interviews' => [
+                'title' => 'Speeches & Interviews',
+                'count' => $this->person->speechesInterviews->count(),
+                'slug' => 'speeches-interviews'
+            ],
         ];
     }
 
@@ -533,6 +601,7 @@ class Details extends Component
             'awards' => $this->person->awards->count(),
             'gallery' => $this->person->photos->count(),
             'controversies' => $this->person->controversies->count(),
+            'speeches_interviews' => $this->person->speechesInterviews->count(),
         ];
 
         return $tab === 'overview' || ($counts[$tab] ?? 0) > 0;
@@ -546,6 +615,7 @@ class Details extends Component
         $count += $this->person->sportsCareers->count();
         $count += $this->person->entrepreneurs->count();
         $count += $this->person->literatureCareer->count();
+        $count += $this->person->speechesInterviews->count();
         return $count;
     }
 

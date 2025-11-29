@@ -86,28 +86,59 @@ class Index extends Component
 
     public function render()
     {
-        $educations = PersonEducation::with(['person'])
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('degree', 'like', "%{$this->search}%")
-                        ->orWhere('institution', 'like', "%{$this->search}%")
-                        ->orWhere('field_of_study', 'like', "%{$this->search}%")
-                        ->orWhere('grade_or_honors', 'like', "%{$this->search}%")
-                        ->orWhere('location', 'like', "%{$this->search}%")
-                        ->orWhereHas('person', function ($personQuery) {
-                            $personQuery->where('name', 'like', "%{$this->search}%")
-                                ->orWhere('full_name', 'like', "%{$this->search}%");
-                        });
-                });
-            })
-            ->when($this->institution, function ($query) {
-                $query->where('institution', 'like', "%{$this->institution}%");
-            })
-            ->when($this->degree, function ($query) {
-                $query->where('degree', 'like', "%{$this->degree}%");
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+        try {
+            $educations = PersonEducation::with(['person'])
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $searchTerm = $this->search;
+                        $searchTermLower = strtolower($searchTerm);
+                        $searchTermTitle = ucwords($searchTermLower);
+
+                        // Case-sensitive search on education fields
+                        $q->whereRaw('LOWER(degree) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(institution) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(field_of_study) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(grade_or_honors) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(location) LIKE ?', ["%{$searchTermLower}%"])
+
+                            // Search by person name and full name
+                            ->orWhereHas('person', function ($personQuery) use ($searchTermLower) {
+                                $personQuery->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                                    ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"]);
+                            })
+
+                            // Search by person nicknames
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->whereJsonContains('nicknames', $searchTerm)
+                                    ->orWhereJsonContains('nicknames', $searchTermLower)
+                                    ->orWhereJsonContains('nicknames', $searchTermTitle);
+                            })
+
+                            // Search by person professions
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->where(function ($professionQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                    $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermTitle}%"]);
+                                });
+                            });
+                    });
+                })
+                ->when($this->institution, function ($query) {
+                    $searchTerm = strtolower($this->institution);
+                    $query->whereRaw('LOWER(institution) LIKE ?', ["%{$searchTerm}%"]);
+                })
+                ->when($this->degree, function ($query) {
+                    $searchTerm = strtolower($this->degree);
+                    $query->whereRaw('LOWER(degree) LIKE ?', ["%{$searchTerm}%"]);
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(15);
+
+        } catch (\Exception $e) {
+            logger("PersonEducation search error: " . $e->getMessage());
+            $educations = PersonEducation::where('id', 0)->paginate(15);
+        }
 
         $institutions = PersonEducation::distinct()->pluck('institution')->filter()->toArray();
         $degrees = PersonEducation::distinct()->pluck('degree')->filter()->toArray();

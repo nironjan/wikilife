@@ -1,7 +1,7 @@
 <div>
     <section class="py-12 bg-gray-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Configurable Section Header -->
+            {{-- Configurable Section Header --}}
             <div class="flex items-center justify-between mb-8">
                 <div class="flex items-center space-x-3">
                     <div class="flex items-center justify-center w-10 h-10 bg-blue-100 rounded-lg">

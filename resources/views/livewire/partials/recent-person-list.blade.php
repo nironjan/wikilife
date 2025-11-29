@@ -1,6 +1,6 @@
 <div>
     <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <!-- Header -->
+        {{-- Header --}}
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-xl font-bold text-gray-900 flex items-center">
                 <svg class="w-5 h-5 text-blue-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -12,14 +12,14 @@
             <p class="text-sm text-gray-600 mt-1">Latest added verified profiles</p>
         </div>
 
-        <!-- Persons Grid -->
+        {{-- Persons Grid --}}
         <div class="p-4">
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                 @forelse($persons as $person)
                 <a href="{{ route('people.people.show', $person['slug']) }}"
                     class="group block bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-md transition-all duration-200 overflow-hidden"
                     wire:key="person-{{ $person['id'] }}">
-                    <!-- Image Container -->
+                    {{-- Image Container --}}
                     <div class="relative overflow-hidden bg-gray-100">
                         @if($person['profile_image_small'])
                         <img src="{{ $person['profile_image_small'] }}" alt="{{ $person['name'] }}"
@@ -35,7 +35,7 @@
                         </div>
                         @endif
 
-                        <!-- Status Badge -->
+                        {{-- Status Badge --}}
                         <div class="absolute top-2 right-2">
                             @if($person['is_alive'])
                             <span
@@ -53,15 +53,15 @@
                         </div>
                     </div>
 
-                    <!-- Content -->
+                    {{-- Content --}}
                     <div class="p-4">
-                        <!-- Title -->
+                        {{-- Title --}}
                         <h3
                             class="font-semibold text-gray-900 group-hover:text-blue-600 line-clamp-2 transition-colors duration-200 text-sm leading-tight mb-2">
                             {{ $person['seo_title'] }}
                         </h3>
 
-                        <!-- Profession & Age -->
+                        {{-- Profession & Age --}}
                         <div class="flex items-center justify-between text-xs text-gray-600">
                             @if($person['primary_profession'])
                             <span class="font-medium text-blue-600 bg-blue-50 px-2 py-1 rounded">
@@ -91,7 +91,7 @@
                 @endforelse
             </div>
 
-            <!-- View All Button -->
+            {{-- View All Button --}}
             @if(count($persons) > 0)
             <div class="mt-6 text-center">
                 <a href="{{ route('people.people.index') }}"

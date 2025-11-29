@@ -1,10 +1,10 @@
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
     @foreach($popularPersons as $person)
     <article class="bg-white rounded-lg shadow overflow-hidden group">
-        <!-- Simplified compact layout -->
+        {{-- Simplified compact layout --}}
         <a href="{{ route('people.people.show', $person->slug) }}" class="block p-4">
             <div class="flex items-center space-x-4">
-                <!-- Image -->
+                {{-- Image --}}
                 <div class="w-16 h-16 rounded-full overflow-hidden shrink-0">
                     @if($person->profile_image_url)
                     <img src="{{ $person->imageSize(64, 64, 80) }}"
@@ -19,7 +19,7 @@
                     @endif
                 </div>
 
-                <!-- Content -->
+                {{-- Content --}}
                 <div class="flex-1 min-w-0">
                     <h3 class="font-semibold text-gray-900 truncate">{{ $person->name }}</h3>
                     @if($person->primary_profession)

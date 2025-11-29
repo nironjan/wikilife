@@ -1,7 +1,7 @@
 <div>
 <div class="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 py-6">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Structured Data -->
+        {{-- Structured Data --}}
         <script type="application/ld+json">
             {!! json_encode($structuredData['breadcrumb']) !!}
         </script>
@@ -16,11 +16,11 @@
         </script>
 
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-            <!-- Main Content -->
+            {{-- Main Content --}}
             <div class="lg:col-span-8">
-                <!-- Header Section -->
+                {{-- Header Section --}}
                 <div class="bg-white rounded-2xl shadow-sm p-8 mb-8 border border-gray-100" itemscope itemtype="https://schema.org/WebPage">
-                    <!-- Breadcrumb -->
+                    {{-- Breadcrumb --}}
                     <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-6" aria-label="Breadcrumb">
                         <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors duration-200 flex items-center" itemprop="breadcrumb">
                             <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                         <span class="text-gray-900 font-semibold" itemprop="name">{{ $category->name }}</span>
                     </nav>
 
-                    <!-- Category Header -->
+                    {{-- Category Header --}}
                     <div class="flex items-center justify-between">
                         <div class="flex items-center space-x-4">
                             <div class="flex items-center justify-center w-14 h-14 bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl shadow-lg">
@@ -62,10 +62,10 @@
                     </div>
                 </div>
 
-                <!-- Search & Filters Section -->
+                {{-- Search & Filters Section --}}
                 <div class="bg-white rounded-2xl shadow-sm p-6 mb-8 border border-gray-100">
                     <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                        <!-- Search -->
+                        {{-- Search --}}
                         <div class="flex-1">
                             <div class="relative">
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none">
@@ -83,9 +83,9 @@
                             </div>
                         </div>
 
-                        <!-- Filters -->
+                        {{-- Filters --}}
                         <div class="flex flex-wrap gap-3">
-                            <!-- Sort By -->
+                            {{-- Sort By --}}
                             <div class="relative">
                                 <select
                                     wire:model.live="sortBy"
@@ -102,7 +102,7 @@
                                 </div>
                             </div>
 
-                            <!-- Clear Filters -->
+                            {{-- Clear Filters --}}
                             <button
                                 wire:click="clearFilters"
                                 class="px-6 py-4 text-base font-semibold text-gray-700 hover:text-gray-900 border border-gray-200 rounded-2xl hover:bg-gray-50 bg-white shadow-sm transition-all duration-200 hover:shadow-md flex items-center"
@@ -116,7 +116,7 @@
                         </div>
                     </div>
 
-                    <!-- Active Filters -->
+                    {{-- Active Filters --}}
                     @if($search || $sortBy !== 'latest')
                     <div class="mt-4 flex flex-wrap gap-2">
                         @if($search)
@@ -143,7 +143,7 @@
                     @endif
                 </div>
 
-                <!-- Articles List -->
+                {{-- Articles List --}}
                 @if($articles->count() > 0)
                     <div class="space-y-6" role="list" aria-label="{{ $category->name }} articles list">
                         @foreach($articles as $article)
@@ -153,7 +153,7 @@
                                 itemtype="https://schema.org/BlogPosting"
                             >
                                 <div class="flex flex-col md:flex-row">
-                                    <!-- Image Column -->
+                                    {{-- Image Column --}}
                                     <div class="md:w-2/5 relative">
                                         @if($article->featured_image)
                                             <img
@@ -177,9 +177,9 @@
                                         </div>
                                     </div>
 
-                                    <!-- Content Column -->
+                                    {{-- Content Column --}}
                                     <div class="md:w-3/5 p-6 lg:p-8">
-                                        <!-- Meta Information -->
+                                        {{-- Meta Information --}}
                                         <div class="flex items-center justify-between mb-4">
                                             <time
                                                 class="text-sm text-gray-500 font-medium flex items-center"
@@ -199,19 +199,19 @@
                                             </div>
                                         </div>
 
-                                        <!-- Title -->
+                                        {{-- Title --}}
                                         <h2 class="text-2xl font-bold text-gray-900 mb-4 leading-tight group-hover:text-blue-600 transition-colors duration-200 line-clamp-2" itemprop="headline">
                                             <a href="{{ route('articles.show', $article->slug) }}" itemprop="url">
                                                 {{ $article->title }}
                                             </a>
                                         </h2>
 
-                                        <!-- Excerpt -->
+                                        {{-- Excerpt --}}
                                         <p class="text-gray-600 text-base mb-6 leading-relaxed line-clamp-3" itemprop="description">
                                             {{ $article->excerpt }}
                                         </p>
 
-                                        <!-- Author & Read More -->
+                                        {{-- Author & Read More --}}
                                         <div class="flex items-center justify-between pt-4 border-t border-gray-100">
                                             <div class="flex items-center space-x-3" itemprop="author" itemscope itemtype="https://schema.org/Person">
                                                 <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold">
@@ -234,7 +234,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Hidden Schema Data -->
+                                {{-- Hidden Schema Data --}}
                                 <meta itemprop="dateModified" content="{{ $article->updated_at->toISOString() }}" />
                                 <meta itemprop="publisher" content="{{ config('app.name', 'WikiLife') }}" />
                                 <meta itemprop="mainEntityOfPage" content="{{ route('articles.show', $article->slug) }}" />
@@ -245,12 +245,12 @@
                         @endforeach
                     </div>
 
-                    <!-- Pagination -->
+                    {{-- Pagination --}}
                     <div class="mt-12 bg-white rounded-2xl shadow-sm p-6 border border-gray-100">
                         {{ $articles->links('components.pagination') }}
                     </div>
                 @else
-                    <!-- Empty State -->
+                    {{-- Empty State --}}
                     <div class="text-center py-20 bg-white rounded-2xl shadow-sm border border-gray-100">
                         <div class="w-24 h-24 bg-gradient-to-br from-gray-100 to-gray-200 rounded-3xl flex items-center justify-center mx-auto mb-6">
                             <svg class="w-12 h-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -289,10 +289,10 @@
                 @endif
             </div>
 
-            <!-- Sidebar -->
+            {{-- Sidebar --}}
             <div class="lg:col-span-4">
                 <div class="sticky top-6 space-y-8">
-                    <!-- Blog Categories -->
+                    {{-- Blog Categories --}}
                     <div class="bg-white rounded-2xl shadow-sm p-6 border border-gray-100" itemscope itemtype="https://schema.org/ItemList">
                         <h3 class="text-xl font-bold text-gray-900 mb-6 pb-4 border-b border-gray-100 flex items-center" itemprop="name">
                             <svg class="w-5 h-5 mr-3 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -320,7 +320,7 @@
                         </div>
                     </div>
 
-                    <!-- Popular Articles -->
+                    {{-- Popular Articles --}}
                     <livewire:front.blogs.popular-articles
                         :limit="5"
                         :show-ranking="true"

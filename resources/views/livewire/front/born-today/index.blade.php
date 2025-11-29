@@ -1,7 +1,7 @@
 <div class="min-h-screen bg-white">
-    <!-- SEO Meta Tags are automatically handled by the component -->
+    {{-- SEO Meta Tags are automatically handled by the component --}}
 
-    <!-- Breadcrumb -->
+    {{-- Breadcrumb --}}
     <div class="bg-gray-50 border-b border-gray-200">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
             <nav class="flex" aria-label="Breadcrumb">
@@ -26,9 +26,9 @@
         </div>
     </div>
 
-    <!-- Main Content -->
+    {{-- Main Content --}}
     <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <!-- Section Header -->
+        {{-- Section Header --}}
         <div class="flex items-center justify-between mb-8">
             <div class="flex items-center space-x-3">
                 <div class="flex items-center justify-center w-10 h-10 bg-green-100 rounded-lg">
@@ -42,7 +42,7 @@
                 </div>
             </div>
 
-            <!-- Date Display -->
+            {{-- Date Display --}}
             <div class="hidden sm:flex items-center px-4 py-2 bg-white rounded-lg border border-gray-200">
                 <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -52,12 +52,12 @@
         </div>
 
         @if($people->count() > 0)
-            <!-- People Grid -->
+            {{-- People Grid --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mb-12">
                 @foreach($people as $person)
                 <div class="bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden group border border-gray-100">
                     <a href="{{ route('people.people.show', $person->slug) }}" class="block">
-                        <!-- Profile Image with Age Badge -->
+                        {{-- Profile Image with Age Badge --}}
                         <div class="relative overflow-hidden">
                             @if($person->profile_image_url)
                             <img src="{{ $person->imageSize(400, 500, 85) }}"
@@ -72,7 +72,7 @@
                             </div>
                             @endif
 
-                            <!-- Status Badge -->
+                            {{-- Status Badge --}}
                             <div class="absolute top-3 left-3">
                                 <span class="px-2 py-1 rounded-full text-xs font-semibold {{ $person->is_alive ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800' }}">
                                     {{ $person->is_alive ? 'Alive' : 'Remembered' }}
@@ -80,7 +80,7 @@
                             </div>
                         </div>
 
-                        <!-- Person Info -->
+                        {{-- Person Info --}}
                         <div class="p-4">
                             <h2 class="font-bold text-lg text-gray-900 mb-2 group-hover:text-green-600 transition-colors line-clamp-1">
                                 {{ $person->name }}
@@ -92,7 +92,7 @@
                             </p>
                             @endif
 
-                            <!-- Birth Date -->
+                            {{-- Birth Date --}}
                             <div class="flex items-center text-xs text-gray-500 mb-3">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -100,7 +100,7 @@
                                 <span>Born {{ $person->birth_date?->format('M j, Y') }}</span>
                             </div>
 
-                            <!-- View Count -->
+                            {{-- View Count --}}
                             <div class="flex items-center justify-between pt-3 border-t border-gray-100">
                                 <div class="flex items-center text-xs text-gray-500">
                                     @if($person->age)
@@ -117,14 +117,14 @@
                 @endforeach
             </div>
 
-            <!-- Pagination -->
+            {{-- Pagination --}}
             @if($people->hasPages())
             <div class="mb-12">
                 {{ $people->links('components.pagination') }}
             </div>
             @endif
 
-            <!-- Browse All Personalities Section -->
+            {{-- Browse All Personalities Section --}}
             <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-8 border border-blue-100">
                 <div class="flex items-center justify-between">
                     <div class="flex items-center space-x-3">
@@ -139,7 +139,7 @@
                         </div>
                     </div>
 
-                    <!-- View All Link -->
+                    {{-- View All Link --}}
                     <a href="{{ route('people.people.index') }}"
                         class="hidden sm:flex items-center bg-white text-blue-600 hover:text-blue-700 font-medium px-6 py-3 rounded-lg border border-blue-200 hover:border-blue-300 transition-colors shadow-sm">
                         Browse All
@@ -149,7 +149,7 @@
                     </a>
                 </div>
 
-                <!-- Mobile View All Button -->
+                {{-- Mobile View All Button --}}
                 <div class="sm:hidden mt-4">
                     <a href="{{ route('people.people.index') }}"
                         class="w-full flex items-center justify-center bg-white text-blue-600 hover:text-blue-700 font-medium px-6 py-3 rounded-lg border border-blue-200 hover:border-blue-300 transition-colors shadow-sm">
@@ -162,7 +162,7 @@
             </div>
 
         @else
-            <!-- Empty State -->
+            {{-- Empty State --}}
             <div class="text-center py-16">
                 <div class="max-w-md mx-auto">
                     <div class="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -184,11 +184,11 @@
         @endif
     </div>
 
-    <!-- Popular Persons Section -->
+    {{-- Popular Persons Section --}}
     <livewire:front.popular-person.index lazy="on-load" />
 </div>
 
-<!-- Multiple Structured Data Schemas -->
+{{-- Multiple Structured Data Schemas --}}
 <script type="application/ld+json">
     @json($structuredData['itemList'])
 </script>

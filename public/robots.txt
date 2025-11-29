@@ -85,6 +85,7 @@ Disallow: /*.dmg$
 # Dynamic Content Restrictions
 Disallow: /search/
 Disallow: /people/search/
+Disallow: /people/search?q=
 
 # Allow Important Dynamic Pages
 Allow: /people/profession/

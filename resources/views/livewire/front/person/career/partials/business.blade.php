@@ -1,4 +1,4 @@
-<!-- Company Details -->
+{{-- Company Details --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Company Details</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -39,7 +39,7 @@
     </div>
 </div>
 
-<!-- Investment Information -->
+{{-- Investment Information --}}
 @if($careerData->investment)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Investment & Funding</h2>
@@ -64,7 +64,7 @@
     </div>
 @endif
 
-<!-- Timeline -->
+{{-- Timeline --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Career Timeline</h2>
     <div class="bg-white rounded-lg border border-gray-200 p-6">
@@ -95,7 +95,7 @@
     </div>
 </div>
 
-<!-- Notable Achievements -->
+{{-- Notable Achievements --}}
 @if($careerData->notable_achievements && count($careerData->notable_achievements) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Business Achievements</h2>
@@ -112,7 +112,7 @@
     </div>
 @endif
 
-<!-- Website Link -->
+{{-- Website Link --}}
 @if($careerData->website_url)
     <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <h3 class="font-semibold text-gray-900 mb-3 flex items-center">

@@ -4,24 +4,24 @@
     categoriesOpen: false
  }" @keydown.escape="searchOpen = false; mobileMenuOpen = false; categoriesOpen = false">
 
-    <!-- Top Bar - WikiHow Style -->
+    {{-- Top Bar - WikiHow Style --}}
     <div class="bg-white border-b border-gray-100">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-16">
-                <!-- Logo -->
+                {{-- Logo --}}
                 <div class="shrink-0 flex items-center">
                     <a href="{{ url('/') }}" class="flex items-center space-x-2">
                         <div class="w-10 h-10 bg-red-600 rounded-lg flex items-center justify-center">
                             <span class="text-white font-bold text-lg">W</span>
                         </div>
                         <div class="hidden sm:block">
-                            <span class="text-2xl font-bold text-gray-900">WikiLife</span>
+                            <span class="text-2xl font-bold text-gray-900">Wiki Life</span>
                             <span class="text-xs text-gray-500 block -mt-1">The Biography Encyclopedia</span>
                         </div>
                     </a>
                 </div>
 
-                <!-- Desktop Search Bar -->
+                {{-- Desktop Search Bar --}}
                 <div class="hidden lg:block w-full mx-8">
                     <livewire:front.search-box
                         variant="default"
@@ -30,9 +30,9 @@
                     />
                 </div>
 
-                <!-- Right Actions -->
+                {{-- Right Actions --}}
                 <div class="flex items-center space-x-4">
-                    <!-- Professions Dropdown -->
+                    {{-- Professions Dropdown --}}
                     <div class="hidden lg:block relative" x-data="{ open: false }">
                         <button @click="open = !open"
                             class="flex items-center cursor-pointer space-x-1 text-gray-700 hover:text-red-600 px-3 py-2 text-sm font-medium transition duration-200">
@@ -56,7 +56,7 @@
                         </div>
                     </div>
 
-                    <!-- Mobile Search Button -->
+                    {{-- Mobile Search Button --}}
                     <button @click="searchOpen = true" aria-label="Search"
                         class="lg:hidden p-2 cursor-pointer text-gray-600 hover:text-red-600 transition duration-200">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -65,7 +65,7 @@
                         </svg>
                     </button>
 
-                    <!-- Today's Birthdays -->
+                    {{-- Today's Birthdays --}}
                     <a href="{{ route('people.born-today') }}"
                         class="hidden sm:flex items-center px-3 py-2 bg-green-700 text-white text-sm font-medium rounded-lg hover:bg-green-800 transition duration-200 whitespace-nowrap shrink-0">
                         <svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -74,7 +74,7 @@
                         <span class="sr-only sm:not-sr-only sm:ml-2">Born Today</span>
                     </a>
 
-                    <!-- Mobile menu button -->
+                    {{-- Mobile menu button --}}
                     <button @click="mobileMenuOpen = !mobileMenuOpen"
                         class="lg:hidden p-2 text-gray-600 hover:text-red-600 transition duration-200 cursor-pointer">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -87,13 +87,13 @@
         </div>
     </div>
 
-    <!-- Mobile Search Overlay -->
+    {{-- Mobile Search Overlay --}}
     <div x-show="searchOpen" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0" x-transition:enter-end="opacity-100"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100"
         x-transition:leave-end="opacity-0" class="fixed inset-0 bg-white z-50 lg:hidden flex flex-col" x-cloak>
 
-        <!-- Header with Search - Fixed -->
+        {{-- Header with Search - Fixed --}}
         <div class="shrink-0 bg-white border-b border-gray-200">
             <div class="p-4">
                 <div class="flex items-center justify-between mb-4">
@@ -109,7 +109,7 @@
                     </button>
                 </div>
 
-                <!-- Search Box -->
+                {{-- Search Box --}}
                 <div class="relative">
                     <livewire:front.search-box
                         variant="compact"
@@ -120,9 +120,9 @@
             </div>
         </div>
 
-        <!-- Scrollable Content Area -->
+        {{-- Scrollable Content Area --}}
         <div class="flex-1 overflow-y-auto">
-            <!-- Quick Categories Section -->
+            {{-- Quick Categories Section --}}
             <div class="p-4 bg-gray-50 border-b border-gray-200">
                 <div class="flex items-center justify-between mb-3">
                     <h3 class="text-base font-semibold text-gray-900">Popular Categories</h3>
@@ -142,7 +142,7 @@
                     @endforeach
                 </div>
 
-                <!-- View All Categories -->
+                {{-- View All Categories --}}
                 <div class="mt-4 pt-3 border-t border-gray-200">
                     <a href="{{ route('people.profession.index') }}"
                         class="flex items-center justify-center w-full py-3 bg-white text-red-600 hover:text-red-700 hover:bg-red-50 font-medium rounded-xl border border-gray-200 transition duration-200 group">
@@ -155,11 +155,11 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
+            {{-- Quick Actions --}}
             <div class="p-4">
                 <h3 class="text-base font-semibold text-gray-900 mb-3">Quick Access</h3>
                 <div class="space-y-2">
-                    <!-- Born Today -->
+                    {{-- Born Today --}}
                     <a href="{{ route('people.born-today') }}"
                         class="flex items-center justify-between p-3 bg-gradient-to-r from-green-500 to-green-600 text-white rounded-xl hover:shadow-lg transition-all duration-200 group">
                         <div class="flex items-center">
@@ -179,7 +179,7 @@
                         </svg>
                     </a>
 
-                    <!-- Recent Updates -->
+                    {{-- Recent Updates --}}
                     <a href="{{ route('people.people.index') }}"
                         class="flex items-center justify-between p-3 bg-blue-50 text-blue-700 rounded-xl hover:bg-blue-100 transition duration-200 group border border-blue-200">
                         <div class="flex items-center">
@@ -199,7 +199,7 @@
                         </svg>
                     </a>
 
-                    <!-- Contribute -->
+                    {{-- Contribute --}}
                     <a href="#"
                         class="flex items-center justify-between p-3 bg-red-50 text-red-700 rounded-xl hover:bg-red-100 transition duration-200 group border border-red-200">
                         <div class="flex items-center">
@@ -221,7 +221,7 @@
                 </div>
             </div>
 
-            <!-- Footer Stats -->
+            {{-- Footer Stats --}}
             <div class="p-4 bg-gray-900 text-white">
                 <div class="grid grid-cols-3 gap-4 text-center">
                     <div>
@@ -244,7 +244,7 @@
         </div>
     </div>
 
-    <!-- Mobile Menu -->
+    {{-- Mobile Menu --}}
     <div x-show="mobileMenuOpen" x-transition:enter="transition ease-out duration-300"
         x-transition:enter-start="opacity-0 -translate-y-4" x-transition:enter-end="opacity-100 translate-y-0"
         x-transition:leave="transition ease-in duration-200" x-transition:leave-start="opacity-100 translate-y-0"
@@ -252,7 +252,7 @@
         class="lg:hidden bg-white border-t border-gray-200 shadow-lg fixed inset-0 z-40 mt-16 overflow-y-auto"
         x-cloak>
         <div class="p-4 space-y-6">
-            <!-- Professions Section -->
+            {{-- Professions Section --}}
             <div class="space-y-4">
                 <h3 class="text-lg font-semibold text-gray-900 border-b border-gray-200 pb-2">Professions</h3>
                 <div class="grid grid-cols-2 gap-3">
@@ -265,7 +265,7 @@
                 </div>
             </div>
 
-            <!-- Quick Actions -->
+            {{-- Quick Actions --}}
             <div class="space-y-3">
                 <a href="#"
                     class="w-full flex items-center justify-center px-4 py-3 bg-red-600 text-white text-sm font-medium rounded-lg hover:bg-red-700 transition duration-200">

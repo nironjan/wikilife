@@ -61,25 +61,61 @@ class Index extends Component
 
     public function render()
     {
-        $relations = PersonRelations::with(['person', 'relatedPerson'])
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->whereHas('person', function ($personQuery) {
-                        $personQuery->where('name', 'like', "%{$this->search}%")
-                            ->orWhere('full_name', 'like', "%{$this->search}%");
-                    })
-                        ->orWhereHas('relatedPerson', function ($relatedQuery) {
-                            $relatedQuery->where('name', 'like', "%{$this->search}%")
-                                ->orWhere('full_name', 'like', "%{$this->search}%");
+        try {
+            $relations = PersonRelations::with(['person', 'relatedPerson'])
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $searchTerm = $this->search;
+                        $searchTermLower = strtolower($searchTerm);
+                        $searchTermTitle = ucwords($searchTermLower);
+
+                        $q->whereHas('person', function ($personQuery) use ($searchTermLower, $searchTerm, $searchTermTitle) {
+                            // Person name search
+                            $personQuery->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                                ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"])
+
+                                // Person nicknames search
+                                ->orWhereJsonContains('nicknames', $searchTerm)
+                                ->orWhereJsonContains('nicknames', $searchTermLower)
+                                ->orWhereJsonContains('nicknames', $searchTermTitle)
+
+                                // Person professions search
+                                ->orWhere(function ($professionQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                    $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermTitle}%"]);
+                                });
                         })
-                        ->orWhere('related_person_name', 'like', "%{$this->search}%");
-                });
-            })
-            ->when($this->relationType, function ($query) {
-                $query->where('relation_type', $this->relationType);
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+                        ->orWhereHas('relatedPerson', function ($relatedQuery) use ($searchTermLower, $searchTerm, $searchTermTitle) {
+                            // Related person name search
+                            $relatedQuery->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                                ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"])
+
+                                // Related person nicknames search
+                                ->orWhereJsonContains('nicknames', $searchTerm)
+                                ->orWhereJsonContains('nicknames', $searchTermLower)
+                                ->orWhereJsonContains('nicknames', $searchTermTitle)
+
+                                // Related person professions search
+                                ->orWhere(function ($professionQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                    $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermTitle}%"]);
+                                });
+                        })
+                        ->orWhereRaw('LOWER(related_person_name) LIKE ?', ["%{$searchTermLower}%"]);
+                    });
+                })
+                ->when($this->relationType, function ($query) {
+                    $query->where('relation_type', $this->relationType);
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(15);
+
+        } catch (\Exception $e) {
+            logger("PersonRelations search error: " . $e->getMessage());
+            $relations = PersonRelations::where('id', 0)->paginate(15);
+        }
 
         $relationTypes = [
             'parent' => 'Parent',

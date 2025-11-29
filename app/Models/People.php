@@ -20,10 +20,13 @@ class People extends Model
         'full_name',
         'nicknames',
         'cover_image',
+        'cover_img_caption',
         'cover_file_id',
         'profile_image',
+        'profile_image_caption',
         'profile_img_file_id',
         'about',
+        'early_life',
         'gender',
         'birth_date',
         'death_date',
@@ -33,6 +36,7 @@ class People extends Model
         'age',
         'hometown',
         'address',
+        'state_code',
         'nationality',
         'religion',
         'caste',
@@ -93,6 +97,12 @@ class People extends Model
     }
 
     // ====================== ATTRIBUTES =====================
+
+    public function getStateNameAttribute()
+    {
+        return config('indian_states.all.' . $this->state_code);
+    }
+
 
     public function getDisplayNameAttribute()
     {

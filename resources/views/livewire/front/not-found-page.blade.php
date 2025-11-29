@@ -1,36 +1,28 @@
 <div class="min-h-screen bg-gradient-to-br from-white to-gray-50 dark:from-gray-900 dark:to-gray-800 py-12">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Search Box -->
-        <div class="max-w-2xl mx-auto mb-12">
-            <livewire:front.search-box
-                variant="large"
-                placeholder="Search biographies, people, professions..."
-                :show-trending="true"
-            />
-        </div>
 
-        <!-- Main Content -->
+        {{-- Main Content --}}
         <div class="text-center">
-            <!-- Animated 404 Illustration -->
+            {{-- Animated 404 Illustration --}}
             <div class="relative mb-8">
                 <div class="mx-auto w-64 h-64 relative">
-                    <!-- Main SVG -->
+                    {{-- Main SVG --}}
                     <svg class="w-full h-full text-gray-300 dark:text-gray-600" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <!-- Book/Profile Silhouette -->
+                        {{-- Book/Profile Silhouette --}}
                         <path d="M50 40C50 34.4772 54.4772 30 60 30H140C145.523 30 150 34.4772 150 40V160C150 165.523 145.523 170 140 170H60C54.4772 170 50 165.523 50 160V40Z"
                               fill="currentColor" fill-opacity="0.1" stroke="currentColor" stroke-width="2"/>
 
-                        <!-- Magnifying Glass -->
+                        {{-- Magnifying Glass --}}
                         <circle cx="130" cy="70" r="25" stroke="currentColor" stroke-width="2" fill="none"/>
                         <path d="M145 85L160 100" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
 
-                        <!-- Question Mark -->
+                        {{-- Question Mark --}}
                         <path d="M80 70C80 67.7909 81.7909 66 84 66C86.2091 66 88 67.7909 88 70C88 72.2091 86.2091 74 84 74C81.7909 74 80 72.2091 80 70Z"
                               fill="currentColor"/>
                         <path d="M84 50V60M84 78V90" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
                     </svg>
 
-                    <!-- Floating Elements -->
+                    {{-- Floating Elements --}}
                     <div class="absolute top-8 left-12 animate-bounce">
                         <svg class="w-8 h-8 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"></path>
@@ -49,19 +41,19 @@
                 </div>
             </div>
 
-            <!-- Error Message -->
+            {{-- Error Message --}}
             <div class="mb-12">
                 <h1 class="text-6xl font-bold text-gray-900 dark:text-white mb-4">404</h1>
                 <h2 class="text-3xl font-semibold text-gray-700 dark:text-gray-300 mb-4">
-                    Biography Not Found
+                    Not Found
                 </h2>
                 <p class="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
-                    The biography page you're looking for doesn't exist or may have been moved.
+                    The page you're looking for doesn't exist or may have been moved.
                     Let's help you find what you're looking for.
                 </p>
             </div>
 
-            <!-- Quick Actions -->
+            {{-- Quick Actions --}}
             <div class="flex flex-col sm:flex-row gap-4 justify-center mb-16">
                 <a href="{{ route('home') }}"
                    class="inline-flex items-center px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors duration-200">
@@ -81,7 +73,7 @@
             </div>
         </div>
 
-        <!-- Suggested People -->
+        {{-- Suggested People --}}
         @if(count($suggestedPeople) > 0)
         <div class="max-w-4xl mx-auto mb-16">
             <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-8 text-center">
@@ -128,7 +120,7 @@
         </div>
         @endif
 
-        <!-- Popular People -->
+        {{-- Popular People --}}
         @if(count($popularPeople) > 0)
         <div class="max-w-4xl mx-auto">
             <h3 class="text-2xl font-semibold text-gray-900 dark:text-white mb-8 text-center">
@@ -179,7 +171,7 @@
         </div>
         @endif
 
-        <!-- Help Section -->
+        {{-- Help Section --}}
         <div class="max-w-3xl mx-auto mt-16 text-center">
             <div class="bg-blue-50 dark:bg-blue-900/20 rounded-2xl p-8 border border-blue-200 dark:border-blue-800">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">

@@ -59,7 +59,7 @@ class Politician extends Model
     // ========= RELATIONS ============
     public function person()
     {
-        return $this->belongsTo(People::class);
+        return $this->belongsTo(People::class, 'person_id');
     }
 
     public function awards()

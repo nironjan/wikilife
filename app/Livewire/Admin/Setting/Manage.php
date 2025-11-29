@@ -40,6 +40,7 @@ class Manage extends Component
     public $media_description = '';
     public $media_official_email = '';
     public $media_banner_image = null;
+    public $media_banner_img_caption = null;
     public $media_existing_banner_image = null;
     public $media_signature = null;
     public $media_existing_signature = null;
@@ -82,6 +83,7 @@ class Manage extends Component
             'media_description' => 'nullable|string',
             'media_official_email' => 'nullable|email|max:255',
             'media_banner_image' => 'nullable|image|max:5120',
+            'media_banner_img_caption' => 'nullable|string|max:255',
             'media_signature' => 'nullable|image|max:2048',
 
             // Social Links Rules
@@ -114,7 +116,7 @@ class Manage extends Component
 
         // Load Assets
         if ($person->assets) {
-            $this->assets_currency = $person->assets->currency ?? 'USD';
+            $this->assets_currency = $person->assets->currency ?? 'INR';
             $this->assets_income = $person->assets->income;
             $this->assets_income_source = $person->assets->income_source;
             $this->assets_current_assets = $person->assets->current_assets;
@@ -134,6 +136,7 @@ class Manage extends Component
             $this->media_description = $person->mediaProfile->description;
             $this->media_official_email = $person->mediaProfile->official_email;
             $this->media_existing_banner_image = $person->mediaProfile->banner_image;
+            $this->media_banner_img_caption = $person->media_banner_img_caption;
             $this->media_existing_signature = $person->mediaProfile->signature_url;
         }
 
@@ -279,7 +282,7 @@ class Manage extends Component
         $this->assets_references = array_values($this->assets_references);
     }
 
-    // Media Profile Methods
+    // Save media Profile Methods
     public function saveMediaProfile()
     {
         $this->validate([
@@ -287,6 +290,7 @@ class Manage extends Component
             'media_description' => 'nullable|string',
             'media_official_email' => 'nullable|email|max:255',
             'media_banner_image' => 'nullable|image|max:5120',
+            'media_banner_img_caption' => 'nullable|string|max:255',
             'media_signature' => 'nullable|image|max:2048',
         ]);
 
@@ -296,6 +300,7 @@ class Manage extends Component
                     'official_website' => $this->media_official_website,
                     'description' => $this->media_description,
                     'official_email' => $this->media_official_email,
+                    'banner_img_caption' => $this->media_banner_img_caption,
                 ];
 
                 $person = People::findOrFail($this->personId);

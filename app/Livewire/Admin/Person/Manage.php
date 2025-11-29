@@ -5,6 +5,7 @@ namespace App\Livewire\Admin\Person;
 use App\Models\People;
 use App\Services\ImageKitService;
 use Exception;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
@@ -32,11 +33,14 @@ class Manage extends Component
     // Media
     public $cover_image = null;
     public $profile_image = null;
+    public $cover_img_caption = '';
+    public $profile_image_caption = '';
     public $existing_cover_image = null;
     public $existing_profile_image = null;
 
     // Biography
     public $about = '';
+    public $early_life = '';
     public $gender = '';
     public $birth_date = null;
     public $death_date = null;
@@ -47,6 +51,7 @@ class Manage extends Component
     public $address = '';
 
     // Background
+    public $state_code = '';
     public $nationality = '';
     public $religion = '';
     public $caste = '';
@@ -83,6 +88,7 @@ class Manage extends Component
 
         // Step 2
         'about' => 'nullable|string',
+        'early_life' => 'nullable|string',
         'gender' => 'required|in:male,female,other',
         'birth_date' => 'nullable|date',
         'death_date' => 'nullable|date|after:birth_date',
@@ -93,6 +99,7 @@ class Manage extends Component
         'address' => 'nullable|string|max:500',
 
         // Step 3
+        'state_code' => 'nullable|string|max:255',
         'nationality' => 'nullable|string|max:100',
         'religion' => 'nullable|string|max:100',
         'caste' => 'nullable|string|max:100',
@@ -111,7 +118,9 @@ class Manage extends Component
 
         // Step 4
         'cover_image' => 'nullable|image|max:5120',
+        'cover_img_caption' => 'nullable|string|max:255',
         'profile_image' => 'nullable|image|max:5120',
+        'profile_image_caption' => 'nullable|string|max:255',
         'status' => 'required|in:active,inactive,deceased',
         'verified' => 'boolean',
 
@@ -267,15 +276,21 @@ class Manage extends Component
         $this->existing_profile_image = $person->profile_image;
 
         $this->about = $person->about;
+        $this->early_life = $person->early_life;
         $this->gender = $person->gender;
-        $this->birth_date = optional($person->birth_date)->format('Y-m-d');
-        $this->death_date = optional($person->death_date)->format('Y-m-d');
+        $this->birth_date = $person->birth_date
+            ? Carbon::parse($person->birth_date)->format('Y-m-d')
+            : null;
+        $this->death_date = $person->death_date
+            ? Carbon::parse($person->death_date)->format('Y-m-d')
+            : null;
         $this->place_of_birth = $person->place_of_birth;
         $this->place_of_death = $person->place_of_death;
         $this->death_cause = $person->death_cause;
         $this->hometown = $person->hometown;
         $this->address = $person->address;
 
+        $this->state_code = $person->state_code;
         $this->nationality = $person->nationality;
         $this->religion = $person->religion;
         $this->caste = $person->caste;
@@ -289,6 +304,9 @@ class Manage extends Component
         $this->favourite_things = $this->convertToKeyValue($person->favourite_things);
 
         $this->references = $person->references ?? [];
+
+        $this->cover_img_caption = $person->cover_img_caption;
+        $this->profile_image_caption = $person->profile_image_caption;
 
         $this->status = $person->status;
         $this->verified = $person->verified;
@@ -323,6 +341,7 @@ class Manage extends Component
             ],
             2 => [
                 'about' => 'nullable|string',
+                'early_life' => 'nullable|string',
                 'gender' => 'required|in:male,female,other',
                 'birth_date' => 'nullable|date',
                 'death_date' => 'nullable|date|after:birth_date',
@@ -333,6 +352,7 @@ class Manage extends Component
                 'address' => 'nullable|string|max:500',
             ],
             3 => [
+                'state_code' => 'nullable|string|max:255',
                 'nationality' => 'nullable|string|max:100',
                 'religion' => 'nullable|string|max:100',
                 'caste' => 'nullable|string|max:100',
@@ -350,7 +370,9 @@ class Manage extends Component
             ],
             4 => [
                 'cover_image' => 'nullable|image|max:5120',
+                'cover_img_caption' => 'nullable|string|max:255',
                 'profile_image' => 'nullable|image|max:5120',
+                'profile_image_caption' => 'nullable|string|max:255',
                 'status' => 'required|in:active,inactive,deceased',
                 'verified' => 'boolean',
             ]
@@ -429,14 +451,16 @@ class Manage extends Component
                 'full_name' => $this->full_name,
                 'nicknames' => array_filter($this->nicknames),
                 'about' => $this->about,
+                'early_life' => $this->early_life,
                 'gender' => $this->gender,
-                'birth_date' => $this->birth_date,
-                'death_date' => $this->death_date,
+                'birth_date' => $this->birth_date ?: null,
+                'death_date' => $this->death_date ?: null,
                 'place_of_birth' => $this->place_of_birth,
                 'place_of_death' => $this->place_of_death,
                 'death_cause' => $this->death_cause,
                 'hometown' => $this->hometown,
                 'address' => $this->address,
+                'state_code' => $this->state_code,
                 'nationality' => $this->nationality,
                 'religion' => $this->religion,
                 'caste' => $this->caste,
@@ -447,6 +471,8 @@ class Manage extends Component
                 'physical_stats' => $this->convertToAssociativeArray($this->physical_stats),
                 'favourite_things' => $this->convertToAssociativeArray($this->favourite_things),
                 'references' => $this->references,
+                'cover_img_caption' => $this->cover_img_caption,
+                'profile_image_caption' => $this->profile_image_caption,
                 'status' => $this->status,
                 'verified' => $this->verified,
                 'created_by' => Auth::id(),
@@ -593,7 +619,9 @@ class Manage extends Component
 
     public function render()
     {
-        return view('livewire.admin.person.manage');
+        $indianStates = config('indian_states.all', []);
+
+        return view('livewire.admin.person.manage', compact('indianStates'));
     }
 
 }

@@ -1,6 +1,6 @@
 <div>
-<div class="bg-white min-h-screen pb-20"> <!-- Added bottom padding for mobile tab -->
-    <!-- SEO-Friendly Header Section -->
+<div class="bg-white min-h-screen pb-20"> {{-- Added bottom padding for mobile tab --}}
+    {{-- SEO-Friendly Header Section --}}
     <div class="bg-gray-50 border-b">
         <div class="container mx-auto px-4 py-8">
             <div class="text-center">
@@ -11,7 +11,7 @@
                 </p>
             </div>
 
-            <!-- Desktop Category Quick Links -->
+            {{-- Desktop Category Quick Links --}}
             <div class="mt-8 max-w-6xl mx-auto hidden lg:block">
                 <div class="border-t border-gray-200 pt-6">
                     <h3 class="text-sm font-medium text-gray-700 mb-4">Browse by Category:</h3>
@@ -35,7 +35,7 @@
         </div>
     </div>
 
-    <!-- Breadcrumb -->
+    {{-- Breadcrumb --}}
     <div class="max-w-6xl mx-auto px-4 py-4">
         <nav class="flex" aria-label="Breadcrumb">
             <ol class="flex items-center space-x-2 text-sm">
@@ -74,13 +74,13 @@
         </nav>
     </div>
 
-    <!-- Main Content Grid -->
+    {{-- Main Content Grid --}}
     <div class="max-w-6xl mx-auto px-4 py-8">
         <div class="grid grid-cols-1 lg:grid-cols-4 gap-8">
-            <!-- Left Sidebar - Search & Filters -->
+            {{-- Left Sidebar - Search & Filters --}}
             <div class="lg:col-span-1">
                 <div class="bg-white rounded-lg border border-gray-200 p-6 sticky top-4">
-                    <!-- Search -->
+                    {{-- Search --}}
                     <div class="mb-6">
                         <label for="search" class="block text-sm font-semibold text-gray-900 mb-3">Search Personalities</label>
                         <div class="relative">
@@ -94,7 +94,7 @@
                         </div>
                     </div>
 
-                    <!-- Category Filter -->
+                    {{-- Category Filter --}}
                     <div class="mb-6">
                         <label for="category" class="block text-sm font-semibold text-gray-900 mb-3">Category</label>
                         <select id="category" wire:model.live="category"
@@ -106,7 +106,7 @@
                         </select>
                     </div>
 
-                    <!-- Profession Filter -->
+                    {{-- Profession Filter --}}
                     <div class="mb-6">
                         <label for="profession" class="block text-sm font-semibold text-gray-900 mb-3">Profession</label>
                         <select id="profession" wire:model.live="profession"
@@ -130,7 +130,7 @@
                         </select>
                     </div>
 
-                    <!-- Active Filters -->
+                    {{-- Active Filters --}}
                     @if($search || $profession || $category)
                     <div class="border-t border-gray-200 pt-6">
                         <h4 class="text-sm font-semibold text-gray-900 mb-3">Active Filters</h4>
@@ -173,7 +173,7 @@
                     </div>
                     @endif
 
-                    <!-- Results Count -->
+                    {{-- Results Count --}}
                     @if($people->count() > 0)
                     <div class="border-t border-gray-200 pt-6">
                         <div class="text-center">
@@ -185,10 +185,10 @@
                 </div>
             </div>
 
-            <!-- Right Content - People Grid -->
+            {{-- Right Content - People Grid --}}
             <div class="lg:col-span-3">
                 @if($people->count() > 0)
-                <!-- Mobile Results Info -->
+                {{-- Mobile Results Info --}}
                 <div class="lg:hidden mb-6 p-4 bg-blue-50 rounded-lg">
                     <p class="text-sm text-blue-800">
                         Showing <span class="font-semibold">{{ $people->firstItem() }}-{{ $people->lastItem() }}</span>
@@ -196,12 +196,12 @@
                     </p>
                 </div>
 
-                <!-- People Grid -->
+                {{-- People Grid --}}
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     @foreach($people as $person)
                     <div class="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden group hover:shadow-md transition-all duration-300">
                         <a href="{{ route('people.people.show', $person->slug) }}" class="block">
-                            <!-- Profile Image -->
+                            {{-- Profile Image --}}
                             <div class="aspect-w-3 aspect-h-4 bg-gray-100 overflow-hidden">
                                 @if($person->profile_image_url)
                                 <img src="{{ $person->imageSize(300, 400, 80) }}"
@@ -218,7 +218,7 @@
                                 @endif
                             </div>
 
-                            <!-- Person Info -->
+                            {{-- Person Info --}}
                             <div class="p-4">
                                 <h2 class="font-bold text-gray-900 text-lg mb-2 line-clamp-1 group-hover:text-blue-600 transition-colors">
                                     {{ $person->display_name }}
@@ -230,7 +230,7 @@
                                 </p>
                                 @endif
 
-                                <!-- Age and Status -->
+                                {{-- Age and Status --}}
                                 <div class="flex items-center justify-between text-xs">
                                     @if($person->age)
                                     <span class="text-gray-500">{{ $person->age }} years</span>
@@ -245,13 +245,13 @@
                     @endforeach
                 </div>
 
-                <!-- Pagination -->
+                {{-- Pagination --}}
                 <div class="mt-12">
                     {{ $people->links('components.pagination') }}
                 </div>
 
                 @else
-                <!-- No Results -->
+                {{-- No Results --}}
                 <div class="text-center py-16 bg-white rounded-xl border-2 border-dashed border-gray-200">
                     <svg class="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
@@ -277,7 +277,7 @@
         </div>
     </div>
 
-    <!-- Mobile Bottom Category Tabs -->
+    {{-- Mobile Bottom Category Tabs --}}
     <div class="lg:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 shadow-lg z-40">
         <div class="px-4 py-3">
             <h4 class="text-sm font-semibold text-gray-900 mb-3 px-2">Browse Categories</h4>
@@ -300,7 +300,7 @@
     </div>
 </div>
 
-<!-- Add this CSS for hiding scrollbar on mobile -->
+{{-- Add this CSS for hiding scrollbar on mobile --}}
 <style>
     .scrollbar-hide {
         -ms-overflow-style: none;
@@ -315,7 +315,7 @@
 
 </div>
 
-<!-- Structured Data for SEO -->
+{{-- Structured Data for SEO --}}
 <script type="application/ld+json">
     @json($structuredData['itemList'])
 </script>

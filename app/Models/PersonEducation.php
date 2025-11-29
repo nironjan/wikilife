@@ -53,16 +53,19 @@ class PersonEducation extends Model
 
 
     // ======== ATTRIBUTES ===========
-    public function getDurationAttribute()
+   public function getDurationAttribute()
     {
         if ($this->start_year && $this->end_year) {
             return "{$this->start_year} - {$this->end_year}";
         } elseif ($this->start_year) {
             return "Since {$this->start_year}";
+        } elseif ($this->end_year) {
+            return "Until {$this->end_year}";
         }
 
         return 'N/A';
     }
+
 
     public function getIsCompletedAttribute()
     {

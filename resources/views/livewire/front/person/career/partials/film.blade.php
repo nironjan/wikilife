@@ -1,8 +1,8 @@
-<!-- Movie Details -->
+{{-- Movie Details --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Movie Details</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Role and Profession -->
+        {{-- Role and Profession --}}
         <div class="space-y-4">
             <div>
                 <h3 class="font-semibold text-gray-900 mb-2">Role</h3>
@@ -18,7 +18,7 @@
             </div>
         </div>
 
-        <!-- Release and Production -->
+        {{-- Release and Production --}}
         <div class="space-y-4">
             @if($careerData->release_date)
             <div>
@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<!-- Genres -->
+{{-- Genres --}}
 @if($careerData->genres && count($careerData->genres) > 0)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Genres</h2>
@@ -54,7 +54,7 @@
     </div>
 @endif
 
-<!-- Box Office Collection -->
+{{-- Box Office Collection --}}
 @if($careerData->box_office_collection)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Box Office Performance</h2>
@@ -79,7 +79,7 @@
     </div>
 @endif
 
-<!-- Description -->
+{{-- Description --}}
 @if($careerData->description)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">About the Movie</h2>
@@ -96,7 +96,7 @@
     </div>
 @endif
 
-<!-- Verification Status -->
+{{-- Verification Status --}}
 <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
     <div class="flex items-center">
         <svg class="w-5 h-5 mr-3 {{ $careerData->is_verified ? 'text-green-600' : 'text-yellow-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">

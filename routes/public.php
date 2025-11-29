@@ -43,6 +43,9 @@ Route::prefix('people')->name('people.')->middleware(['web', 'cache.headers:no_s
         // Controversy
         Route::get('/controversies/{slug}', \App\Livewire\Front\Person\ControversyDetails::class)->name('controversies.show');
 
+        // Speeches & Interviews
+        Route::get('/speeches-interviews/{slug}', \App\Livewire\Front\Person\Speeches::class)->name('speeches.show');
+
         // Career
         Route::get('/career/{slug}', \App\Livewire\Front\Person\Career\Details::class)->name('career.show');
     });

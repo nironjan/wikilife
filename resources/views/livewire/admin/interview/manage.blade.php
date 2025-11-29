@@ -121,15 +121,7 @@
                         <div class="relative">
                             <x-flux::input wire:model="title"
                                 placeholder="Enter a compelling title for this media appearance..."
-                                class="pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200" />
-                            <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor"
-                                    viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z">
-                                    </path>
-                                </svg>
-                            </div>
+                                class="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200" />
                         </div>
                         @error('title')
                             <p class="text-sm text-red-600 dark:text-red-400 flex items-center mt-1">
@@ -143,22 +135,33 @@
                     </div>
 
                     <!-- Description -->
-                    <div class="space-y-2">
-                        <label class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
-                            <svg class="w-4 h-4 mr-2 text-indigo-500" fill="none" stroke="currentColor"
-                                viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
-                                </path>
-                            </svg>
-                            Description
+
+                    <div class="space-y-2" wire:ignore>
+                        <flux:textarea wire:model="description" label="Description" rows="3" placeholder="Enter a brief description or summary..."
+                            class="pl-10 bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600 focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-500 transition-all duration-200" />
+                        @error('description')
+                            <p class="text-sm text-red-600 dark:text-red-400 flex items-center mt-1">
+                                {{ $message }}
+                            </p>
+                        @enderror
+                    </div>
+                    {{-- Content --}}
+                    <div class="space-y-2" wire:ignore>
+                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                            Content
                         </label>
-                        <div
-                            class="bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-lg focus-within:ring-2 focus-within:ring-indigo-500/20 focus-within:border-indigo-500 transition-all duration-200">
-                            <flux:textarea wire:model="description" rows="4"
-                                placeholder="Provide a detailed description of the interview or speech... Include key topics, context, and notable moments."
-                                class="border-0 focus:ring-0 bg-transparent resize-none" />
-                        </div>
+
+                        <x-quill-editor wire:model="content" placeholder="Write a detailed story of content..." height="400px"
+                            toolbar="basic" />
+
+                        <!-- Hidden field for validation -->
+                        <input type="hidden" wire:model="content" />
+                        @error('content')
+                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                        @enderror
+                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                            Use the toolbar above to format your content with rich text editing.
+                        </p>
                     </div>
 
                     <!-- Location & Date -->

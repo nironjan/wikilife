@@ -6,6 +6,7 @@ use App\Services\ImageKitService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Str;
 
 class SpeechesInterview extends Model
 {
@@ -15,7 +16,9 @@ class SpeechesInterview extends Model
         'person_id',
         'type',
         'title',
+        'slug',
         'description',
+        'content',
         'location',
         'date',
         'url',
@@ -26,6 +29,47 @@ class SpeechesInterview extends Model
     protected $casts = [
         'date' => 'date',
     ];
+
+    /**
+     * Boot function for model events
+     */
+    protected static function boot()
+    {
+        parent::boot();
+
+        // Generate slug automatically when creating
+        static::creating(function ($model) {
+            if (empty($model->slug)) {
+                $model->slug = $model->generateSlug();
+            }
+        });
+
+        // Update slug when title changes
+        static::updating(function ($model) {
+            if ($model->isDirty('title') && empty($model->slug)) {
+                $model->slug = $model->generateSlug();
+            }
+        });
+    }
+
+    /**
+     * Generate a unique slug
+     */
+    public function generateSlug(): string
+    {
+        $baseSlug = Str::slug($this->title);
+        $slug = $baseSlug;
+        $counter = 1;
+
+        while (static::where('slug', $slug)
+                ->where('id', '!=', $this->id)
+                ->exists()) {
+            $slug = $baseSlug . '-' . $counter;
+            $counter++;
+        }
+
+        return $slug;
+    }
 
     // =========== RELATIONS ============
     public function person()
@@ -54,17 +98,29 @@ class SpeechesInterview extends Model
         return $query->whereYear('date', $year);
     }
 
+    public function scopeWhereSlug(Builder $query, string $slug)
+    {
+        return $query->where('slug', $slug);
+    }
+
+    /**
+     * Get the route key for the model.
+     */
+    public function getRouteKeyName()
+    {
+        return 'slug';
+    }
+
+
 
     /**
      * Get image with custom size using ImageKitService
-     * Usage: $product->imageSize(400, 300) or $product->imageSize(800)
      */
     public function imageSize($width = null, $height = null, $quality = null): ?string
     {
         $imagePath = $this->thumbnail_url ?? $this->image_path ?? null;
 
-        // This method seems to be looking for an images relationship
-        // but your model doesn't have one. You might want to update this:
+
         if (!$imagePath) {
             return null;
         }
@@ -108,7 +164,7 @@ class SpeechesInterview extends Model
             }
 
             // Remove duplicate folder prefix (like "thebodoland/")
-            $path = preg_replace('#^thebodoland/#', '', $path);
+            $path = preg_replace('#^wikilife/#', '', $path);
 
             // Ensure it starts with a leading slash
             if (!str_starts_with($path, '/')) {

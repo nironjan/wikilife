@@ -45,7 +45,7 @@
         </div>
     </form>
 
-    <!-- Loading Indicator -->
+
     <div wire:loading class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 z-50 p-4">
         <div class="flex items-center justify-center">
             <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-red-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -56,7 +56,7 @@
         </div>
     </div>
 
-    <!-- Search Suggestions -->
+
     <div
         x-show="suggestionsOpen"
         class="absolute top-full left-0 right-0 mt-2 bg-white rounded-xl shadow-xl border border-gray-200 z-50 max-h-80 overflow-y-auto"
@@ -64,7 +64,7 @@
         wire:loading.remove
     >
         @if($search && strlen($search) >= 2)
-            <!-- People Results -->
+
             @if(count($searchSuggestions['people'] ?? []) > 0)
                 <div class="p-3 border-b border-gray-100">
                     <h3 class="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-wide">People ({{ count($searchSuggestions['people']) }})</h3>
@@ -103,7 +103,7 @@
                 </div>
             @endif
 
-            <!-- Profession Results -->
+
             @if(count($searchSuggestions['professions'] ?? []) > 0)
                 <div class="p-3 border-b border-gray-100">
                     <h3 class="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-wide">Professions ({{ count($searchSuggestions['professions']) }})</h3>
@@ -131,7 +131,7 @@
                 </div>
             @endif
 
-            <!-- No Results -->
+
             @if(count($searchSuggestions['people'] ?? []) === 0 && count($searchSuggestions['professions'] ?? []) === 0)
                 <div class="p-4 text-center text-gray-500">
                     <svg class="w-8 h-8 mx-auto mb-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -142,9 +142,9 @@
             @endif
 
         @elseif((!$search || strlen($search) < 2) && $showTrending && count($trendingPeople) > 0)
-            <!-- Trending People -->
+
             <div class="p-3">
-                <h3 class="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-wide">Trending Biographies</h3>
+                <h3 class="text-xs font-semibold text-gray-900 mb-2 uppercase tracking-wide text-left">Trending Biographies</h3>
                 <div class="space-y-1">
                     @foreach($trendingPeople as $person)
                         <a

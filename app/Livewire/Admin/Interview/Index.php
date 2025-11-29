@@ -74,25 +74,58 @@ class Index extends Component
     public function render()
     {
 
-        $interviews = SpeechesInterview::with(['person'])
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('title', 'like', "%{$this->search}%")
-                        ->orWhere('description', 'like', "%{$this->search}%")
-                        ->orWhere('location', 'like', "%{$this->search}%");
-                });
-            })
-            ->when($this->type, function ($query) {
-                $query->where('type', $this->type);
-            })
-            ->when($this->person, function ($query) {
-                $query->where('person_id', $this->person);
-            })
-            ->when($this->year, function ($query) {
-                $query->whereYear('date', $this->year);
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(20);
+       try {
+            $interviews = SpeechesInterview::with(['person'])
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $searchTerm = $this->search;
+                        $searchTermLower = strtolower($searchTerm);
+                        $searchTermTitle = ucwords($searchTermLower);
+
+                        // Case-sensitive search on interview fields
+                        $q->whereRaw('LOWER(title) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(description) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(location) LIKE ?', ["%{$searchTermLower}%"])
+
+                            // Search by person name and full name
+                            ->orWhereHas('person', function ($personQuery) use ($searchTermLower) {
+                                $personQuery->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                                    ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"]);
+                            })
+
+                            // Search by person nicknames
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->whereJsonContains('nicknames', $searchTerm)
+                                    ->orWhereJsonContains('nicknames', $searchTermLower)
+                                    ->orWhereJsonContains('nicknames', $searchTermTitle);
+                            })
+
+                            // Search by person professions
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->where(function ($professionQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                    $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermTitle}%"]);
+                                });
+                            });
+                    });
+                })
+                ->when($this->type, function ($query) {
+                    $query->where('type', $this->type);
+                })
+                ->when($this->person, function ($query) {
+                    $query->where('person_id', $this->person);
+                })
+                ->when($this->year, function ($query) {
+                    $query->whereYear('date', $this->year);
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(20);
+
+        } catch (\Exception $e) {
+            logger("SpeechesInterview search error: " . $e->getMessage());
+            $interviews = SpeechesInterview::where('id', 0)->paginate(20);
+        }
 
         $people = People::where('status', 'active')
             ->orderBy('name')
@@ -105,14 +138,16 @@ class Index extends Component
             'speech' => 'Speech',
         ];
 
-        $years = SpeechesInterview::selectRaw('YEAR(date) as year')
-            ->whereNotNull('date')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
+        $years = SpeechesInterview::whereNotNull('date')
+            ->orderBy('date', 'desc')
             ->get()
-            ->pluck('year')
+            ->pluck('date')
+            ->map(function ($date) {
+                return $date->format('Y');
+            })
+            ->unique()
+            ->values()
             ->toArray();
-
 
         return view('livewire.admin.interview.index', compact('interviews', 'people', 'types', 'years'));
     }

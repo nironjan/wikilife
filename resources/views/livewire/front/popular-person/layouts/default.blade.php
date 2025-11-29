@@ -1,15 +1,15 @@
-<!-- Your existing complex layout here -->
+{{-- Your existing complex layout here --}}
 <div class="space-y-8">
-    <!-- First Row: 2-column layout -->
+    {{-- First Row: 2-column layout --}}
     @if($popularPersons->count() >= 3)
                 <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
-                    <!-- Left: Featured Person Card -->
+                    {{-- Left: Featured Person Card --}}
                     <article class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                         @php $featuredPerson = $popularPersons[0]; @endphp
                         <a href="{{ route('people.people.show', $featuredPerson->slug) }}" class="block h-full"
                             aria-label="View profile of {{ $featuredPerson->name }}">
                             <div class="flex flex-col lg:flex-row h-full">
-                                <!-- Image Section -->
+                                {{-- Image Section --}}
                                 <div class="lg:w-2/5 relative">
                                     @if($featuredPerson->profile_image_url)
                                     <img src="{{ $featuredPerson->imageSize(400, 500, 85) }}"
@@ -27,7 +27,7 @@
                                     </div>
                                     @endif
 
-                                    <!-- Popular Badge -->
+                                    {{-- Popular Badge --}}
                                     <div class="absolute top-4 left-4" aria-label="Most Popular Personality">
                                         <div
                                             class="flex items-center bg-linear-to-r from-yellow-500 to-yellow-600 text-white px-3 py-2 rounded-full text-xs font-bold shadow-lg">
@@ -41,7 +41,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Content Section -->
+                                {{-- Content Section --}}
                                 <div class="lg:w-3/5 p-6 flex flex-col justify-between">
                                     <div>
                                         <header class="flex flex-row gap-1">
@@ -58,7 +58,7 @@
                                         </div>
                                         @endif
 
-                                        <!-- Meta Information -->
+                                        {{-- Meta Information --}}
                                         <div class="space-y-3 mb-4">
 
 
@@ -70,7 +70,7 @@
                                         </div>
                                     </div>
 
-                                    <!-- Stats & Verification -->
+                                    {{-- Stats & Verification --}}
                                     <footer
                                         class="flex items-center justify-between pt-4 border-t border-gray-100 mt-4">
                                         <div class="flex items-center space-x-4 text-sm text-gray-600">
@@ -89,16 +89,16 @@
                         </a>
                     </article>
 
-                    <!-- Right Column: Secondary Personalities -->
+                    {{-- Right Column: Secondary Personalities --}}
                     <div class="grid grid-cols-1 gap-6">
-                        <!-- Top Right: Single Person -->
+                        {{-- Top Right: Single Person --}}
                         @if(isset($popularPersons[1]))
                         @php $topRightPerson = $popularPersons[1]; @endphp
                         <article class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                             <a href="{{ route('people.people.show', $topRightPerson->slug) }}" class="block h-full"
                                 aria-label="View profile of {{ $topRightPerson->name }}">
                                 <div class="flex h-full">
-                                    <!-- Image Section -->
+                                    {{-- Image Section --}}
                                     <div class="w-1/3 md:w-2/5 relative shrink-0">
                                         @if($topRightPerson->profile_image_url)
                                         <img src="{{ $topRightPerson->imageSize(280, 200, 85) }}"
@@ -116,14 +116,14 @@
                                         </div>
                                         @endif
 
-                                        <!-- Rank Badge -->
+                                        {{-- Rank Badge --}}
                                         <div
                                             class="absolute top-3 left-3 bg-purple-600 text-white px-3 py-1 rounded-full text-xs font-bold shadow-md">
                                             #2
                                         </div>
                                     </div>
 
-                                    <!-- Content Section -->
+                                    {{-- Content Section --}}
                                     <div class="w-2/3 md:w-3/5 p-4 flex flex-col justify-between">
                                         <div>
                                             <header>
@@ -133,7 +133,7 @@
                                                 </h2>
                                             </header>
 
-                                            <!-- Meta Information -->
+                                            {{-- Meta Information --}}
                                             <div class="space-y-2">
                                                 @if($topRightPerson->primary_profession)
                                                 <p class="text-gray-600 text-xs mb-2 line-clamp-1 font-medium">
@@ -148,7 +148,7 @@
                                             </div>
                                         </div>
 
-                                        <!-- Stats -->
+                                        {{-- Stats --}}
                                         <footer
                                             class="flex items-center justify-between text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
                                             @if($topRightPerson->age)
@@ -167,14 +167,14 @@
                         </article>
                         @endif
 
-                        <!-- Bottom Right: Two Persons Side by Side -->
+                        {{-- Bottom Right: Two Persons Side by Side --}}
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                             @foreach($popularPersons->slice(2, 2) as $index => $person)
                             <article class="bg-white rounded-lg shadow-md overflow-hidden group h-full border border-gray-100">
                                 <a href="{{ route('people.people.show', $person->slug) }}" class="block"
                                     aria-label="View profile of {{ $person->name }}">
                                     <div class="flex">
-                                        <!-- Image -->
+                                        {{-- Image --}}
                                         <div class="w-1/3 shrink-0 relative">
                                             @if($person->profile_image_url)
                                             <img src="{{ $person->imageSize(120, 120, 85) }}"
@@ -193,14 +193,14 @@
                                             </div>
                                             @endif
 
-                                            <!-- Rank Badge -->
+                                            {{-- Rank Badge --}}
                                             <div
                                                 class="absolute top-2 left-1 bg-gray-600 text-white px-2 py-1 rounded-lg text-xs">
                                                 #{{ $index + 1 }}
                                             </div>
                                         </div>
 
-                                        <!-- Content -->
+                                        {{-- Content --}}
                                         <div class="w-2/3 p-4 flex flex-col justify-between">
                                             <div>
                                                 <header>
@@ -220,7 +220,7 @@
                                                 </p>
                                                 @endif
                                             </div>
-                                            <!-- Stats -->
+                                            {{-- Stats --}}
                                             <footer
                                                 class="md:hidden text-right text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
                                                 <span class="text-green-700 font-semibold">
@@ -239,14 +239,14 @@
                 </div>
                 @endif
 
-    <!-- Second Row: 4-column grid -->
+    {{-- Second Row: 4-column grid --}}
     @if($popularPersons->count() > 4)
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-6">
                     @foreach($popularPersons->slice(4, 4) as $index => $person)
                     <article class="bg-white rounded-lg shadow overflow-hidden group h-full">
                         <a href="{{ route('people.people.show', $person->slug) }}" class="block h-full"
                             aria-label="View profile of {{ $person->name }}">
-                            <!-- Image Section -->
+                            {{-- Image Section --}}
                             <div class="flex">
                                 <div class="w-1/3 shrink-0 relative">
                                     @if($person->profile_image_url)
@@ -265,7 +265,7 @@
                                     </div>
                                     @endif
                                 </div>
-                                <!-- Content Section -->
+                                {{-- Content Section --}}
                                 <div class="w-2/3 p-4 flex flex-col justify-between">
                                     <div>
                                     <header>
@@ -280,7 +280,7 @@
                                         @endif
                                     </header>
 
-                                    <!-- Meta Information -->
+                                    {{-- Meta Information --}}
                                     <div class="flex items-center justify-between">
                                         @if($person->age)
                                         <span class="flex items-center font-medium text-sm text-gray-600">
@@ -289,7 +289,7 @@
                                         @endif
                                     </div>
                                     </div>
-                                    <!-- Stats -->
+                                    {{-- Stats --}}
                                             <footer
                                                 class="md:hidden text-right text-xs text-gray-500 pt-3 border-t border-gray-100 mt-3">
                                                 <span class="text-green-700 font-semibold">

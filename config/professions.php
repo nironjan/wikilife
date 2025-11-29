@@ -16,7 +16,7 @@ return [
                 'agriculture minister', 'transport minister', 'law minister', 'parliamentary secretary',
                 'party leader', 'party spokesperson', 'political advisor', 'political strategist',
                 'campaign manager', 'local councilor', 'panchayat member', 'village head', 'mayoral candidate',
-                'political activist', 'public servant', 'bureaucrat', 'diplomat', 'ambassador'
+                'political activist', 'public servant', 'bureaucrat', 'diplomat', 'ambassador','mcla', 'em'
             ]
         ],
         'filmographies' => [
@@ -34,7 +34,7 @@ return [
                 'production designer', 'sound designer', 'sound engineer', 'lighting director', 'film critic',
                 'film journalist', 'cinema historian', 'film distributor', 'film promoter', 'film editor',
                 'screenplay writer', 'cinema technician', 'theatre artist', 'stage actor', 'short film director',
-                'documentary filmmaker', 'web series actor', 'digital content creator'
+                'documentary filmmaker', 'web series actor', 'digital content creator', 'celebrities', 'dancer'
             ]
         ],
         'sports' => [

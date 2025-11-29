@@ -243,8 +243,52 @@
                                     </div>
 
                                     <!-- About -->
-                                    <x-flux::textarea label="About / Biography" wire:model="about"
-                                        placeholder="Write a detailed biography..." rows="6" />
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            About/Biography
+                                        </label>
+
+                                        <x-quill-editor
+                                            wire:model="about"
+                                            placeholder="Write a detailed biography..."
+                                            height="400px"
+                                            toolbar="basic"
+                                        />
+
+                                        <!-- Hidden field for validation -->
+                                        <input type="hidden" wire:model="about" />
+
+                                        @error('about')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Use the toolbar above to format your content with rich text editing.
+                                        </p>
+                                    </div>
+
+                                    <!-- Ealy Life -->
+                                    <div>
+                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            Early Life
+                                        </label>
+
+                                        <x-quill-editor
+                                            wire:model="early_life"
+                                            placeholder="Write a detailed story of ealry life..."
+                                            height="400px"
+                                            toolbar="basic"
+                                        />
+
+                                        <!-- Hidden field for validation -->
+                                        <input type="hidden" wire:model="early_life" />
+
+                                        @error('early_life')
+                                            <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                        @enderror
+                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                            Use the toolbar above to format your content with rich text editing.
+                                        </p>
+                                    </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <!-- Gender -->
@@ -300,7 +344,18 @@
                                             professional information.</p>
                                     </div>
 
-                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <!-- State name -->
+                                        <x-flux::select
+                                            label="State / UT"
+                                            placeholder="Select a state or territory"
+                                            wire:model="state_code"
+                                        >
+                                            @foreach ($indianStates as $code => $name)
+                                                <option value="{{ $code }}">{{ $name }} ({{ $code }})</option>
+                                            @endforeach
+                                        </x-flux::select>
+
                                         <!-- Nationality -->
                                         <x-flux::input label="Nationality" wire:model="nationality"
                                             placeholder="e.g., American, Indian" />
@@ -450,10 +505,10 @@
                                     <!-- Profile Image -->
                                     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
                                         <div>
-                                            <label
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                 Profile Image
                                             </label>
+
                                             @if ($existing_profile_image)
                                                 <div class="mb-4">
                                                     <img src="{{ $existing_profile_image }}"
@@ -465,23 +520,34 @@
                                                     Remove Current Image
                                                 </x-flux::button>
                                             @endif
-                                            <x-flux::input type="file" wire:model="profile_image"
-                                                accept="image/*" />
+
+                                            <x-flux::input type="file" wire:model="profile_image" accept="image/*" />
                                             @error('profile_image')
-                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}
-                                                </p>
+                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                             @enderror
+
+                                            <!-- Profile Image Caption -->
+                                            <div class="mt-4">
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    Profile Image Caption
+                                                </label>
+                                                <x-flux::input type="text" wire:model="profile_image_caption" placeholder="Enter caption..." />
+                                                @error('profile_image_caption')
+                                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                                @enderror
+                                            </div>
                                         </div>
 
                                         <!-- Cover Image -->
                                         <div>
-                                            <label
-                                                class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                            <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                                 Cover Image
                                             </label>
+
                                             @if ($existing_cover_image)
                                                 <div class="mb-4">
-                                                    <img src="{{ $existing_cover_image }}" alt="Current cover image"
+                                                    <img src="{{ $existing_cover_image }}"
+                                                        alt="Current cover image"
                                                         class="w-full h-32 object-cover rounded-lg border-2 border-gray-300">
                                                 </div>
                                                 <x-flux::button type="button" wire:click="removeCoverImage"
@@ -489,14 +555,25 @@
                                                     Remove Current Image
                                                 </x-flux::button>
                                             @endif
-                                            <x-flux::input type="file" wire:model="cover_image"
-                                                accept="image/*" />
+
+                                            <x-flux::input type="file" wire:model="cover_image" accept="image/*" />
                                             @error('cover_image')
-                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}
-                                                </p>
+                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                             @enderror
+
+                                            <!-- Cover Image Caption -->
+                                            <div class="mt-4">
+                                                <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                                    Cover Image Caption
+                                                </label>
+                                                <x-flux::input type="text" wire:model="cover_img_caption" placeholder="Enter caption..." />
+                                                @error('cover_img_caption')
+                                                    <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                                @enderror
+                                            </div>
                                         </div>
                                     </div>
+
 
                                     <!-- Status & Verification -->
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">

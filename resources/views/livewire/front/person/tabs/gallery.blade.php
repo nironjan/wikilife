@@ -34,7 +34,7 @@
     </div>
     @endif
 
-    <!-- Profile Images Section -->
+    {{-- Profile Images Section --}}
     <div class="mt-12">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Profile Images</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">

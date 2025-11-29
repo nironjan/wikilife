@@ -1,8 +1,14 @@
 <div class="bg-white rounded-lg shadow-sm border border-gray-200 sticky top-24">
-    <!-- Quick Facts -->
+    {{-- Quick Facts --}}
     <div class="p-6 border-b border-gray-200">
         <h3 class="font-bold text-gray-900 mb-4">Quick Facts</h3>
         <div class="space-y-3 text-sm">
+            @if($person->gender)
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Gender</span>
+                    <span class="font-medium text-gray-900 capitalize">{{ $person->gender }}</span>
+                </div>
+            @endif
             @if($person->zodiac_sign)
                 <div class="flex justify-between">
                     <span class="text-gray-600">Zodiac Sign</span>
@@ -14,6 +20,18 @@
                 <div class="flex justify-between">
                     <span class="text-gray-600">Blood Group</span>
                     <span class="font-medium text-gray-900">{{ $person->blood_group }}</span>
+                </div>
+            @endif
+            @if($person->nationality)
+                <div class="flex justify-between">
+                    <span class="text-gray-600">Nationality</span>
+                    <span class="font-medium text-gray-900">{{ $person->nationality }}</span>
+                </div>
+            @endif
+            @if($person->state_name)
+                <div class="flex justify-between">
+                    <span class="text-gray-600">State/UT</span>
+                    <span class="font-medium text-gray-900">{{ $person->state_name }}</span>
                 </div>
             @endif
 
@@ -37,10 +55,19 @@
                     <span class="font-medium text-gray-900">{{ $person->ethnicity }}</span>
                 </div>
             @endif
+            @if($person->address)
+                <div class="flex justify-between gap-4">
+                    <span class="text-gray-600">Current Address</span>
+                    <span class="font-medium text-gray-900 text-right break-words">
+                        {{ $person->address }}
+                    </span>
+                </div>
+            @endif
+
         </div>
     </div>
 
-    <!-- Favourite Things -->
+    {{-- Favourite Things --}}
     @if($person->favourite_things && count($person->favourite_things) > 0)
         <div class="p-6 border-b border-gray-200">
             <h3 class="font-bold text-gray-900 mb-4">Favourites</h3>
@@ -55,7 +82,7 @@
         </div>
     @endif
 
-    <!-- Social Links -->
+    {{-- Social Links --}}
     @if($person->socialLinks && $person->socialLinks->count() > 0)
         <div class="p-6">
             <h3 class="font-bold text-gray-900 mb-4">Social Media</h3>
@@ -75,7 +102,7 @@
                     <a href="{{ $link->url }}" target="_blank" rel="noopener noreferrer"
                         class="flex items-center space-x-3 p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200 group">
                         @if($iconConfig)
-                            <!-- Display SVG icon with brand color -->
+                            {{-- Display SVG icon with brand color --}}
                             <div class="w-8 h-8 flex items-center justify-center rounded-full transition-transform duration-200 group-hover:scale-110"
                                 style="background-color: {{ $iconConfig['color'] }}20;">
                                 <svg class="w-4 h-4 transition-colors duration-200" viewBox="0 0 24 24"
@@ -84,7 +111,7 @@
                                 </svg>
                             </div>
                         @else
-                            <!-- Fallback icon -->
+                            {{-- Fallback icon --}}
                             <div
                                 class="w-8 h-8 bg-gray-100 dark:bg-gray-600 rounded-full flex items-center justify-center transition-transform duration-200 group-hover:scale-110">
                                 <span class="text-xs font-medium text-gray-600 dark:text-gray-300">
@@ -105,7 +132,7 @@
                             @endif
                         </div>
 
-                        <!-- External link indicator -->
+                        {{-- External link indicator --}}
                         <svg class="w-4 h-4 text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-200"
                             fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

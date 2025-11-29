@@ -6,13 +6,13 @@
         @foreach($person->controversies as $controversy)
         <div
             class="border border-red-200 rounded-lg bg-red-50 overflow-hidden transition-all duration-200 hover:shadow-md my-6">
-            <!-- Header with Status -->
+            {{-- Header with Status --}}
             <div class="p-4 border-b border-red-200 bg-white">
                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3">
                     <div class="flex-1">
                         <h3 class="text-lg font-semibold text-gray-900 mb-1">{{ $controversy->title }}</h3>
 
-                        <!-- Date and Status -->
+                        {{-- Date and Status --}}
                         <div class="flex flex-wrap items-center gap-2 mt-2">
                             @if($controversy->date)
                             <span
@@ -26,7 +26,7 @@
                             </span>
                             @endif
 
-                            <!-- Resolution Status -->
+                            {{-- Resolution Status --}}
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ $controversy->is_resolved ? 'bg-green-100 text-green-800' : 'bg-orange-100 text-orange-800' }}">
                                 <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -36,7 +36,7 @@
                                 {{ $controversy->is_resolved ? 'Resolved' : 'Unresolved' }}
                             </span>
 
-                            <!-- Publication Status -->
+                            {{-- Publication Status --}}
                             @if(!$controversy->is_published)
                             <span
                                 class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-800">
@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <!-- Source Link -->
+                    {{-- Source Link --}}
                     @if($controversy->source_url)
                     <a href="{{ $controversy->source_url }}" target="_blank"
                         class="inline-flex items-center px-3 py-1.5 border border-red-300 text-sm font-medium rounded-md text-red-700 bg-white hover:bg-red-50 transition-colors duration-200">
@@ -65,15 +65,15 @@
                 </div>
             </div>
 
-            <!-- Content -->
+            {{-- Content --}}
             <div class="p-4">
-                <!-- HTML Content -->
+                {{-- HTML Content --}}
                 <div
                     class="prose max-w-none text-gray-700 prose-headings:font-semibold prose-p:leading-relaxed prose-ul:my-2 prose-li:my-1 prose-a:text-blue-600 prose-a:no-underline hover:prose-a:underline prose-a:font-medium">
                     {!! $controversy->safe_html_content !!}
                 </div>
 
-                <!-- Excerpt for longer content -->
+                {{-- Excerpt for longer content --}}
                 @if(strlen(strip_tags($controversy->safe_html_content)) > 500)
                 <div class="mt-4 p-4 bg-gradient-to-r from-gray-50 to-blue-50 rounded-lg border border-blue-200">
                     <div class="flex items-start space-x-3">
@@ -90,7 +90,7 @@
                                 {!! Str::markdown($controversy->excerpt) !!}
                             </div>
 
-                            <!-- Action Links -->
+                            {{-- Action Links --}}
                             <div class="mt-3 flex flex-wrap gap-3">
                                 @if($controversy->source_url)
                                 <a href="{{ $controversy->source_url }}" target="_blank"
@@ -155,7 +155,7 @@
     </div>
     @endif
 
-    <!-- Lesser Known Facts -->
+    {{-- Lesser Known Facts --}}
     @if($person->lesserKnownFacts->count() > 0)
     <div class="mt-12 pt-8 border-t border-gray-200">
         <div class="flex items-center mb-6">

@@ -1,5 +1,5 @@
 <div class="p-2 md:p-6">
-    <h2 class="text-2xl font-bold text-gray-900 mb-6">Career</h2>
+    <h2 class="text-2xl font-bold text-gray-900 mb-6">Career of {{ $person->name }}</h2>
 
     @php
     $hasCareer = $person->filmography->count() > 0 ||
@@ -10,7 +10,7 @@
     @endphp
 
     @if($hasCareer)
-    <!-- Filmography -->
+    {{-- Filmography --}}
     @if($person->filmography->count() > 0)
     <div class="space-y-4 mb-8">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Filmography</h3>
@@ -44,44 +44,82 @@
     </div>
     @endif
 
-    <!-- Political Career -->
+    {{-- Political Career Section - Mobile Optimized --}}
     @if($person->politicalCareers->count() > 0)
     <div class="space-y-4 mb-8">
-        <h3 class="text-xl font-semibold text-gray-900 mb-4">Political Career</h3>
-        <div class="space-y-4">
+        {{-- Section Header --}}
+        <div class="flex items-center justify-between mb-4">
+            <div>
+                <h3 class="text-xl font-bold text-gray-900">Political Career</h3>
+                <p class="text-sm text-gray-600 mt-1">{{ $person->politicalCareers->count() }} position{{ $person->politicalCareers->count() > 1 ? 's' : '' }}</p>
+            </div>
+            <div class="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                <svg class="w-5 h-5 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path>
+                </svg>
+            </div>
+        </div>
+
+        {{-- Career Cards - Mobile Compact --}}
+        <div class="space-y-3">
             @foreach($person->politicalCareers as $career)
             <a href="{{ route('people.career.show', ['personSlug' => $person->slug, 'slug' => $career->slug]) }}"
-                class="block border-l-4 border-blue-500 pl-4 py-2 hover:bg-blue-50 rounded-r-lg transition-colors duration-200 group">
-                <div>
-                    <!-- Position as clickable heading -->
-                    <h4
-                        class="font-semibold text-gray-900 group-hover:text-blue-600 transition-colors duration-200 mb-1">
-                        {{ $career->position }}
-                        <svg class="w-4 h-4 inline-block ml-1 text-gray-400 group-hover:text-blue-500 transition-colors duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                class="block bg-white rounded-lg border border-gray-200 hover:border-blue-300 hover:shadow-sm transition-all duration-200 active:scale-[0.98]">
+
+                <div class="p-4">
+                    {{-- Main Header Row --}}
+                    <div class="flex items-start justify-between mb-2">
+                        <div class="flex-1 min-w-0">
+                            <div class="flex items-center gap-2 mb-1">
+                                <h4 class="text-base font-semibold text-gray-900 truncate pr-2">
+                                    {{ $career->position }}
+                                </h4>
+                                @if($career->is_current)
+                                <span class="flex-shrink-0 px-2 py-1 bg-green-100 text-green-800 text-xs font-medium rounded-full whitespace-nowrap">
+                                    Current
+                                </span>
+                                @endif
+                            </div>
+
+                            {{-- Compact Meta Info --}}
+                            <div class="space-y-1">
+                                @if($career->political_party)
+                                <p class="text-sm text-gray-700 truncate">
+                                    <span class="text-gray-500">Party Name:</span> {{ $career->political_party }}
+                                </p>
+                                @endif
+
+                                @if($career->constituency)
+                                <p class="text-sm text-gray-700 truncate">
+                                    <span class="text-gray-500">Constituency:</span> {{ $career->constituency }}
+                                </p>
+                                @endif
+
+                                {{-- Tenure --}}
+                                <p class="text-xs text-gray-600">
+                                    @if($career->tenure_start && $career->tenure_end)
+                                    ({{ $career->tenure_start->format('Y') }} - {{ $career->tenure_end->format('Y') }})
+                                    @elseif($career->tenure_start)
+                                    Since {{ $career->tenure_start->format('M Y') }}
+                                    @endif
+                                </p>
+                            </div>
+                        </div>
+
+                        {{-- Arrow Icon --}}
+                        <svg class="w-4 h-4 text-gray-400 mt-1 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path>
                         </svg>
-                    </h4>
+                    </div>
 
-                    @if($career->political_party)
-                    <p class="text-gray-600">{{ $career->political_party }}</p>
+                    {{-- Journey Excerpt - Collapsible --}}
+                    @if($career->political_journey)
+                    <div class="mt-3 pt-3 border-t border-gray-100">
+                        <p class="text-sm text-gray-600 line-clamp-2 leading-relaxed">
+                            {!! Str::limit(strip_tags($career->political_journey), 120) !!}
+                        </p>
+                    </div>
                     @endif
-
-                    @if($career->constituency)
-                    <p class="text-sm text-gray-500">Constituency: {{ $career->constituency }}</p>
-                    @endif
-
-                    <p class="text-sm text-gray-500">
-                        @if($career->tenure_start && $career->tenure_end)
-                        {{ $career->tenure_start->format('Y') }} - {{ $career->tenure_end->format('Y') }}
-                        @elseif($career->tenure_start)
-                        Since {{ $career->tenure_start->format('Y') }}
-                        @endif
-                        @if($career->is_current)
-                        <span class="ml-2 px-2 py-1 bg-green-100 text-green-800 text-xs rounded-full">Current</span>
-                        @endif
-                    </p>
                 </div>
             </a>
             @endforeach
@@ -89,7 +127,7 @@
     </div>
     @endif
 
-    <!-- Sports Career -->
+    {{-- Sports Career --}}
     @if($person->sportsCareers->count() > 0)
     <div class="space-y-4 mb-8">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Sports Career</h3>
@@ -121,7 +159,7 @@
     </div>
     @endif
 
-    <!-- Business Career -->
+    {{-- Business Career --}}
     @if($person->entrepreneurs->count() > 0)
     <div class="space-y-4 mb-8">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Business Ventures</h3>
@@ -155,7 +193,7 @@
     </div>
     @endif
 
-    <!-- Literature Career -->
+    {{-- Literature Career --}}
     @if($person->literatureCareer->count() > 0)
     <div class="space-y-4 mb-8">
         <h3 class="text-xl font-semibold text-gray-900 mb-4">Literary Works</h3>
@@ -165,7 +203,7 @@
                 class="block border-l-4 border-purple-500 pl-4 py-3 hover:bg-purple-50 rounded-r-lg transition-colors duration-200 group">
                 <div class="flex justify-between items-start">
                     <div class="flex-1">
-                        <!-- Title as clickable heading -->
+                        {{-- Title as clickable heading --}}
                         <h4
                             class="font-semibold text-gray-900 group-hover:text-purple-600 transition-colors duration-200 text-lg mb-1">
                             {{ $work->display_title }}
@@ -177,7 +215,7 @@
                             </svg>
                         </h4>
 
-                        <!-- Work Details -->
+                        {{-- Work Details --}}
                         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-600 mb-2">
                             @if($work->work_type)
                             <span class="bg-purple-100 text-purple-800 px-2 py-1 rounded-full text-xs font-medium">
@@ -209,7 +247,7 @@
                             @endif
                         </div>
 
-                        <!-- Additional Information -->
+                        {{-- Additional Information --}}
                         <div class="flex flex-wrap items-center gap-4 text-sm text-gray-500 mb-2">
                             @if($work->genre)
                             <span>{{ $work->genre }}</span>
@@ -224,7 +262,7 @@
                             @endif
                         </div>
 
-                        <!-- Awards -->
+                        {{-- Awards --}}
                         @if($work->awards_count > 0)
                         <div class="mt-2">
                             <span
@@ -240,7 +278,7 @@
                         </div>
                         @endif
 
-                        <!-- Status -->
+                        {{-- Status --}}
                         <div class="mt-2">
                             @if($work->career_status === 'Active')
                             <span
@@ -265,7 +303,7 @@
                         </div>
                     </div>
 
-                    <!-- Cover Image -->
+                    {{-- Cover Image --}}
                     @if($work->cover_image_url)
                     <div class="ml-4 flex-shrink-0">
                         <img src="{{ $work->cover_image_url }}" alt="Cover of {{ $work->display_title }}"
@@ -274,7 +312,7 @@
                     @endif
                 </div>
 
-                <!-- Description Preview -->
+                {{-- Description Preview --}}
                 @if($work->description)
                 <div class="mt-3">
                     <p class="text-sm text-gray-600 line-clamp-2">
@@ -292,7 +330,7 @@
     @endif
 
     @else
-    <!-- No Career Information -->
+    {{-- No Career Information --}}
     <div class="text-center py-12">
         <svg class="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"

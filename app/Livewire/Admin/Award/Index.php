@@ -69,26 +69,56 @@ class Index extends Component
 
     public function render()
     {
-        $awards = PersonAward::with(['person'])
-            ->when($this->search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('award_name', 'like', "%{$this->search}%")
-                        ->orWhere('organization', 'like', "%{$this->search}%")
-                        ->orWhere('category', 'like', "%{$this->search}%")
-                        ->orWhereHas('person', function ($personQuery) {
-                            $personQuery->where('name', 'like', "%{$this->search}%")
-                                ->orWhere('full_name', 'like', "%{$this->search}%");
-                        });
-                });
-            })
-            ->when($this->category, function ($query) {
-                $query->where('category', $this->category);
-            })
-            ->when($this->organization, function ($query) {
-                $query->where('organization', 'like', "%{$this->organization}%");
-            })
-            ->orderBy($this->sortField, $this->sortDirection)
-            ->paginate(15);
+        try {
+            $awards = PersonAward::with(['person'])
+                ->when($this->search, function ($query) {
+                    $query->where(function ($q) {
+                        $searchTerm = $this->search;
+                        $searchTermLower = strtolower($searchTerm);
+                        $searchTermTitle = ucwords($searchTermLower);
+
+                        // Case-sensitive search on award fields
+                        $q->whereRaw('LOWER(award_name) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(organization) LIKE ?', ["%{$searchTermLower}%"])
+                            ->orWhereRaw('LOWER(category) LIKE ?', ["%{$searchTermLower}%"])
+
+                            // Search by person name and full name
+                            ->orWhereHas('person', function ($personQuery) use ($searchTermLower) {
+                                $personQuery->whereRaw('LOWER(name) LIKE ?', ["%{$searchTermLower}%"])
+                                    ->orWhereRaw('LOWER(full_name) LIKE ?', ["%{$searchTermLower}%"]);
+                            })
+
+                            // Search by person nicknames
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->whereJsonContains('nicknames', $searchTerm)
+                                    ->orWhereJsonContains('nicknames', $searchTermLower)
+                                    ->orWhereJsonContains('nicknames', $searchTermTitle);
+                            })
+
+                            // Search by person professions
+                            ->orWhereHas('person', function ($personQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                $personQuery->where(function ($professionQuery) use ($searchTerm, $searchTermLower, $searchTermTitle) {
+                                    $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
+                                                ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermTitle}%"]);
+                                });
+                            });
+                    });
+                })
+                ->when($this->category, function ($query) {
+                    $query->where('category', $this->category);
+                })
+                ->when($this->organization, function ($query) {
+                    $searchTerm = strtolower($this->organization);
+                    $query->whereRaw('LOWER(organization) LIKE ?', ["%{$searchTerm}%"]);
+                })
+                ->orderBy($this->sortField, $this->sortDirection)
+                ->paginate(15);
+
+        } catch (\Exception $e) {
+            logger("PersonAward search error: " . $e->getMessage());
+            $awards = PersonAward::where('id', 0)->paginate(15);
+        }
 
         $categories = PersonAward::distinct()->pluck('category')->filter()->toArray();
         $organizations = PersonAward::distinct()->pluck('organization')->filter()->toArray();

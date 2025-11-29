@@ -1,4 +1,4 @@
-<!-- Work Details -->
+{{-- Work Details --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Work Details</h2>
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -40,7 +40,7 @@
     </div>
 </div>
 
-<!-- Cover Image -->
+{{-- Cover Image --}}
 @if($careerData->cover_image_url)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Cover Image</h2>
@@ -52,7 +52,7 @@
     </div>
 @endif
 
-<!-- ISBN -->
+{{-- ISBN --}}
 @if($careerData->isbn)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">Publication Information</h2>
@@ -70,7 +70,7 @@
     </div>
 @endif
 
-<!-- Description -->
+{{-- Description --}}
 @if($careerData->description)
     <div class="mb-8">
         <h2 class="text-2xl font-bold text-gray-900 mb-4">About the Work</h2>
@@ -87,7 +87,7 @@
     </div>
 @endif
 
-<!-- Career Timeline -->
+{{-- Career Timeline --}}
 <div class="mb-8">
     <h2 class="text-2xl font-bold text-gray-900 mb-4">Career Timeline</h2>
     <div class="bg-white rounded-lg border border-gray-200 p-6">
@@ -112,7 +112,7 @@
     </div>
 </div>
 
-<!-- External Link -->
+{{-- External Link --}}
 @if($careerData->link)
     <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
         <h3 class="font-semibold text-gray-900 mb-3 flex items-center">
@@ -128,7 +128,7 @@
     </div>
 @endif
 
-<!-- Verification Status -->
+{{-- Verification Status --}}
 <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
     <div class="flex items-center">
         <svg class="w-5 h-5 mr-3 {{ $careerData->is_verified ? 'text-green-600' : 'text-yellow-600' }}" fill="none" stroke="currentColor" viewBox="0 0 24 24">

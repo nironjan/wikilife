@@ -14,7 +14,7 @@
             </button>
         </div>
 
-        <!-- Search Input -->
+        {{-- Search Input --}}
         <form wire:submit.prevent="performSearch" class="relative">
             <div class="relative">
                 <input
@@ -49,13 +49,13 @@
         </form>
     </div>
 
-    <!-- Mobile Search Suggestions -->
+    {{-- Mobile Search Suggestions --}}
     <div class="overflow-y-auto h-[calc(100vh-120px)]">
         @if($search && strlen($search) >= 2)
             <div class="p-4 border-b border-gray-200">
                 <h4 class="text-sm font-semibold text-gray-900 mb-3">Search Suggestions</h4>
                 <div class="space-y-3">
-                    <!-- People Suggestions -->
+                    {{-- People Suggestions --}}
                     @if(isset($searchSuggestions['people']) && $searchSuggestions['people']->count() > 0)
                         @foreach($searchSuggestions['people'] as $person)
                             <button wire:click="searchBySuggestion('person', '{{ $person->slug }}', '{{ $person->name }}')"
@@ -83,7 +83,7 @@
                         @endforeach
                     @endif
 
-                    <!-- Profession Suggestions -->
+                    {{-- Profession Suggestions --}}
                     @if(isset($searchSuggestions['professions']) && count($searchSuggestions['professions']) > 0)
                         @foreach($searchSuggestions['professions'] as $profession)
                             <button wire:click="searchBySuggestion('profession', '{{ $profession['url'] }}', '{{ $profession['name'] }}')"
@@ -104,7 +104,7 @@
                         @endforeach
                     @endif
 
-                    <!-- No Results Message -->
+                    {{-- No Results Message --}}
                     @if((!isset($searchSuggestions['people']) || $searchSuggestions['people']->count() == 0) && (!isset($searchSuggestions['professions']) || count($searchSuggestions['professions']) == 0))
                         <div class="text-center py-4">
                             <svg class="w-8 h-8 text-gray-400 mx-auto mb-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -114,7 +114,7 @@
                         </div>
                     @endif
 
-                    <!-- View All Results Link -->
+                    {{-- View All Results Link --}}
                     @if(isset($searchSuggestions['people']) && $searchSuggestions['people']->count() > 0)
                         <div class="pt-2 border-t border-gray-200">
                             <a href="{{ route('people.people.search', ['query' => $search]) }}"
@@ -129,7 +129,7 @@
                 </div>
             </div>
         @else
-            <!-- Trending Suggestions when no search term -->
+            {{-- Trending Suggestions when no search term --}}
             <div class="p-4 border-b border-gray-200">
                 <h4 class="text-sm font-semibold text-gray-900 mb-3">Trending Biographies</h4>
                 <div class="space-y-3">

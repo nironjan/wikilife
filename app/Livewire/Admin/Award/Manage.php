@@ -28,6 +28,7 @@ class Manage extends Component
     public $description = '';
     public $awarded_at = '';
     public $award_image = null;
+    public $image_caption = null;
     public $category = '';
     public $organization = '';
     public $is_verified = false;
@@ -57,6 +58,7 @@ class Manage extends Component
             'description' => 'nullable|string',
             'awarded_at' => 'nullable|date',
             'award_image' => 'nullable|image|max:5120',
+            'image_caption' => 'nullable|string|max:255',
             'category' => 'nullable|string|max:100',
             'organization' => 'required|string|max:255',
             'is_verified' => 'boolean',
@@ -95,6 +97,7 @@ class Manage extends Component
         $this->awarded_at = optional($award->awarded_at)->format('Y-m-d');
         $this->existing_award_image = $award->awarde_image_url;
         $this->existing_award_image_file_id = $award->award_image_file_id;
+        $this->image_caption = $award->image_caption;
         $this->category = $award->category;
         $this->organization = $award->organization;
         $this->is_verified = $award->is_verified;
@@ -111,16 +114,49 @@ class Manage extends Component
      */
     public function getPeopleProperty()
     {
-        return People::active()
-            ->when($this->person_search, function ($query) {
-                $query->where(function ($q) {
-                    $q->where('name', 'like', "%{$this->person_search}%")
-                        ->orWhere('full_name', 'like', "%{$this->person_search}%");
-                });
-            })
+        // Get all active people first
+        $allPeople = People::active()
             ->orderBy('name')
             ->limit(50)
             ->get();
+
+        // If no search term, return all people
+        if (empty($this->person_search)) {
+            return $allPeople;
+        }
+
+        $searchTerm = strtolower(trim($this->person_search));
+
+        // Apply the same PHP filtering logic as search suggestions
+        return $allPeople->filter(function($person) use ($searchTerm) {
+            // Check name (case insensitive)
+            if (stripos($person->name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check full_name (case insensitive)
+            if ($person->full_name && stripos($person->full_name, $searchTerm) !== false) {
+                return true;
+            }
+
+            // Check nicknames (case insensitive)
+            $nicknames = $person->nicknames ?? [];
+            foreach ($nicknames as $nickname) {
+                if (stripos($nickname, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            // Check professions (case insensitive)
+            $professions = $person->professions ?? [];
+            foreach ($professions as $profession) {
+                if (stripos($profession, $searchTerm) !== false) {
+                    return true;
+                }
+            }
+
+            return false;
+        });
     }
 
     /**
@@ -291,6 +327,7 @@ class Manage extends Component
                 'category' => 'nullable|string|max:100',
                 'description' => 'nullable|string',
                 'award_image' => 'nullable|image|max:5120',
+                'image_caption' => 'nullable|string|max:255',
             ],
             3 => [
                 'is_verified' => 'boolean',
@@ -320,6 +357,7 @@ class Manage extends Component
                 'awarded_at' => $this->awarded_at ?: null,
                 'category' => $this->category,
                 'organization' => $this->organization,
+                'image_caption' => $this->image_caption,
                 'is_verified' => $this->is_verified,
                 'sort_order' => $this->sort_order ?: 0,
             ];

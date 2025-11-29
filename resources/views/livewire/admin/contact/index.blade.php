@@ -117,8 +117,7 @@
                                                 'inline-flex items-center px-2 py-0.5 rounded text-xs font-medium',
                                                 'bg-gray-100 text-gray-800 dark:bg-gray-600 dark:text-gray-100' => $message->type === 'general',
                                                 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' => $message->type === 'support',
-                                                'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' => $message->type === 'partnership',
-                                                'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100' => $message->type === 'technical',
+                                                'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' => $message->type === 'advertise',
                                                 'bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100' => $message->type === 'other',
                                             ])>
                                                 {{ ucfirst($message->type) }}

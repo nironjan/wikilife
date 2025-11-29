@@ -1,6 +1,6 @@
 <div class="min-h-screen py-8">
     <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-        <!-- Breadcrumb -->
+        {{-- Breadcrumb --}}
         <nav class="flex items-center space-x-2 text-sm text-gray-600 mb-8">
             <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors">Home</a>
             <span class="text-gray-400">›</span>
@@ -11,9 +11,9 @@
             <span class="text-gray-900 font-medium">Suggest Edit</span>
         </nav>
 
-        <!-- Main Card -->
+        {{-- Main Card --}}
         <div class="bg-white rounded-lg shadow overflow-hidden">
-            <!-- Header with Gradient -->
+            {{-- Header with Gradient --}}
             <div class="bg-gradient-to-r from-blue-600 to-indigo-700 px-8 py-8 text-white">
                 <div class="flex items-center space-x-4">
                     <div class="flex-shrink-0">
@@ -31,11 +31,11 @@
             </div>
 
             <div class="flex flex-col lg:flex-row">
-                <!-- Left Sidebar - Progress Steps -->
+                {{-- Left Sidebar - Progress Steps --}}
                 <div class="lg:w-1/4 bg-gray-50 p-6 border-r border-gray-200">
-                    <!-- Progress Steps -->
+                    {{-- Progress Steps --}}
                     <div class="space-y-4">
-                        <!-- Step 1: Email Verification -->
+                        {{-- Step 1: Email Verification --}}
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 1 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 @if($emailVerified)
@@ -53,7 +53,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 2: Basic Info -->
+                        {{-- Step 2: Basic Info --}}
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 2 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 2
@@ -65,7 +65,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 3: Feedback -->
+                        {{-- Step 3: Feedback --}}
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 3 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 3
@@ -77,7 +77,7 @@
                             </div>
                         </div>
 
-                        <!-- Step 4: Suggestions -->
+                        {{-- Step 4: Suggestions --}}
                         <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 4 ? 'bg-blue-50 border border-dashed border-blue-200' : 'bg-gray-100' }}">
                             <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 4 ? 'bg-blue-600 text-white' : 'bg-gray-300 text-gray-600' }}">
                                 4
@@ -90,7 +90,7 @@
                         </div>
                     </div>
 
-                    <!-- Progress Bar -->
+                    {{-- Progress Bar --}}
                     <div class="mt-8">
                         <div class="flex justify-between text-sm text-gray-600 mb-2">
                             <span>Progress</span>
@@ -103,9 +103,9 @@
                     </div>
                 </div>
 
-                <!-- Right Content - Form Steps -->
+                {{-- Right Content - Form Steps --}}
                 <div class="lg:w-3/4 p-6 lg:p-8">
-                    <!-- Success Message -->
+                    {{-- Success Message --}}
                     @if (session()->has('success_message'))
                         <div class="mb-8 p-6 bg-green-50 border border-green-200 rounded-xl">
                             <div class="flex items-center">
@@ -126,7 +126,7 @@
                         </div>
                     @endif
 
-                    <!-- Error Message -->
+                    {{-- Error Message --}}
                     @if (session()->has('error'))
                         <div class="mb-8 p-6 bg-red-50 border border-red-200 rounded-xl">
                             <div class="flex items-center">
@@ -141,7 +141,7 @@
                         </div>
                     @endif
 
-                    <!-- OTP Message -->
+                    {{-- OTP Message --}}
                     @if (session()->has('otp_message'))
                         <div class="mb-8 p-6 bg-blue-50 border border-blue-200 rounded-xl">
                             <div class="flex items-center">
@@ -157,14 +157,14 @@
 
                     <form wire:submit.prevent="submitFeedback">
 
-                        <!-- Step 1: Email Verification -->
+                        {{-- Step 1: Email Verification --}}
                         @if ($currentStep == 1)
                             <div class="space-y-4">
                                 <div>
                                     <h2 class="text-lg font-bold text-gray-900 mb-1">Verify Your Email</h2>
                                     <p class="text-gray-600 text-sm">We'll send a verification code to ensure you're a real person.</p>
 
-                                    <!-- Session Status -->
+                                    {{-- Session Status --}}
                                     @if ($hasValidSession)
                                         <div class="mt-2 p-2 bg-green-50 border border-green-200 rounded">
                                             <div class="flex items-center">
@@ -183,10 +183,10 @@
                                         <input type="email" id="email" wire:model="email" wire:change="updateOTPRateLimitInfo"
                                             class="w-full px-3 py-2 text-sm border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-1 focus:ring-blue-500 focus:border-blue-500 transition-colors"
                                             placeholder="your.email@example.com"
-                                            {{ $sendingOtp ? 'disabled' : '' }}> <!-- Removed $isEmailBlocked from disabled -->
+                                            {{ $sendingOtp ? 'disabled' : '' }}> {{-- Removed $isEmailBlocked from disabled --}}
                                         @error('email') <span class="text-red-500 text-xs mt-1">{{ $message }}</span> @enderror
 
-                                        <!-- Blocked Email Warning -->
+                                        {{-- Blocked Email Warning --}}
                                         @if ($isEmailBlocked && $email)
                                             <div class="mt-2 p-3 bg-red-50 border border-red-200 rounded-lg">
                                                 <div class="flex items-center">
@@ -202,7 +202,7 @@
                                                 </div>
                                             </div>
                                         @elseif ($email && $remainingOTPRequests < 3)
-                                            <!-- Rate Limit Info -->
+                                            {{-- Rate Limit Info --}}
                                             <div class="mt-2 text-xs text-{{ $remainingOTPRequests > 0 ? 'blue' : 'orange' }}-600">
                                                 {{ \App\Helpers\FeedbackHelper::getRateLimitMessage($email) }}
                                             </div>
@@ -239,7 +239,7 @@
                                         </button>
                                     </div>
                                 @else
-                                    <!-- OTP Verification -->
+                                    {{-- OTP Verification --}}
                                     <div class="max-w-md mx-auto text-center">
                                         <div class="mb-8">
                                             <div class="mx-auto flex items-center justify-center h-16 w-16 rounded-full bg-blue-100 mb-4">
@@ -308,7 +308,7 @@
                             </div>
                         @endif
 
-                        <!-- Step 2: Basic Information -->
+                        {{-- Step 2: Basic Information --}}
                         @if ($currentStep == 2)
                             <div class="space-y-6">
                                 <div class="flex justify-end">
@@ -349,7 +349,7 @@
                             </div>
                         @endif
 
-                        <!-- Step 3: Feedback Details -->
+                        {{-- Step 3: Feedback Details --}}
                         @if ($currentStep == 3)
                             <div class="space-y-6">
                                 <div class="flex justify-end">
@@ -367,7 +367,7 @@
                                     <p class="text-gray-600">Provide detailed feedback about what needs to be changed or added.</p>
                                 </div>
 
-                                <!-- Content with Quill Editor -->
+                                {{-- Content with Quill Editor --}}
                                     <div>
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Feedback *
@@ -380,7 +380,7 @@
                                             toolbar="basic"
                                         />
 
-                                        <!-- Hidden field for validation -->
+                                        {{-- Hidden field for validation --}}
                                         <input type="hidden" wire:model="content" />
 
                                         @error('content')
@@ -393,7 +393,7 @@
                             </div>
                         @endif
 
-                        <!-- Step 4: Suggested Changes -->
+                        {{-- Step 4: Suggested Changes --}}
                         @if ($currentStep == 4)
                             <div class="space-y-6">
                                 <div class="flex justify-end">
@@ -492,7 +492,7 @@
             </div>
         </div>
 
-        <!-- Help Text -->
+        {{-- Help Text --}}
         <div class="mt-8 text-center">
             <p class="text-sm text-gray-600">
                 Your feedback helps us maintain accurate and up-to-date information.

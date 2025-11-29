@@ -1,7 +1,7 @@
 <div>
     <div class="min-h-screen bg-linear-to-br from-gray-50 to-gray-100 py-6">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <!-- Breadcrumb -->
+            {{-- Breadcrumb --}}
             <nav class="flex items-center space-x-2 text-sm text-gray-500 mb-8">
                 <a href="{{ url('/') }}" class="hover:text-blue-600 transition-colors duration-200 flex items-center">
                     <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -22,16 +22,16 @@
             </nav>
 
             <div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
-                <!-- Main Content -->
+                {{-- Main Content --}}
                 <div class="lg:col-span-8 space-y-8">
-                    <!-- Main Content Card -->
+                    {{-- Main Content Card --}}
                     <div class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden transition-all duration-300 hover:shadow-md">
-                        <!-- Header Section -->
+                        {{-- Header Section --}}
                         <div class="bg-linear-to-r from-red-50 via-orange-50 to-amber-50 border-b border-red-100 p-6 lg:p-8">
                             <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-6">
-                                <!-- Person Info & Title -->
+                                {{-- Person Info & Title --}}
                                 <div class="flex-1">
-                                    <!-- Person Card -->
+                                    {{-- Person Card --}}
                                     <div class="flex items-start space-x-4 mb-6">
                                         <a href="{{ route('people.people.show', $person->slug)}}" class="shrink-0 transform hover:scale-105 transition-transform duration-200">
                                             <div class="relative">
@@ -69,12 +69,12 @@
                                         </div>
                                     </div>
 
-                                    <!-- Controversy Title -->
+                                    {{-- Controversy Title --}}
                                     <h1 class="text-3xl lg:text-4xl font-bold text-gray-900 mb-6 leading-tight tracking-tight">
                                         {{ $controversy->title }}
                                     </h1>
 
-                                    <!-- Meta Information -->
+                                    {{-- Meta Information --}}
                                     <div class="flex flex-wrap items-center gap-4 text-sm">
                                         @if($controversy->date)
                                         <div class="flex items-center text-gray-600 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
@@ -85,7 +85,7 @@
                                         </div>
                                         @endif
 
-                                        <!-- Status Badge -->
+                                        {{-- Status Badge --}}
                                         <div class="flex items-center">
                                             <span class="inline-flex items-center px-4 py-2 rounded-full text-sm font-semibold shadow-sm {{ $controversy->is_resolved ? 'bg-gradient-to-r from-green-50 to-emerald-50 text-green-700 border border-green-200' : 'bg-gradient-to-r from-orange-50 to-red-50 text-orange-700 border border-orange-200' }}">
                                                 <span class="w-2 h-2 rounded-full {{ $controversy->is_resolved ? 'bg-green-500' : 'bg-orange-500' }} mr-2 animate-pulse"></span>
@@ -93,7 +93,7 @@
                                             </span>
                                         </div>
 
-                                        <!-- Last Updated -->
+                                        {{-- Last Updated --}}
                                         <div class="flex items-center text-gray-600 bg-white px-3 py-2 rounded-lg border border-gray-200 shadow-sm">
                                             <svg class="w-4 h-4 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
@@ -103,7 +103,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Action Buttons -->
+                                {{-- Action Buttons --}}
                                 <div class="flex flex-col sm:flex-row lg:flex-col gap-3">
                                     @if($controversy->source_url)
                                     <a href="{{ $controversy->source_url }}" target="_blank" class="group inline-flex items-center justify-center px-5 py-3 border border-red-200 text-sm font-semibold rounded-xl text-red-700 bg-white hover:bg-red-50 hover:border-red-300 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
@@ -124,14 +124,14 @@
                             </div>
                         </div>
 
-                        <!-- Structured Data -->
+                        {{-- Structured Data --}}
                         <script type="application/ld+json">
                             {!! $this->getStructuredData() !!}
                         </script>
 
-                        <!-- Content Section -->
+                        {{-- Content Section --}}
                         <div class="p-6 lg:p-8">
-                            <!-- Controversy Content -->
+                            {{-- Controversy Content --}}
                             <div class="prose prose-lg max-w-none
                                 prose-headings:font-bold prose-headings:text-gray-900 prose-headings:leading-tight
                                 prose-p:leading-relaxed prose-p:text-gray-700 prose-p:text-lg
@@ -147,7 +147,7 @@
                                 {!! $controversy->safe_html_content !!}
                             </div>
 
-                            <!-- Source Section -->
+                            {{-- Source Section --}}
                             @if($controversy->source_url)
                             <div class="mt-12 p-6 bg-gradient-to-r from-gray-50 to-gray-100 rounded-2xl border border-gray-200 shadow-sm">
                                 <div class="flex items-start space-x-4">
@@ -169,7 +169,7 @@
                         </div>
                     </div>
 
-                    <!-- Related Controversies -->
+                    {{-- Related Controversies --}}
                     @php
                     $relatedControversies = \App\Models\Controversy::with(['person'])
                     ->where('person_id', $person->id)
@@ -220,7 +220,7 @@
                     @endif
                 </div>
 
-                <!-- Sidebar -->
+                {{-- Sidebar --}}
                 <div class="lg:col-span-4">
                     <div class="sticky top-6 space-y-6">
                         <livewire:partials.profession-category-list />

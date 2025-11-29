@@ -242,6 +242,9 @@
                                             <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                                         @enderror
                                     </div>
+                                    <div>
+                                        <x-flux::input type="text" wire:model="image_caption" label="Image Caption" placeholder="Image source..." />
+                                    </div>
 
                                     <!-- Description -->
                                     <x-flux::textarea label="Description" wire:model="description"

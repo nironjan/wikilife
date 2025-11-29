@@ -3,12 +3,12 @@
         <h2 id="footer-heading" class="sr-only">Footer</h2>
 
         <div class="max-w-6xl mx-auto px-4 py-12">
-            <!-- Main Footer Grid -->
+            {{-- Main Footer Grid --}}
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-12">
 
-                <!-- Grid 1: About & Social -->
+                {{-- Grid 1: About & Social --}}
                 <div class="space-y-6">
-                    <!-- Logo & Site Info -->
+                    {{-- Logo & Site Info --}}
                     <div class="flex items-start space-x-4">
                         <div class="w-8 h-8 bg-red-600 rounded-lg flex items-center justify-center shrink-0">
                             <span class="text-white font-bold text-lg">W</span>
@@ -36,7 +36,7 @@
 
 
 
-                    <!-- Social Links -->
+                    {{-- Social Links --}}
                     @if(!empty($socialLinks))
                         <div class="space-y-3">
                             <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider">Follow Us</h4>
@@ -64,7 +64,7 @@
                     @endif
                 </div>
 
-                <!-- Grid 2: Important Links -->
+                {{-- Grid 2: Important Links --}}
                 <div class="space-y-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Quick Links</h3>
                     <ul class="space-y-3">
@@ -90,7 +90,7 @@
                     </ul>
                 </div>
 
-                <!-- Grid 3: Professions -->
+                {{-- Grid 3: Professions --}}
                 <div class="space-y-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Browse Professions</h3>
                     <ul class="space-y-3">
@@ -108,7 +108,7 @@
                     </ul>
                 </div>
 
-                <!-- Grid 4: Contact & Newsletter -->
+                {{-- Grid 4: Contact & Newsletter --}}
                 <div class="space-y-6">
                     <h3 class="text-lg font-semibold text-gray-900 mb-4">Get In Touch</h3>
                     <div class="space-y-4">
@@ -137,7 +137,7 @@
                         @endif
                     </div>
 
-                    <!-- Newsletter Signup -->
+                    {{-- Newsletter Signup --}}
                     <div class="pt-4">
                         <h4 class="text-sm font-semibold text-gray-900 uppercase tracking-wider mb-3">Stay Updated</h4>
                         <form class="space-y-2">
@@ -158,15 +158,15 @@
                 </div>
             </div>
 
-            <!-- Bottom Bar -->
+            {{-- Bottom Bar --}}
             <div class="border-t border-gray-200 mt-12 pt-8">
                 <div class="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
-                    <!-- Copyright Text -->
+                    {{-- Copyright Text --}}
                     <div class="text-gray-500 text-sm text-center md:text-left">
                         &copy; {{ date('Y') }} {{ $siteSettings->site_name ?? 'WikiLife' }}. All rights reserved.
                     </div>
 
-                    <!-- Footer Bar Menu -->
+                    {{-- Footer Bar Menu --}}
                     @if(!empty($footerBarMenus))
                         <div class="flex flex-wrap justify-center md:justify-end items-center gap-4 md:gap-6">
                             @foreach($footerBarMenus as $menu)
@@ -188,6 +188,8 @@
                     @endif
                 </div>
             </div>
+            {{-- Add padding for mobile floating menu --}}
+            <div class="pb-20 lg:pb-0"></div>
         </div>
     </footer>
 </div>

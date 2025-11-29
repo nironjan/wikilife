@@ -2,7 +2,7 @@
     <section class="bg-linear-to-br from-white via-red-50/30 to-white flex items-center py-6">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
             <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
-                <!-- Left Column - Content & Search -->
+                {{-- Left Column - Content & Search --}}
                 <div class="space-y-4 text-center md:text-left">
                     <div class="inline-flex items-center px-4 py-2 rounded-full bg-red-100 text-red-700 text-xs font-medium border border-red-200">
                         <svg class="w-4 h-4 mr-2" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
@@ -11,7 +11,7 @@
                         India's Biography Encyclopedia
                     </div>
 
-                    <!-- Main Heading -->
+                    {{-- Main Heading --}}
                     <div class="space-y-2">
                         <h1 class="text-2xl md:text-3xl font-bold text-gray-900 leading-tight">
                             Discover
@@ -25,14 +25,14 @@
                         </p>
                     </div>
 
-                    <!-- Search Box -->
+                    {{-- Search Box --}}
                     <livewire:front.search-box
                         variant="hero"
                         input-class="bg-gray-900 text-black border-gray-700 placeholder-gray-400"
                         button-class="text-black hover:text-red-400"
                     />
 
-                    <!-- Quick Stats -->
+                    {{-- Quick Stats --}}
                     <div class="flex justify-center md:justify-start gap-6 pt-4">
                         <div class="text-center md:text-left">
                             <div class="text-lg font-bold text-red-600">10K+</div>
@@ -49,11 +49,11 @@
                     </div>
                 </div>
 
-                <!-- Right Column - Illustration -->
+                {{-- Right Column - Illustration --}}
                 <div class="relative hidden md:block">
-                    <!-- Main Illustration Container -->
+                    {{-- Main Illustration Container --}}
                     <div class="relative p-4 mb-2">
-                        <!-- Background Pattern -->
+                        {{-- Background Pattern --}}
                         <div class="absolute inset-0 opacity-10">
                             <svg class="w-full h-full" viewBox="0 0 400 400" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <circle cx="200" cy="200" r="150" stroke="currentColor" stroke-width="1" fill="none"/>
@@ -62,18 +62,18 @@
                             </svg>
                         </div>
 
-                        <!-- Main Illustration -->
+                        {{-- Main Illustration --}}
                         <div class="relative z-10">
-                            <!-- Book/Knowledge Theme -->
+                            {{-- Book/Knowledge Theme --}}
                             <div class="flex justify-center items-center space-x-8 mb-8">
-                                <!-- Book Stack -->
+                                {{-- Book Stack --}}
                                 <div class="relative">
                                     <div class="w-16 h-20 bg-red-500 rounded-lg transform rotate-6 shadow-lg"></div>
                                     <div class="w-16 h-20 bg-red-400 rounded-lg absolute top-1 left-1 transform -rotate-3 shadow-lg"></div>
                                     <div class="w-16 h-20 bg-red-300 rounded-lg absolute top-2 left-2 transform rotate-2 shadow-lg"></div>
                                 </div>
 
-                                <!-- Globe -->
+                                {{-- Globe --}}
                                 <div class="relative">
                                     <div class="w-20 h-20 bg-blue-500 rounded-full shadow-lg"></div>
                                     <div class="absolute inset-2 bg-blue-400 rounded-full"></div>
@@ -82,9 +82,9 @@
                                 </div>
                             </div>
 
-                            <!-- People Silhouettes -->
+                            {{-- People Silhouettes --}}
                             <div class="flex justify-center space-x-6 mb-8">
-                                <!-- Scientist -->
+                                {{-- Scientist --}}
                                 <div class="text-center">
                                     <div class="w-12 h-16 bg-purple-500 rounded-t-full mx-auto mb-2 relative">
                                         <div class="w-8 h-8 bg-purple-400 rounded-full absolute -top-2 left-2"></div>
@@ -92,7 +92,7 @@
                                     <span class="text-xs text-gray-500 font-medium">Scientists</span>
                                 </div>
 
-                                <!-- Artist -->
+                                {{-- Artist --}}
                                 <div class="text-center">
                                     <div class="w-12 h-16 bg-green-500 rounded-t-full mx-auto mb-2 relative">
                                         <div class="w-3 h-3 bg-green-400 rounded-full absolute top-2 left-4"></div>
@@ -101,7 +101,7 @@
                                     <span class="text-xs text-gray-500 font-medium">Artists</span>
                                 </div>
 
-                                <!-- Leader -->
+                                {{-- Leader --}}
                                 <div class="text-center">
                                     <div class="w-12 h-16 bg-yellow-500 rounded-t-full mx-auto mb-2 relative">
                                         <div class="w-8 h-8 bg-yellow-400 rounded-full absolute -top-2 left-2"></div>
@@ -111,9 +111,9 @@
                                 </div>
                             </div>
 
-                            <!-- Achievement Icons -->
+                            {{-- Achievement Icons --}}
                             <div class="flex justify-center space-x-8">
-                                <!-- Trophy -->
+                                {{-- Trophy --}}
                                 <div class="text-center">
                                     <div class="w-10 h-10 bg-yellow-500 rounded-full flex items-center justify-center mx-auto mb-1 shadow-md">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -123,7 +123,7 @@
                                     <span class="text-xs text-gray-500">Achievements</span>
                                 </div>
 
-                                <!-- Lightbulb -->
+                                {{-- Lightbulb --}}
                                 <div class="text-center">
                                     <div class="w-10 h-10 bg-orange-500 rounded-full flex items-center justify-center mx-auto mb-1 shadow-md">
                                         <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,7 +133,7 @@
                                     <span class="text-xs text-gray-500">Innovations</span>
                                 </div>
 
-                                <!-- Heart -->
+                                {{-- Heart --}}
                                 <div class="text-center">
                                     <div class="w-10 h-10 bg-pink-500 rounded-full flex items-center justify-center mx-auto mb-1 shadow-md">
                                         <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -145,13 +145,13 @@
                             </div>
                         </div>
 
-                        <!-- Floating Elements -->
+                        {{-- Floating Elements --}}
                         <div class="absolute -top-4 right-4 w-8 h-8 bg-red-400 rounded-full opacity-20 animate-pulse"></div>
                         <div class="absolute -bottom-4 -left-4 w-6 h-6 bg-blue-400 rounded-full opacity-20 animate-pulse delay-1000"></div>
                         <div class="absolute top-1/2 right-6 w-4 h-4 bg-green-400 rounded-full opacity-20 animate-pulse delay-500"></div>
                     </div>
 
-                    <!-- Background Decorative Elements -->
+                    {{-- Background Decorative Elements --}}
                     <div class="absolute -z-10 top-10  w-32 h-32 bg-red-200 rounded-full opacity-20 blur-xl"></div>
                     <div class="absolute -z-10 bottom-10 -left-10 w-40 h-40 bg-blue-200 rounded-full opacity-20 blur-xl"></div>
                 </div>

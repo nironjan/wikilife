@@ -321,36 +321,87 @@
                                     </div>
 
                                     <!-- Political Journey -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <div class="space-y-2">
+                                        <label class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
                                             Political Journey
                                         </label>
-                                        <textarea wire:model="political_journey" rows="3"
-                                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            placeholder="Describe their political journey, career progression, and key milestones..."></textarea>
-                                        <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-                                            Brief overview of their political career progression
-                                        </p>
+                                        <div>
+
+
+                                            <x-quill-editor wire:model="political_journey" placeholder="Describe their political journey, career progression, and key milestones..."
+                                                height="400px" toolbar="basic" />
+
+                                            <!-- Hidden field for validation -->
+                                            <input type="hidden" wire:model="political_journey" />
+
+                                            @error('political_journey')
+                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                            @enderror
+                                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                Use the toolbar above to format your content with rich text editing.
+                                            </p>
+                                        </div>
                                     </div>
 
                                     <!-- Notable Achievements -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                                    <div class="space-y-2">
+                                        <label class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
                                             Notable Achievements
                                         </label>
-                                        <textarea wire:model="notable_achievements" rows="3"
-                                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            placeholder="List significant political achievements, legislation passed, reforms implemented..."></textarea>
+                                        <div>
+
+
+                                            <x-quill-editor wire:model="notable_achievements" placeholder="List significant political achievements, legislation passed, reforms implemented..."
+                                                height="400px" toolbar="basic" />
+
+                                            <!-- Hidden field for validation -->
+                                            <input type="hidden" wire:model="notable_achievements" />
+
+                                            @error('notable_achievements')
+                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                            @enderror
+                                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                Use the toolbar above to format your content with rich text editing.
+                                            </p>
+                                        </div>
                                     </div>
 
                                     <!-- Major Initiatives -->
-                                    <div>
-                                        <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                                            Major Initiatives
+                                    <div class="space-y-2">
+                                        <label class="flex items-center text-sm font-semibold text-gray-700 dark:text-gray-300">
+                                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                                    d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z">
+                                                </path>
+                                            </svg>
+                                            Notable Achievements
                                         </label>
-                                        <textarea wire:model="major_initiatives" rows="3"
-                                            class="block w-full border border-gray-300 rounded-md shadow-sm focus:ring-blue-500 focus:border-blue-500 sm:text-sm dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                                            placeholder="Describe major political initiatives, campaigns, or projects led..."></textarea>
+                                        <div>
+
+
+                                            <x-quill-editor wire:model="major_initiatives" placeholder="Describe major political initiatives, campaigns, or projects led..."
+                                                height="400px" toolbar="basic" />
+
+                                            <!-- Hidden field for validation -->
+                                            <input type="hidden" wire:model="major_initiatives" />
+
+                                            @error('major_initiatives')
+                                                <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
+                                            @enderror
+                                            <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
+                                                Use the toolbar above to format your content with rich text editing.
+                                            </p>
+                                        </div>
                                     </div>
 
                                     <!-- Notes -->

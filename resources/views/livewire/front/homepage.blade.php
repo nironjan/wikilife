@@ -1,29 +1,29 @@
 <div>
     <main>
-        <!-- Hero Section -->
+        {{-- Hero Section --}}
         <livewire:partials.hero-section lazy="on-load" />
 
-        <!-- Born Today Section -->
+        {{-- Born Today Section --}}
         <livewire:front.born-today.card lazy="on-load" />
 
-        <!-- Popular Person Section -->
+        {{-- Popular Person Section --}}
         <livewire:front.popular-person.index lazy="on-load" />
 
-        <!-- Call to Action Section -->
+        {{-- Call to Action Section --}}
         <livewire:partials.call-to-action />
 
-        <!-- Born Today Section -->
+        {{-- Born Today Section --}}
         <livewire:front.blogs.recent-card lazy="on-load" />
 
-        <!-- Recent Persons & Sidebar Section -->
+        {{-- Recent Persons & Sidebar Section --}}
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
-                <!-- Main Content -->
+                {{-- Main Content --}}
                 <div class="md:col-span-8">
                     <livewire:partials.recent-person-list />
                 </div>
 
-                <!-- Sidebar -->
+                {{-- Sidebar --}}
                 <div class="md:col-span-4">
                     <livewire:partials.profession-category-list />
                 </div>

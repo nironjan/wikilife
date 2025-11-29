@@ -100,3 +100,23 @@ if (!function_exists('convertQuillLists')) {
         return $dom->saveHTML();
     }
 }
+
+
+// currency convert
+if (!function_exists('getCurrencySymbol')) {
+    function getCurrencySymbol($currencyCode) {
+        $symbols = [
+            'USD' => '$',
+            'EUR' => '€',
+            'GBP' => '£',
+            'INR' => '₹',
+            'JPY' => '¥',
+            'CAD' => 'C$',
+            'AUD' => 'A$',
+            'CHF' => 'CHF',
+            'CNY' => '¥',
+        ];
+
+        return $symbols[$currencyCode] ?? $currencyCode;
+    }
+}

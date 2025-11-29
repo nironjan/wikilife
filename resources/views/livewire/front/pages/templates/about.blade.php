@@ -1,5 +1,5 @@
 <div>
-    <!-- Hero Section -->
+    {{-- Hero Section --}}
     <section class="relative py-16 bg-gradient-to-r from-primary-600 to-primary-800 dark:from-gray-900 dark:to-gray-800">
         <div class="absolute inset-0 bg-black/80 dark:bg-black/40"></div>
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative">
@@ -17,13 +17,13 @@
         </div>
     </section>
 
-    <!-- Main Content with Sidebar -->
+    {{-- Main Content with Sidebar --}}
     <section class="py-12 bg-white dark:bg-gray-900">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="grid grid-cols-1 lg:grid-cols-6 gap-8">
-                <!-- Main Content (3 columns) -->
+                {{-- Main Content (3 columns) --}}
                 <div class="lg:col-span-4">
-                    <!-- About Us Content -->
+                    {{-- About Us Content --}}
                     <article class="py-6 max-w-none text-[16.5px] sm:text-[17px] leading-relaxed text-gray-800 dark:text-gray-200 [&_h1]:text-3xl [&_h1]:font-semibold [&_h1]:leading-snug [&_h1]:mt-4 [&_h1]:mb-2 [&_h2]:text-2xl [&_h2]:font-semibold [&_h2]:leading-snug [&_h2]:mt-3 [&_h2]:mb-2 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:mt-3 [&_h3]:mb-1.5 [&_p]:my-1.5 [&_p]:text-gray-700 dark:[&_p]:text-gray-300 [&_a]:text-rose-600 dark:[&_a]:text-rose-400 [&_a]:underline [&_a]:decoration-rose-400/70 [&_a]:decoration-[0.5px] [&_a]:underline-offset-[3px] hover:[&_a]:text-rose-700
                         dark:hover:[&_a]:text-rose-300 hover:[&_a]:decoration-rose-500/90 transition-colors duration-200 [&_strong]:font-semibold [&_strong]:text-gray-900 dark:[&_strong]:text-gray-100 [&_em]:italic
                         [&_ul]:list-disc [&_ul]:ml-6 [&_ul]:my-2 [&_li]:my-0.5 [&_li]:leading-snug [&_ol]:list-decimal [&_ol]:ml-6 [&_ol]:my-2 [&_blockquote]:border-l-2 [&_blockquote]:border-blue-500/70 [&_blockquote]:pl-4 [&_blockquote]:italic [&_blockquote]:my-2 [&_img]:rounded-xl [&_img]:shadow-md [&_img]:mx-auto [&_img]:my-3 [&_img]:transition-all hover:[&_img]:scale-[1.015]
@@ -36,11 +36,11 @@
 
                     </article>
 
-                    <!-- What We Offer Section -->
+                    {{-- What We Offer Section --}}
                     <section class="mb-12">
                         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">What We Offer</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <!-- Card 1 -->
+                            {{-- Card 1 --}}
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow duration-300">
                                 <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
                                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -53,7 +53,7 @@
                                 </p>
                             </div>
 
-                            <!-- Card 2 -->
+                            {{-- Card 2 --}}
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow duration-300">
                                 <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
                                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -66,7 +66,7 @@
                                 </p>
                             </div>
 
-                            <!-- Card 3 -->
+                            {{-- Card 3 --}}
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow duration-300">
                                 <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
                                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -79,7 +79,7 @@
                                 </p>
                             </div>
 
-                            <!-- Card 4 -->
+                            {{-- Card 4 --}}
                             <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 hover:shadow-md transition-shadow duration-300">
                                 <div class="w-12 h-12 bg-primary-100 dark:bg-primary-900 rounded-lg flex items-center justify-center mb-4">
                                     <svg class="w-6 h-6 text-primary-600 dark:text-primary-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -94,7 +94,7 @@
                         </div>
                     </section>
 
-                    <!-- Our Team Section -->
+                    {{-- Our Team Section --}}
                     <section class="mb-12">
                         <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">Our Team</h2>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -114,7 +114,7 @@
                             @forelse($teamMembers as $member)
                                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 text-center">
                                     @if($member->profile_image_url)
-                                        <!-- Profile Image with optimized size -->
+                                        {{-- Profile Image with optimized size --}}
                                         <div class="w-20 h-20 rounded-full mx-auto mb-4 overflow-hidden border-2 border-primary-200 dark:border-primary-700">
                                             <img
                                                 src="{{ $member->imageSize(80, 80) ?? $member->profile_image_url }}"
@@ -124,7 +124,7 @@
                                             >
                                         </div>
                                     @else
-                                        <!-- Fallback Initials -->
+                                        {{-- Fallback Initials --}}
                                         <div class="w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl font-bold">
                                             {{ substr($member->name, 0, 2) }}
                                         </div>
@@ -145,7 +145,7 @@
                                     @endif
                                 </div>
                             @empty
-                                <!-- Fallback team members if no users found -->
+                                {{-- Fallback team members if no users found --}}
                                 <div class="bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 p-6 text-center">
                                     <div class="w-20 h-20 bg-gradient-to-r from-primary-500 to-primary-600 rounded-full mx-auto mb-4 flex items-center justify-center text-white text-xl font-bold">
                                         TM
@@ -161,7 +161,7 @@
                     </section>
                 </div>
 
-                <!-- Sidebar (1 column) -->
+                {{-- Sidebar (1 column) --}}
                 <div class="lg:col-span-2">
                     @php
                         // Fetch statistics from People model
@@ -179,7 +179,7 @@
                             ->count();
                     @endphp
 
-                    <!-- Biography Summary Stats -->
+                    {{-- Biography Summary Stats --}}
                     <div class="bg-white dark:bg-gray-800 rounded-xl shadow border border-gray-200 dark:border-gray-700 p-6 mb-6 sticky top-6">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4 uppercase">Key Figures</h3>
                         <div class="space-y-4">
@@ -202,7 +202,7 @@
                         </div>
                     </div>
 
-                    <!-- Contact & Support Section -->
+                    {{-- Contact & Support Section --}}
                     <div class="bg-gradient-to-br from-primary-50 to-primary-100 dark:from-primary-900/20 dark:to-primary-800/20 rounded-xl shadow border border-primary-200 dark:border-primary-700 p-6">
                         <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-4">Contact & Support</h3>
                         <div class="space-y-4">
@@ -267,7 +267,7 @@
                         @endif
                     </div>
 
-                    <!-- AdSense Ad Unit (Example) -->
+                    {{-- AdSense Ad Unit (Example) --}}
                     <div class="mt-6 p-4 border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg text-center">
                         <p class="text-sm text-gray-500 dark:text-gray-400 mb-2">Advertisement</p>
                         <div class="bg-gray-100 dark:bg-gray-700 h-60 flex items-center justify-center rounded">

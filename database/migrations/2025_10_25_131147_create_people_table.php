@@ -21,13 +21,16 @@ return new class extends Migration {
 
             // Media
             $table->string('cover_image')->nullable();
+            $table->string('cover_img_caption')->nullable();
             $table->string('cover_file_id')->nullable();
             $table->string('profile_image')->nullable();
+            $table->string('profile_image_caption')->nullable();
             $table->string('profile_img_file_id')->nullable();
 
 
             // Biography
             $table->text('about')->nullable();
+            $table->longText('early_life')->nullable();
             $table->enum('gender', ['male', 'female', 'other'])->nullable();
             $table->date('birth_date')->nullable();
             $table->date('death_date')->nullable();
@@ -39,6 +42,8 @@ return new class extends Migration {
             $table->text('address')->nullable();
 
             // Background
+            $table->string('state_code', 5)->nullable();
+            $table->string('state_name')->nullable();
             $table->string('nationality')->nullable();
             $table->string('religion')->nullable();
             $table->string('caste')->nullable();
@@ -66,9 +71,15 @@ return new class extends Migration {
             // Audit
             $table->timestamps();
 
-            // Indexes
-            $table->index(['name', 'slug']);
-            $table->index(['status', 'verified']);
+            // 🔥 OPTIMIZED INDEXES FOR BIOGRAPHY QUERIES
+            $table->index(['status', 'verified', 'created_at']); // For admin listings
+            $table->index(['birth_date']); // For age-based queries
+            $table->index(['state_code', 'status']); // For location filtering
+            $table->index(['gender', 'status']); // For demographic queries
+            $table->index(['nationality', 'status']); // For nationality filtering
+            $table->index(['created_at']); // For recent additions
+            $table->index(['view_count']); // For popular biographies
+            $table->index(['name']); // For name searches
         });
     }
 

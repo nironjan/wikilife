@@ -1,6 +1,6 @@
 <div>
     <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-        Sports Awards & Recognition
+
         @if (count($award_ids) > 0)
             <span
                 class="ml-2 inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-800 dark:bg-purple-800 dark:text-purple-100">

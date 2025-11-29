@@ -17,6 +17,7 @@ class PersonAward extends Model
         'description',
         'awarded_at',
         'award_image',
+        'image_caption',
         'award_image_file_id',
         'category',
         'organization',

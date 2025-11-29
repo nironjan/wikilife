@@ -1,5 +1,6 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Builder;
@@ -29,19 +30,16 @@ class Assets extends Model
         'references' => 'array',
     ];
 
-    // ========= RELATIONS ================
+    // ========= RELATIONS ============
     public function person()
     {
         return $this->belongsTo(People::class);
     }
 
-
-
-    // ========== SCOPES ==================
-
+    // ========= SCOPES ===============
     public function scopeByYear(Builder $query, int $year)
     {
-        return $query->where('year_estiated', $year);
+        return $query->where('year_estimated', $year);
     }
 
     public function scopeWealthy(Builder $query, int $minNetWorth = 15200000)
@@ -49,14 +47,49 @@ class Assets extends Model
         return $query->where('net_worth', '>=', $minNetWorth);
     }
 
-
-    // ========= ATTRIBUTES ================
-
-    public function getFormattedNetWorthAttribute()
+ // ========= ATTRIBUTES ===========
+    public function getFormattedNetWorthAttribute(): string
     {
-        if (!$this->net_worth)
+        if (!$this->net_worth) {
             return 'N/A';
+        }
 
-        return $this->currency . ' ' . number_format($this->net_worth);
+        $symbol = getCurrencySymbol($this->currency);
+        return $symbol . ' ' . number_format($this->net_worth);
+    }
+
+    public function getIsHighNetWorthAttribute(): bool
+    {
+        return $this->net_worth >= 15200000;
+    }
+
+    public function getReferencesListAttribute(): array
+    {
+        return $this->references ?: [];
+    }
+
+    public function getFormattedIncomeAttribute(): string
+    {
+        if (!$this->income) {
+            return 'N/A';
+        }
+
+        $symbol = getCurrencySymbol($this->currency);
+        return $symbol . ' ' . number_format($this->income);
+    }
+
+    public function getFormattedCurrentAssetsAttribute(): string
+    {
+        if (!$this->current_assets) {
+            return 'N/A';
+        }
+
+        $symbol = getCurrencySymbol($this->currency);
+        return $symbol . ' ' . number_format($this->current_assets);
+    }
+
+    public function getEstimatedYearLabelAttribute(): ?string
+    {
+        return $this->year_estimated ? $this->year_estimated . ' Estimate' : null;
     }
 }
