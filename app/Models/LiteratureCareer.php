@@ -48,11 +48,11 @@ class LiteratureCareer extends Model
     protected static function booted()
 {
     static::saved(function ($career) {
-        app(SitemapService::class)->generateSitemap();
+        app(SitemapService::class)->regenerateDynamicContentSitemap();
     });
 
     static::deleted(function () {
-        app(SitemapService::class)->generateSitemap();
+        app(SitemapService::class)->regenerateDynamicContentSitemap();
     });
 }
 

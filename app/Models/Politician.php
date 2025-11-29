@@ -46,15 +46,15 @@ class Politician extends Model
     ];
 
     protected static function booted()
-{
-    static::saved(function ($career) {
-        app(SitemapService::class)->generateSitemap();
-    });
+    {
+        static::saved(function ($career) {
+            app(SitemapService::class)->regenerateDynamicContentSitemap();
+        });
 
-    static::deleted(function () {
-        app(SitemapService::class)->generateSitemap();
-    });
-}
+        static::deleted(function () {
+            app(SitemapService::class)->regenerateDynamicContentSitemap();
+        });
+    }
 
     // ========= RELATIONS ============
     public function person()

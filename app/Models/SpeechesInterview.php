@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Services\ImageKitService;
+use App\Services\SitemapService;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -29,6 +30,32 @@ class SpeechesInterview extends Model
     protected $casts = [
         'date' => 'date',
     ];
+
+    /**
+     * The "booted" method of the model
+     */
+
+    protected static function booted(){
+        //Generate sitemap when a person is created
+        static::created(function ($speechesInterview){
+            if($speechesInterview->status === 'active' && $speechesInterview->verified){
+                app(SitemapService::class)->regenerateSpeechesSitemap();
+            }
+        });
+
+        // Generate sitemap when a person is updated
+        static::updated(function ($speechesInterview){
+            if($speechesInterview->isDirty(['slug', 'title'])){
+                app(SitemapService::class)->regenerateSpeechesSitemap();
+            }
+        });
+
+        // generate sitemap when a person is deleted
+        static::deleted(function($speechesInterview){
+            app(SitemapService::class)->regenerateSpeechesSitemap();
+        });
+    }
+
 
     /**
      * Boot function for model events

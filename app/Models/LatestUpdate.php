@@ -38,12 +38,12 @@ class LatestUpdate extends Model
     protected static function booted(){
         static::saved(function($update){
             if($update->isPublished() && $update->isApproved()){
-                app(SitemapService::class)->generateSitemap();
+                app(SitemapService::class)->regenerateDynamicContentSitemap();
             }
         });
 
         static::deleted(function(){
-            app(SitemapService::class)->generateSitemap();
+            app(SitemapService::class)->regenerateDynamicContentSitemap();
         });
     }
 

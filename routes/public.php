@@ -17,6 +17,11 @@ Route::prefix('people')->name('people.')->middleware(['web', 'cache.headers:no_s
     // Professions
     Route::get('/profession', \App\Livewire\Front\Professions\Index::class)->name('profession.index');
 
+    // State-wise List route
+    Route::get('/states', \App\Livewire\Front\Person\States\Index::class)->name('states.index');
+    Route::get('/state/{stateCode}', \App\Livewire\Front\Person\StateList::class)->name('state-list.index');
+
+
     // Profession details route
     Route::get('/profession/{professionName}', \App\Livewire\Front\Professions\Details::class)
         ->name('profession.details')

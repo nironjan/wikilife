@@ -120,12 +120,16 @@ class Index extends Component
             ->mapWithKeys(fn($category) => [$category->id => $category->name])
             ->toArray();
 
-        $years = BlogPost::selectRaw('YEAR(published_at) as year')
-            ->whereNotNull('published_at')
-            ->groupBy('year')
-            ->orderBy('year', 'desc')
+        $years = BlogPost::whereNotNull('published_at')
+            ->select('published_at')
+            ->distinct()
+            ->orderBy('published_at', 'desc')
             ->get()
-            ->pluck('year')
+            ->map(function ($post) {
+                return $post->published_at->year;
+            })
+            ->unique()
+            ->values()
             ->toArray();
 
         $statuses = [

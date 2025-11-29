@@ -4,7 +4,6 @@ namespace App\Livewire\Front\Person;
 
 use App\Models\Assets;
 use App\Models\People;
-use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Layout;
 use Livewire\Attributes\Url;
@@ -582,13 +581,6 @@ class Details extends Component
 
     public function isActiveTab($tab)
     {
-        // Debug logging
-        Log::info("isActiveTab check", [
-            'requested_tab' => $tab,
-            'current_tab' => $this->tab,
-            'is_equal' => $this->tab === $tab
-        ]);
-
         return $this->tab === $tab;
     }
 

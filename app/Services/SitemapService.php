@@ -12,62 +12,215 @@ use App\Models\Page;
 use App\Models\People;
 use App\Models\Politician;
 use App\Models\SportsCareer;
+use App\Models\SpeechesInterview;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-class SitemapService{
+class SitemapService
+{
+    public function generateSitemapIndex()
+    {
+        $sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>';
+        $sitemapIndex .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
 
-    public function generateSitemap(){
-        $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
-        $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+        $sitemaps = [
+            'static' => 'Static Pages',
+            'pages' => 'Content Pages',
+            'people' => 'People Profiles',
+            'states' => 'State Pages',
+            'professions' => 'Profession Pages',
+            'blogs' => 'Blog Articles',
+            'careers' => 'Peoples Career',
+            'speeches' => 'Speeches & Interviews'
+        ];
 
-        // Add static pages
-        $sitemap .= $this->addStaticPages();
+        foreach ($sitemaps as $key => $description) {
+            $this->generateIndividualSitemap($key);
 
-        // Add dynamic pages
-        $sitemap .= $this->addDynamicPages();
+            $sitemapIndex .= "
+                <sitemap>
+                    <loc>" . $this->getSitemapUrl($key) . "</loc>
+                    <lastmod>" . Carbon::now()->toDateString() . "</lastmod>
+                </sitemap>
+            ";
+        }
 
-        // Add profession pages
-        $sitemap .= $this->addProfessionPages();
+        $sitemapIndex .= '</sitemapindex>';
 
-
-        // Add people pages
-        $sitemap .= $this->addPeoplePages();
-
-        // Add blog article and categories
-        $sitemap .= $this->addBlogPages();
-
-        // Add Latest updates, controversy, career...
-        $sitemap .= $this->addDynamicContentPages();
-
-        $sitemap .= '</urlset>';
-
-        // Save the sitemap
-        Storage::disk('public')->put('sitemap.xml', $sitemap);
+        Storage::disk('public')->put('sitemap_index.xml', $sitemapIndex);
+        Storage::disk('public')->put('sitemap.xml', $sitemapIndex); // Main sitemap points to index
 
         return true;
     }
 
-    protected function addStaticPages(){
+    protected function generateIndividualSitemap($type)
+    {
+        $sitemap = '<?xml version="1.0" encoding="UTF-8"?>';
+        $sitemap .= '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
+
+        switch ($type) {
+            case 'static':
+                $sitemap .= $this->addStaticPages();
+                break;
+            case 'pages':
+                $sitemap .= $this->addDynamicPages();
+                break;
+            case 'people':
+                $sitemap .= $this->addPeoplePages();
+                break;
+            case 'states':
+                $sitemap .= $this->addStatePages();
+                break;
+            case 'professions':
+                $sitemap .= $this->addProfessionPages();
+                break;
+            case 'blogs':
+                $sitemap .= $this->addBlogPages();
+                break;
+            case 'careers':
+                $sitemap .= $this->addDynamicContentPages();
+                break;
+            case 'speeches':
+                $sitemap .= $this->addSpeechesPages();
+                break;
+        }
+
+        $sitemap .= '</urlset>';
+
+        Storage::disk('public')->put("sitemap_{$type}.xml", $sitemap);
+
+        return true;
+    }
+
+    // Legacy method for backward compatibility
+    public function generateSitemap()
+    {
+        return $this->generateSitemapIndex();
+    }
+
+    public function getSitemapUrl($type = null)
+    {
+        if ($type) {
+            return url("/sitemap_{$type}.xml");
+        }
+        return url('/sitemap.xml');
+    }
+
+    protected function addStaticPages()
+    {
         $staticPages = [
             '/' => ['changefreq' => 'daily', 'priority' => '1.0'],
-            '/born-today' => ['changefreq' => 'daily', 'priority' => '0.8'],
+            route('people.born-today') => ['changefreq' => 'daily', 'priority' => '0.8'],
+            route('people.people.index') => ['changefreq' => 'daily', 'priority' => '0.9'],
+            route('people.states.index') => ['changefreq' => 'weekly', 'priority' => '0.8'],
+            route('people.profession.index') => ['changefreq' => 'weekly', 'priority' => '0.8'],
+            route('articles.index') => ['changefreq' => 'daily', 'priority' => '0.8'],
+            route('contact') => ['changefreq' => 'monthly', 'priority' => '0.5'],
         ];
 
         $xml = '';
-        foreach($staticPages as $page => $config){
+        foreach ($staticPages as $page => $config) {
             $xml .= $this->urlToXml(
-                url($page),
+                $page,
                 Carbon::now()->toDateString(),
                 $config['changefreq'],
-            $config['priority']
-        );
+                $config['priority']
+            );
         }
         return $xml;
     }
 
+    protected function addStatePages()
+    {
+        $xml = '';
 
-    protected function addDynamicPages(){
+        $xml .= $this->urlToXml(
+            route('people.states.index'),
+            Carbon::now()->toDateString(),
+            'weekly',
+            '0.8'
+        );
+
+        $states = config('indian_states.all', []);
+
+        foreach ($states as $stateCode => $stateName) {
+            $peopleCount = People::active()
+                ->verified()
+                ->where('state_code', $stateCode)
+                ->count();
+
+            $priority = $this->getStatePriority($peopleCount);
+            $changeFreq = $peopleCount > 50 ? 'weekly' : 'monthly';
+
+            $xml .= $this->urlToXml(
+                route('people.state-list.index', ['stateCode' => $stateCode]),
+                Carbon::now()->toDateString(),
+                $changeFreq,
+                $priority
+            );
+        }
+        return $xml;
+    }
+
+    protected function getStatePriority($peopleCount)
+    {
+        if ($peopleCount > 100) {
+            return '0.9';
+        } elseif ($peopleCount > 50) {
+            return '0.8';
+        } elseif ($peopleCount > 20) {
+            return '0.7';
+        } else {
+            return '0.6';
+        }
+    }
+
+    protected function addSpeechesPages()
+    {
+        $xml = '';
+
+        // Get all people who have speeches/interviews
+        $peopleWithSpeeches = People::active()
+            ->verified()
+            ->has('speechesInterviews')
+            ->select(['id', 'slug', 'updated_at'])
+            ->with(['speechesInterviews' => function($query) {
+                $query->select(['id', 'person_id', 'slug', 'type', 'updated_at', 'date'])
+                    ->orderBy('date', 'desc');
+            }])
+            ->get();
+
+        foreach ($peopleWithSpeeches as $person) {
+            // Add the speeches tab page for each person
+            $xml .= $this->urlToXml(
+                route('people.details.tab', [
+                    'slug' => $person->slug,
+                    'tab' => 'speeches-interviews'
+                ]),
+                $person->updated_at->toDateString(),
+                'monthly',
+                '0.7'
+            );
+
+            // Add individual speech/interview pages
+            foreach ($person->speechesInterviews as $speech) {
+                $xml .= $this->urlToXml(
+                    route('people.speeches.show', [
+                        'personSlug' => $person->slug,
+                        'slug' => $speech->slug
+                    ]),
+                    $speech->updated_at->toDateString(),
+                    'monthly',
+                    '0.6'
+                );
+            }
+        }
+
+        return $xml;
+    }
+
+    protected function addDynamicPages()
+    {
         $xml = '';
 
         // Get all published pages
@@ -96,7 +249,6 @@ class SitemapService{
 
     protected function getPagePriority($template)
     {
-        // Assign priorities based on template importance
         return match($template) {
             'home' => '1.0',
             'about' => '0.9',
@@ -106,7 +258,7 @@ class SitemapService{
             'privacy' => '0.3',
             'terms' => '0.3',
             'faq' => '0.5',
-            default => '0.6' // custom and other templates
+            default => '0.6'
         };
     }
 
@@ -123,7 +275,8 @@ class SitemapService{
         }
     }
 
-    protected function addBlogPages(){
+    protected function addBlogPages()
+    {
         $xml = '';
 
         // Blog Index page
@@ -150,7 +303,6 @@ class SitemapService{
         }
 
         // Blog Posts
-
         $posts = BlogPost::published()
             ->select(['slug', 'updated_at', 'published_at'])
             ->with('blogCategory:id,slug')
@@ -172,9 +324,6 @@ class SitemapService{
         return $xml;
     }
 
-
-
-
     protected function addProfessionPages()
     {
         $categories = config('professions.categories', []);
@@ -193,10 +342,10 @@ class SitemapService{
             $categorySlug = \Illuminate\Support\Str::slug($categoryKey);
 
             $xml .= $this->urlToXml(
-            route('people.profession.details', ['professionName' => $categorySlug]),
-            Carbon::now()->toDateString(),
-            'weekly',
-            '0.7'
+                route('people.profession.details', ['professionName' => $categorySlug]),
+                Carbon::now()->toDateString(),
+                'weekly',
+                '0.7'
             );
 
             // Add individual profession pages within each category
@@ -214,26 +363,26 @@ class SitemapService{
         return $xml;
     }
 
-
-    protected function addPeoplePages(){
+    protected function addPeoplePages()
+    {
         $people = People::active()
             ->verified()
             ->select(['slug', 'updated_at'])
             ->orderBy('updated_at', 'desc')
             ->get();
 
-            $xml = '';
-            foreach($people as $person){
-                // Main person profile page
-                $xml .= $this->urlToXml(
-                    route('people.people.show', $person->slug),
-                    $person->updated_at->toDateString(),
-                    'weekly',
-                    '0.9'
-                );
+        $xml = '';
+        foreach ($people as $person) {
+            // Main person profile page
+            $xml .= $this->urlToXml(
+                route('people.people.show', $person->slug),
+                $person->updated_at->toDateString(),
+                'weekly',
+                '0.9'
+            );
 
-                // Person tabs (biography, career, etc)
-                $tabs = ['biography', 'career', 'gallery', 'awards', 'updates', 'controversies'];
+            // Person tabs (biography, career, etc)
+            $tabs = ['biography', 'career', 'gallery', 'awards', 'updates', 'controversies'];
             foreach ($tabs as $tab) {
                 $xml .= $this->urlToXml(
                     route('people.details.tab', ['slug' => $person->slug, 'tab' => $tab]),
@@ -242,16 +391,16 @@ class SitemapService{
                     '0.7'
                 );
             }
+        }
 
-            }
-
-            return $xml;
+        return $xml;
     }
 
-    protected function addDynamicContentPages(){
+    protected function addDynamicContentPages()
+    {
         $xml = '';
 
-        // Lates Updates
+        // Latest Updates
         $latestUpdates = LatestUpdate::published()
             ->approved()
             ->select(['slug', 'person_id', 'updated_at'])
@@ -278,7 +427,7 @@ class SitemapService{
             ->with('person:id,slug')
             ->get();
 
-            foreach ($controversies as $controversy) {
+        foreach ($controversies as $controversy) {
             if ($controversy->person) {
                 $xml .= $this->urlToXml(
                     route('people.controversies.show', [
@@ -381,8 +530,8 @@ class SitemapService{
         return $xml;
     }
 
-
-    protected function urlToXml($loc, $lastmod, $changefreq, $priority){
+    protected function urlToXml($loc, $lastmod, $changefreq, $priority)
+    {
         return "
             <url>
                 <loc>{$loc}</loc>
@@ -393,31 +542,41 @@ class SitemapService{
         ";
     }
 
-    public function getSitemapUrl(){
-        return url('/sitemap.xml');
-    }
-
     /**
-     * Generate sitemap index for large sites (if needed in future)
+     * Regenerate specific sitemaps when content changes
      */
-    public function generateSitemapIndex()
+    public function regeneratePeopleSitemap()
     {
-        // This can be implemented if you have multiple sitemap files
-        $sitemapIndex = '<?xml version="1.0" encoding="UTF-8"?>';
-        $sitemapIndex .= '<sitemapindex xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">';
-
-        $sitemapIndex .= "
-            <sitemap>
-                <loc>" . $this->getSitemapUrl() . "</loc>
-                <lastmod>" . Carbon::now()->toDateString() . "</lastmod>
-            </sitemap>
-        ";
-
-        $sitemapIndex .= '</sitemapindex>';
-
-        Storage::disk('public')->put('sitemap_index.xml', $sitemapIndex);
-
-        return true;
+        return $this->generateIndividualSitemap('people');
     }
 
+    public function regenerateSpeechesSitemap()
+    {
+        return $this->generateIndividualSitemap('speeches');
+    }
+
+    public function regenerateBlogsSitemap()
+    {
+        return $this->generateIndividualSitemap('blogs');
+    }
+
+    public function regeneratePagesSitemap()
+    {
+        return $this->generateIndividualSitemap('pages');
+    }
+
+    public function regenerateStatesSitemap()
+    {
+        return $this->generateIndividualSitemap('states');
+    }
+
+    public function regenerateProfessionsSitemap()
+    {
+        return $this->generateIndividualSitemap('professions');
+    }
+
+    public function regenerateDynamicContentSitemap()
+    {
+        return $this->generateIndividualSitemap('careers');
+    }
 }

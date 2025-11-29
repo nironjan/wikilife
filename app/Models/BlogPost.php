@@ -37,25 +37,25 @@ class BlogPost extends Model
     ];
 
     protected static function booted(){
-    // Generate sitemap when a blog post is created
-    static::created(function ($post){
-        if($post->is_published){
-            app(SitemapService::class)->generateSitemap();
-        }
-    });
+        // Generate sitemap when a blog post is created
+        static::created(function ($post){
+            if($post->is_published){
+                app(SitemapService::class)->regenerateBlogsSitemap();
+            }
+        });
 
-    // Generate sitemap when a blog post is updated
-    static::updated(function ($post){
-        if($post->isDirty(['is_published', 'slug', 'title', 'blog_category_id']) && $post->is_published){
-            app(SitemapService::class)->generateSitemap();
-        }
-    });
+        // Generate sitemap when a blog post is updated
+        static::updated(function ($post){
+            if($post->isDirty(['is_published', 'slug', 'title', 'blog_category_id']) && $post->is_published){
+                app(SitemapService::class)->regenerateBlogsSitemap();
+            }
+        });
 
-    // Generate sitemap when a blog post is deleted
-    static::deleted(function(){
-        app(SitemapService::class)->generateSitemap();
-    });
-}
+        // Generate sitemap when a blog post is deleted
+        static::deleted(function(){
+            app(SitemapService::class)->regenerateBlogsSitemap();
+        });
+    }
 
     public function blogCategory()
     {

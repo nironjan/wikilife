@@ -31,17 +31,17 @@ class Controversy extends Model
 
 
     protected static function booted()
-{
-    static::saved(function ($controversy) {
-        if ($controversy->is_published) {
-            app(SitemapService::class)->generateSitemap();
-        }
-    });
+    {
+        static::saved(function ($controversy) {
+            if ($controversy->is_published) {
+                app(SitemapService::class)->regenerateDynamicContentSitemap();
+            }
+        });
 
-    static::deleted(function () {
-        app(SitemapService::class)->generateSitemap();
-    });
-}
+        static::deleted(function () {
+            app(SitemapService::class)->regenerateDynamicContentSitemap();
+        });
+    }
 
     // ========= RELATIONS =============
     public function person()

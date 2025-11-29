@@ -79,20 +79,23 @@ class People extends Model
         //Generate sitemap when a person is created
         static::created(function ($person){
             if($person->status === 'active' && $person->verified){
-                app(SitemapService::class)->generateSitemap();
+                app(SitemapService::class)->regeneratePeopleSitemap();
+                app(SitemapService::class)->regenerateStatesSitemap();
             }
         });
 
         // Generate sitemap when a person is updated
         static::updated(function ($person){
             if($person->isDirty(['status', 'verified', 'slug']) && $person->status === 'active' && $person->verified){
-                app(SitemapService::class)->generateSitemap();
+                app(SitemapService::class)->regeneratePeopleSitemap();
+                app(SitemapService::class)->regenerateStatesSitemap();
             }
         });
 
         // generate sitemap when a person is deleted
-        static::deleted(function(){
-            app(SitemapService::class)->generateSitemap();
+        static::deleted(function($person){
+            app(SitemapService::class)->regeneratePeopleSitemap();
+            app(SitemapService::class)->regenerateStatesSitemap();
         });
     }
 

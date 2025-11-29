@@ -6,6 +6,7 @@ use App\Models\BlogCategory;
 use App\Models\BlogPost;
 use App\Services\ImageKitService;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Livewire\Component;
@@ -22,7 +23,6 @@ class Manage extends Component
     public bool $autoSlug = true;
 
     // Blog Post fields
-    public $blog_category_id = '';
     public $title = '';
     public $slug = '';
     public $excerpt = '';
@@ -36,7 +36,9 @@ class Manage extends Component
     public $published_at = '';
 
     // Search fields
+    public $category_display = '';
     public $category_search = '';
+    public $blog_category_id = '';
     public $existing_featured_image = null;
     public $existing_featured_image_file_id = null;
     public $new_tag = '';
@@ -115,17 +117,45 @@ class Manage extends Component
         }
     }
 
-    /**
-     * Get filtered categories based on search
-     */
     public function getCategoriesProperty()
     {
         return BlogCategory::when($this->category_search, function ($query) {
-            $query->where('name', 'like', "%{$this->category_search}%");
-        })
+                // Use ilike for case-insensitive search in PostgreSQL
+                $query->where('name', 'ilike', "%{$this->category_search}%");
+            })
             ->orderBy('name')
             ->limit(50)
             ->get();
+    }
+
+    public function getSelectedCategoryProperty()
+    {
+        if (!$this->blog_category_id) {
+            return null;
+        }
+
+        return BlogCategory::find($this->blog_category_id);
+    }
+
+    public function updatedBlogCategoryId($value)
+    {
+        if ($value) {
+            $category = BlogCategory::find($value);
+            if ($category) {
+                $this->category_display = $category->name;
+                $this->category_search = '';
+            }
+        } else {
+            $this->category_display = '';
+            $this->category_search = '';
+        }
+    }
+
+    public function clearCategory()
+    {
+        $this->blog_category_id = '';
+        $this->category_display = '';
+        $this->category_search = '';
     }
 
     /**
@@ -196,29 +226,7 @@ class Manage extends Component
         Toaster::success('Slug reset to auto-generated value.');
     }
 
-    /**
-     * When category is selected, update search field
-     */
-    public function updatedBlogCategoryId($value)
-    {
-        if ($value) {
-            $category = BlogCategory::find($value);
-            if ($category) {
-                $this->category_search = $category->name;
-            }
-        } else {
-            $this->category_search = '';
-        }
-    }
 
-    /**
-     * Clear category selection
-     */
-    public function clearCategory()
-    {
-        $this->blog_category_id = '';
-        $this->category_search = '';
-    }
 
     /**
      * Add a new tag

@@ -37,27 +37,27 @@ class Page extends Model
      */
 
     protected static function booted(){
+    // Generate sitemap when a page is created
+    static::created(function ($page){
+        if($page->is_published){
+            app(SitemapService::class)->regeneratePagesSitemap();
+        }
+    });
 
-        static::updated(function ($page) {
-            $relevantFields = ['title', 'slug', 'is_published', 'published_at'];
+    // Generate sitemap when a page is updated
+    static::updated(function ($page){
+        $relevantFields = ['title', 'slug', 'is_published', 'published_at'];
 
-            if ($page->isDirty($relevantFields)) {
-                app(SitemapService::class)->generateSitemap();
-            }
-        });
+        if($page->isDirty($relevantFields)){
+            app(SitemapService::class)->regeneratePagesSitemap();
+        }
+    });
 
-        // Generate sitemap when a page is updated
-        static::updated(function ($page){
-            if($page->isDirty(['title', 'slug', 'is_published', 'published_at'])){
-                app(SitemapService::class)->generateSitemap();
-            }
-        });
-
-        // generate sitemap when a page is deleted
-        static::deleted(function(){
-            app(SitemapService::class)->generateSitemap();
-        });
-    }
+    // Generate sitemap when a page is deleted
+    static::deleted(function(){
+        app(SitemapService::class)->regeneratePagesSitemap();
+    });
+}
 
     /**
      * Relationships

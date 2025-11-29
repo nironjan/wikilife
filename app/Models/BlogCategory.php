@@ -23,25 +23,25 @@ class BlogCategory extends Model
     ];
 
     protected static function booted(){
-    // Generate sitemap when a blog category is created
-    static::created(function ($category){
-        if($category->is_active){
-            app(SitemapService::class)->generateSitemap();
-        }
-    });
+        // Generate sitemap when a blog category is created
+        static::created(function ($category){
+            if($category->is_active){
+                app(SitemapService::class)->regenerateBlogsSitemap();
+            }
+        });
 
-    // Generate sitemap when a blog category is updated
-    static::updated(function ($category){
-        if($category->isDirty(['is_active', 'slug', 'name'])){
-            app(SitemapService::class)->generateSitemap();
-        }
-    });
+        // Generate sitemap when a blog category is updated
+        static::updated(function ($category){
+            if($category->isDirty(['is_active', 'slug', 'name'])){
+                app(SitemapService::class)->regenerateBlogsSitemap();
+            }
+        });
 
-    // Generate sitemap when a blog category is deleted
-    static::deleted(function(){
-        app(SitemapService::class)->generateSitemap();
-    });
-}
+        // Generate sitemap when a blog category is deleted
+        static::deleted(function(){
+            app(SitemapService::class)->regenerateBlogsSitemap();
+        });
+    }
 
     public function blogPosts()
     {

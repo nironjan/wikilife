@@ -115,7 +115,6 @@
                                     </div>
 
                                     <!-- Category Selection -->
-                                    <!-- Category Selection -->
                                     <div class="space-y-2">
                                         <label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                                             Select Category *
@@ -178,37 +177,33 @@
                                             @endif
 
                                             <!-- Selected Category Display -->
-                                            @if ($blog_category_id)
+                                            @if ($blog_category_id && $this->selectedCategory)
                                                 <div class="p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-md">
                                                     <div class="flex items-center justify-between">
                                                         <div class="flex items-center space-x-3">
-                                                            @php $selectedCategory = $this->categories->firstWhere('id', $blog_category_id) @endphp
-                                                            @if ($selectedCategory)
-                                                                <div
-                                                                    class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
-                                                                    <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
-                                                                    </svg>
+                                                            <div class="h-10 w-10 rounded-full bg-blue-100 dark:bg-blue-900 flex items-center justify-center">
+                                                                <svg class="h-5 w-5 text-blue-600 dark:text-blue-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path>
+                                                                </svg>
+                                                            </div>
+                                                            <div>
+                                                                <div class="text-sm font-medium text-green-800 dark:text-green-200">
+                                                                    {{ $this->selectedCategory->name }}
                                                                 </div>
-                                                                <div>
-                                                                    <div class="text-sm font-medium text-green-800 dark:text-green-200">
-                                                                        {{ $selectedCategory->name }}
+                                                                @if ($this->selectedCategory->description)
+                                                                    <div class="text-xs text-green-600 dark:text-green-400">
+                                                                        {{ $this->selectedCategory->description }}
                                                                     </div>
-                                                                    @if ($selectedCategory->description)
-                                                                        <div class="text-xs text-green-600 dark:text-green-400">
-                                                                            {{ $selectedCategory->description }}
-                                                                        </div>
-                                                                    @endif
-                                                                </div>
-                                                            @endif
+                                                                @endif
+                                                            </div>
                                                         </div>
                                                         <span class="text-green-600 dark:text-green-400">
-                        <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
-                            <path fill-rule="evenodd"
-                                  d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
-                                  clip-rule="evenodd"></path>
-                        </svg>
-                    </span>
+                                                            <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 20 20">
+                                                                <path fill-rule="evenodd"
+                                                                    d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+                                                                    clip-rule="evenodd"></path>
+                                                            </svg>
+                                                        </span>
                                                     </div>
                                                 </div>
                                             @endif
