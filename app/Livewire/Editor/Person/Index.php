@@ -1,10 +1,11 @@
 <?php
 
-namespace App\Livewire\Admin\Person;
+namespace App\Livewire\Editor\Person;
 
 use App\Models\People;
 use Exception;
 use Illuminate\Support\Facades\Auth;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Lazy;
 use Livewire\Attributes\Title;
 use Livewire\Component;
@@ -12,7 +13,8 @@ use Livewire\WithPagination;
 use Masmerise\Toaster\Toaster;
 
 #[Lazy]
-#[Title("Person List Page")]
+#[Title('My Persons - Editor')]
+#[Layout('components.layouts.editor')]
 class Index extends Component
 {
     use WithPagination;
@@ -24,6 +26,7 @@ class Index extends Component
     public string $sortDirection = 'desc';
     public bool $loading = false;
 
+    public $approvalStatus = '';
 
     protected $queryString = [
         'search' => ['except' => ''],
@@ -32,8 +35,21 @@ class Index extends Component
         'sortDirection' => ['except' => 'desc'],
     ];
 
+    public function mount()
+    {
+        /**
+         * @var \App\Models\User|null $user
+         */
+        $user = Auth::user();
+
+        // Ensure user is editor and can manage content
+        if (!$user || !$user->canManageContent()) {
+            abort(403, 'Unauthorized access.');
+        }
+    }
+
     public function placeholder(){
-        return view('livewire.admin.person.person-list-skeleton');
+        return view('livewire.editor.person.person-list-skeleton');
     }
 
     public function updatingSearch()
@@ -50,6 +66,7 @@ class Index extends Component
     {
         $this->loading = false;
     }
+
     public function updatingStatus()
     {
         $this->loading = true;
@@ -88,13 +105,13 @@ class Index extends Component
         $this->loading = true;
 
         try {
-            $person = People::findOrFail($id);
+            $person = People::where('created_by', Auth::id())->findOrFail($id);
             $personName = $person->display_name;
             $person->delete();
 
             Toaster::success("{$personName} deleted successfully.");
         } catch (Exception $e) {
-            Toaster::error('Failed to delete person:' . $e->getMessage());
+            Toaster::error('Failed to delete person: ' . $e->getMessage());
         }
 
         $this->loading = false;
@@ -105,24 +122,24 @@ class Index extends Component
         $this->loading = true;
 
         try {
-            $person = People::findOrFail($id);
+            $person = People::where('created_by', Auth::id())->findOrFail($id);
             $person->status = $person->status === 'active' ? 'inactive' : 'active';
             $person->save();
 
             $status = $person->status === 'active' ? 'activated' : 'deactivated';
             Toaster::success("Person {$status} successfully.");
         } catch (Exception $e) {
-            Toaster::error("Failed to update status:" . $e->getMessage());
+            Toaster::error("Failed to update status: " . $e->getMessage());
         }
 
         $this->loading = false;
     }
 
 
-
     public function render()
     {
-        $people = People::with(['creator', 'verifier'])
+        $people = People::with(['creator'])
+            ->where('created_by', Auth::id()) // Only show current editor's persons
             ->when($this->search, function ($query) {
                 $query->where(function ($q) {
                     $searchTerm = $this->search;
@@ -133,21 +150,24 @@ class Index extends Component
                         ->orWhereJsonContains('nicknames', $searchTerm)
                         ->orWhereJsonContains('nicknames', $searchTermLower)
                         ->orWhereJsonContains('nicknames', ucwords($searchTermLower));
-                        // Profession search with multiple variations
+                    // Profession search with multiple variations
                     $q->orWhere(function ($professionQuery) use ($searchTerm, $searchTermLower) {
                         $professionQuery->orWhereRaw('professions::text LIKE ?', ["%{$searchTerm}%"])
                                     ->orWhereRaw('professions::text LIKE ?', ["%{$searchTermLower}%"])
                                     ->orWhereRaw('professions::text LIKE ?', ["%".ucwords($searchTermLower)."%"]);
                     });
-
                 });
             })
             ->when($this->status, function ($query) {
                 $query->where('status', $this->status);
             })
+
+            ->when($this->approvalStatus, function ($query) {
+                $query->where('approval_status', $this->approvalStatus);
+            })
             ->orderBy($this->sortField, $this->sortDirection)
             ->paginate(10);
 
-        return view('livewire.admin.person.index', compact('people'));
+        return view('livewire.editor.person.index', compact('people'));
     }
 }

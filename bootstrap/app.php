@@ -15,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
         web: [
             __DIR__ . '/../routes/public.php',  // frontend routes
             __DIR__ . '/../routes/web.php', // Admin routes
+            __DIR__ . '/../routes/editor.php', // Editor routes
 
         ],
         commands: __DIR__ . '/../routes/console.php',
@@ -23,6 +24,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         $middleware->alias([
             'admin' => AdminMiddleware::class,
+            'editor' => \App\Http\Middleware\EditorMiddleware::class,
         ]);
 
     })
@@ -38,7 +40,7 @@ return Application::configure(basePath: dirname(__DIR__))
                 return App::call(ErrorPage::class, ['code' => $code]);
             }
 
-            return null; // allow next handler
+            return null;
         });
 
         $exceptions->render(function (Throwable $e, $request) {

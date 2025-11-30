@@ -72,14 +72,14 @@ return new class extends Migration {
             $table->timestamps();
 
             // 🔥 OPTIMIZED INDEXES FOR BIOGRAPHY QUERIES
-            $table->index(['status', 'verified', 'created_at']); // For admin listings
-            $table->index(['birth_date']); // For age-based queries
-            $table->index(['state_code', 'status']); // For location filtering
-            $table->index(['gender', 'status']); // For demographic queries
-            $table->index(['nationality', 'status']); // For nationality filtering
-            $table->index(['created_at']); // For recent additions
-            $table->index(['view_count']); // For popular biographies
-            $table->index(['name']); // For name searches
+            $table->index(['status', 'verified', 'created_at']);
+            $table->index(['birth_date']);
+            $table->index(['state_code', 'status']);
+            $table->index(['gender', 'status']);
+            $table->index(['nationality', 'status']);
+            $table->index(['created_at']);
+            $table->index(['view_count']);
+            $table->index(['name']);
         });
     }
 

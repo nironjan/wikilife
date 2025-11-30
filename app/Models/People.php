@@ -52,7 +52,11 @@ class People extends Model
         'comment_count',
         'follower_count',
         'status',
+        'approval_status',
         'created_by',
+        'verified_by',
+        'verified_at',
+        'rejection_reason',
         'verified',
     ];
 
@@ -65,6 +69,7 @@ class People extends Model
         'birth_date' => 'date',
         'death_date' => 'date',
         'verified'  => 'boolean',
+        'verified_at' => 'datetime',
     ];
 
 
@@ -250,6 +255,22 @@ class People extends Model
         return $query->where('verified', true);
     }
 
+    public function scopeApproved(Builder $query)
+    {
+        return $query->where('approval_status', 'approved');
+    }
+
+    public function scopePending(Builder $query)
+    {
+        return $query->where('approval_status', 'pending');
+    }
+
+    public function scopeRejected(Builder $query)
+    {
+        return $query->where('approval_status', 'rejected');
+    }
+
+
     public function scopeAlive(Builder $query)
     {
         return $query->whereNull('death_date');
@@ -344,6 +365,16 @@ class People extends Model
 
     // ================== RELATIONSHIPS ======================
 
+    public function creator()
+    {
+        return $this->belongsTo(User::class, 'created_by');
+    }
+
+    public function verifier()
+    {
+        return $this->belongsTo(User::class, 'verified_by');
+    }
+
     public function latestUpdates(){
         return $this->hasMany(LatestUpdate::class, 'person_id')
             ->published()
@@ -432,11 +463,6 @@ class People extends Model
         return $this->hasMany(LiteratureCareer::class, 'person_id')->orderBy('sort_order');
     }
 
-    public function creator()
-    {
-        return $this->belongsTo(User::class, 'created_by');
-    }
-
     public function feedbacks()
     {
         return $this->hasMany(Feedback::class, 'people_id');
@@ -471,6 +497,72 @@ class People extends Model
     public function getActiveSocialLinks()
     {
         return $this->socialLinks()->whereNotNull('url')->get();
+    }
+
+    /**
+     * Approve the person entry
+     */
+    public function approve($verifiedBy)
+    {
+        $this->update([
+            'approval_status' => 'approved',
+            'verified' => true,
+            'verified_by' => $verifiedBy,
+            'verified_at' => now(),
+            'rejection_reason' => null,
+        ]);
+    }
+
+    /**
+     * Reject the person entry
+     */
+    public function reject($verifiedBy, $reason = null)
+    {
+        $this->update([
+            'approval_status' => 'rejected',
+            'verified' => false,
+            'verified_by' => $verifiedBy,
+            'verified_at' => now(),
+            'rejection_reason' => $reason,
+        ]);
+    }
+
+    /**
+     * Set back to pending status
+     */
+    public function setPending()
+    {
+        $this->update([
+            'approval_status' => 'pending',
+            'verified' => false,
+            'verified_by' => null,
+            'verified_at' => null,
+            'rejection_reason' => null,
+        ]);
+    }
+
+    /**
+     * Check if person is approved
+     */
+    public function isApproved(): bool
+    {
+        return $this->approval_status === 'approved';
+    }
+
+    /**
+     * Check if person is pending
+     */
+    public function isPending(): bool
+    {
+        return $this->approval_status === 'pending';
+    }
+
+    /**
+     * Check if person is rejected
+     */
+    public function isRejected(): bool
+    {
+        return $this->approval_status === 'rejected';
     }
 
 

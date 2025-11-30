@@ -1,160 +1,100 @@
 <div>
     <div class="min-h-screen py-8">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
-                <!-- Approval Status Banner -->
-                @if($editingId)
+            <!-- Editor-specific header -->
+            <div class="mb-6">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+                            {{ $editingId ? 'Edit Person' : 'Create New Person' }}
+                        </h1>
+                        <p class="text-gray-600 dark:text-gray-400 mt-1">
+                            Editor Panel - You can only edit your own entries
+                        </p>
+                    </div>
+                    <div class="bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full text-sm text-blue-800 dark:text-blue-200">
+                        Editor Mode
+                    </div>
+                </div>
+            </div>
+            <!-- Add this after the editor header section -->
+            @if($editingId)
                 @php
-                    $person = \App\Models\People::with(['creator', 'verifier'])->find($editingId);
+                    $person = \App\Models\People::with(['creator'])->find($editingId);
                 @endphp
                 @if($person)
-                    <div class="border-b border-gray-200 dark:border-gray-600">
-                        <div class="px-6 py-4">
-                            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                                <div class="flex items-center space-x-4">
-                                    <!-- Approval Status Badge -->
-                                    <div @class([
-                                        'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
-                                        'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 border border-yellow-200 dark:border-yellow-700' =>
-                                            $person->approval_status === 'pending',
-                                        'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border border-green-200 dark:border-green-700' =>
-                                            $person->approval_status === 'approved',
-                                        'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 border border-red-200 dark:border-red-700' =>
-                                            $person->approval_status === 'rejected',
-                                    ])>
-                                        @if($person->approval_status === 'pending')
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        @elseif($person->approval_status === 'approved')
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                            </svg>
-                                        @else
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                                            </svg>
-                                        @endif
-                                        {{ ucfirst($person->approval_status) }}
-                                    </div>
-
-                                    <!-- Creator Info -->
-                                    @if($person->creator)
-                                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                            </svg>
-                                            Created by: {{ $person->creator->name }}
-                                        </div>
+                    <div class="mb-6 border border-gray-200 dark:border-gray-600 rounded-lg p-4 bg-white dark:bg-gray-800">
+                        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                            <div class="flex items-center space-x-4">
+                                <!-- Approval Status Badge -->
+                                <div @class([
+                                    'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium',
+                                    'bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100 border border-yellow-200 dark:border-yellow-700' =>
+                                        $person->approval_status === 'pending',
+                                    'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border border-green-200 dark:border-green-700' =>
+                                        $person->approval_status === 'approved',
+                                    'bg-red-100 text-red-800 dark:bg-red-800 dark:text-red-100 border border-red-200 dark:border-red-700' =>
+                                        $person->approval_status === 'rejected',
+                                ])>
+                                    @if($person->approval_status === 'pending')
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @elseif($person->approval_status === 'approved')
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                        </svg>
+                                    @else
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
                                     @endif
-
-                                    <!-- Verifier Info -->
-                                    @if($person->verified_by && $person->verified_at)
-                                        <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
-                                            <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
-                                            </svg>
-                                            Verified by: {{ $person->verifier->name ?? 'Admin' }} on {{ $person->verified_at->format('M j, Y') }}
-                                        </div>
-                                    @endif
+                                    {{ ucfirst($person->approval_status) }}
                                 </div>
 
-                                <!-- Move the x-data to wrap both buttons and modal -->
-                                <div x-data="{ showRejectionModal: false }">
-                                    <!-- Admin Approval Actions -->
-                                    @if(auth()->user()->isAdmin() && $person->approval_status !== 'approved')
-                                        <div class="flex space-x-2">
-                                            @if($person->approval_status === 'pending')
-                                                <!-- APPROVE -->
-                                                <button wire:click="approvePerson"
-                                                        wire:confirm="Are you sure you want to approve this person entry?"
-                                                        class="inline-flex items-center px-3 py-1 bg-green-600 rounded text-white">
-                                                    Approve
-                                                </button>
-
-                                                <!-- REJECT BUTTON -->
-                                                <button type="button"
-                                                        @click="showRejectionModal = true"
-                                                        class="inline-flex items-center px-3 py-1 bg-red-600 rounded text-white">
-                                                    Reject
-                                                </button>
-
-                                            @elseif($person->approval_status === 'rejected')
-                                                <button wire:click="setPending"
-                                                        class="inline-flex items-center px-3 py-1 bg-yellow-600 rounded text-white">
-                                                    Set to Pending
-                                                </button>
-                                            @endif
-                                        </div>
-                                    @endif
-
-                                    <!-- REJECTION MODAL - Now inside the same x-data scope -->
-                                    <div x-show="showRejectionModal"
-                                        x-cloak
-                                        class="fixed inset-0 z-50 flex items-center justify-center">
-
-                                        <!-- Backdrop -->
-                                        <div class="absolute inset-0 bg-gray-500 bg-opacity-75"
-                                            @click="showRejectionModal = false"></div>
-
-                                        <!-- Modal Panel -->
-                                        <div class="relative bg-white dark:bg-gray-800 rounded-lg shadow-xl w-full max-w-lg p-6">
-
-                                            <h3 class="text-lg font-bold mb-2">Reject Person Entry</h3>
-
-                                            <textarea
-                                                wire:model.defer="rejectionReason"
-                                                rows="4"
-                                                class="w-full border rounded p-2">
-                                            </textarea>
-
-                                            <div class="mt-4 flex justify-end gap-3">
-                                                <button
-                                                    type="button"
-                                                    @click="showRejectionModal = false; $wire.set('rejectionReason', '')"
-                                                    class="px-4 py-2 bg-gray-300 rounded">
-                                                    Cancel
-                                                </button>
-
-                                                <button
-                                                    type="button"
-                                                    wire:click="rejectPerson"
-                                                    @click="showRejectionModal = false"
-                                                    class="px-4 py-2 bg-red-600 text-white rounded">
-                                                    Reject Entry
-                                                </button>
-                                            </div>
-                                        </div>
+                                <!-- Creator Info -->
+                                @if($person->creator)
+                                    <div class="flex items-center text-sm text-gray-600 dark:text-gray-400">
+                                        <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+                                        </svg>
+                                        Created by: {{ $person->creator->name }}
                                     </div>
-                                </div>
+                                @endif
                             </div>
 
-                            <!-- Rejection Reason -->
-                            @if($person->approval_status === 'rejected' && $person->rejection_reason)
-                                <div class="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
-                                    <div class="flex items-start">
-                                        <svg class="w-5 h-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
-                                        </svg>
-                                        <div>
-                                            <h4 class="text-sm font-medium text-red-800 dark:text-red-200">Rejection Reason</h4>
-                                            <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ $person->rejection_reason }}</p>
-                                        </div>
-                                    </div>
+                            <!-- Info message for editors -->
+                            @if($person->approval_status === 'rejected')
+                                <div class="text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/20 px-3 py-2 rounded-lg">
+                                    💡 Updating this entry will reset approval status to "Pending"
                                 </div>
                             @endif
                         </div>
+
+                        <!-- Rejection Reason -->
+                        @if($person->approval_status === 'rejected' && $person->rejection_reason)
+                            <div class="mt-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg">
+                                <div class="flex items-start">
+                                    <svg class="w-5 h-5 text-red-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                                    </svg>
+                                    <div>
+                                        <h4 class="text-sm font-medium text-red-800 dark:text-red-200">Rejection Reason</h4>
+                                        <p class="text-sm text-red-700 dark:text-red-300 mt-1">{{ $person->rejection_reason }}</p>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
                     </div>
                 @endif
             @endif
+
+            <div class="bg-white dark:bg-gray-800 rounded-xl shadow overflow-hidden">
                 <div class="flex flex-col lg:flex-row">
                     <!-- Left Sidebar - Progress Steps -->
                     <div class="lg:w-1/4 bg-gray-50 dark:bg-gray-700 p-6 border-r border-gray-200 dark:border-gray-600">
                         <!-- Header -->
                         <div class="mb-8">
-                            <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-                                {{ $editingId ? 'Edit Person' : 'Create New Person' }}
-                            </h1>
                             <p class="text-gray-600 dark:text-gray-400 mt-2">
                                 Complete all steps to {{ $editingId ? 'update' : 'create' }} the biography
                             </p>
@@ -163,72 +103,48 @@
                         <!-- Progress Steps -->
                         <div class="space-y-4">
                             <!-- Step 1: Basic Info -->
-                            <div
-                                class="flex items-center space-x-3 p-3 rounded-lg
-                            {{ $currentStep >= 1 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                {{ $currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
+                            <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 1 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 1 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
                                     1
                                 </div>
                                 <div>
-                                    <span
-                                        class="text-sm font-medium
-                                    {{ $currentStep >= 1 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <span class="text-sm font-medium {{ $currentStep >= 1 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
                                         Basic Information
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Step 2: Biography -->
-                            <div
-                                class="flex items-center space-x-3 p-3 rounded-lg
-                            {{ $currentStep >= 2 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                {{ $currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
+                            <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 2 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 2 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
                                     2
                                 </div>
                                 <div>
-                                    <span
-                                        class="text-sm font-medium
-                                    {{ $currentStep >= 2 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <span class="text-sm font-medium {{ $currentStep >= 2 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
                                         Biography Details
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Step 3: Background -->
-                            <div
-                                class="flex items-center space-x-3 p-3 rounded-lg
-                            {{ $currentStep >= 3 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                {{ $currentStep >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
+                            <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 3 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 3 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
                                     3
                                 </div>
                                 <div>
-                                    <span
-                                        class="text-sm font-medium
-                                    {{ $currentStep >= 3 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <span class="text-sm font-medium {{ $currentStep >= 3 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
                                         Background & Stats
                                     </span>
                                 </div>
                             </div>
 
                             <!-- Step 4: Media & Status -->
-                            <div
-                                class="flex items-center space-x-3 p-3 rounded-lg
-                            {{ $currentStep >= 4 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
-                                <div
-                                    class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center
-                                {{ $currentStep >= 4 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
+                            <div class="flex items-center space-x-3 p-3 rounded-lg {{ $currentStep >= 4 ? 'bg-blue-50 dark:bg-blue-900/20 border border-dashed border-blue-200 dark:border-blue-800' : 'bg-gray-100 dark:bg-gray-600' }}">
+                                <div class="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center {{ $currentStep >= 4 ? 'bg-blue-600 text-white' : 'bg-gray-300 dark:bg-gray-500 text-gray-600 dark:text-gray-300' }}">
                                     4
                                 </div>
                                 <div>
-                                    <span
-                                        class="text-sm font-medium
-                                    {{ $currentStep >= 4 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
+                                    <span class="text-sm font-medium {{ $currentStep >= 4 ? 'text-blue-900 dark:text-blue-100' : 'text-gray-600 dark:text-gray-300' }}">
                                         Media & Status
                                     </span>
                                 </div>
@@ -242,8 +158,7 @@
                                 <span>{{ round(($currentStep / 4) * 100) }}%</span>
                             </div>
                             <div class="w-full bg-gray-200 dark:bg-gray-600 rounded-full h-2">
-                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300"
-                                    style="width: {{ ($currentStep / 4) * 100 }}%"></div>
+                                <div class="bg-blue-600 h-2 rounded-full transition-all duration-300" style="width: {{ ($currentStep / 4) * 100 }}%"></div>
                             </div>
                         </div>
 
@@ -273,20 +188,35 @@
                             @if ($currentStep == 1)
                                 <div class="space-y-6">
                                     <div>
-                                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Basic
-                                            Information</h2>
-                                        <p class="text-gray-600 dark:text-gray-400">Enter the fundamental details about
-                                            the person.</p>
+                                        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-2">Basic Information</h2>
+                                        <p class="text-gray-600 dark:text-gray-400">Enter the fundamental details about the person.</p>
+
+                                        <!-- Existing Person Check Alert -->
+                                        <div class="mt-4 p-4 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                                            <div class="flex items-center">
+                                                <div class="flex-shrink-0">
+                                                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                                                    </svg>
+                                                </div>
+                                                <div class="ml-3">
+                                                    <h3 class="text-sm font-medium text-yellow-800 dark:text-yellow-200">
+                                                        Duplicate Check Active
+                                                    </h3>
+                                                    <div class="mt-1 text-sm text-yellow-700 dark:text-yellow-300">
+                                                        <p>We'll check for existing persons with similar names as you type.</p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                         <!-- Name with live updates -->
-                                        <x-flux::input label="Display Name *" wire:model.live="name"
-                                            placeholder="Enter display name" required />
+                                        <x-flux::input label="Display Name *" wire:model.live="name" placeholder="Enter display name" required />
 
                                         <!-- Full Name -->
-                                        <x-flux::input label="Full Name" wire:model="full_name"
-                                            placeholder="Enter full legal name" />
+                                        <x-flux::input label="Full Name" wire:model="full_name" placeholder="Enter full legal name" />
                                     </div>
 
                                     <!-- Slug with Auto-generation -->
@@ -297,29 +227,23 @@
                                             </label>
                                             <div class="flex items-center space-x-2">
                                                 @if (!$autoSlug)
-                                                    <x-flux::button type="button" wire:click="resetSlug"
-                                                        class="cursor-pointer" size="sm">
-
+                                                    <x-flux::button type="button" wire:click="resetSlug" class="cursor-pointer" size="sm">
                                                         ↻ Reset to Auto
                                                     </x-flux::button>
                                                 @endif
-                                                <span
-                                                    class="text-xs px-2 py-1 rounded-full {{ $autoSlug ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' }}">
+                                                <span class="text-xs px-2 py-1 rounded-full {{ $autoSlug ? 'bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100' : 'bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100' }}">
                                                     {{ $autoSlug ? 'Auto' : 'Manual' }}
                                                 </span>
                                             </div>
                                         </div>
 
                                         <div class="relative">
-                                            <x-flux::input wire:model="slug" placeholder="URL-friendly identifier"
-                                                required class="pr-10" />
+                                            <x-flux::input wire:model="slug" placeholder="URL-friendly identifier" required class="pr-10" />
 
                                             <!-- Loading indicator -->
                                             @if ($autoSlug && !empty($name) && empty($slug))
                                                 <div class="absolute inset-y-0 right-0 flex items-center pr-3">
-                                                    <div
-                                                        class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600">
-                                                    </div>
+                                                    <div class="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
                                                 </div>
                                             @endif
                                         </div>
@@ -357,19 +281,15 @@
                                         <div class="space-y-2">
                                             @foreach ($nicknames as $index => $nickname)
                                                 <div class="flex gap-2">
-                                                    <x-flux::input wire:model="nicknames.{{ $index }}"
-                                                        placeholder="Enter nickname" class="flex-1" />
+                                                    <x-flux::input wire:model="nicknames.{{ $index }}" placeholder="Enter nickname" class="flex-1" />
                                                     @if (count($nicknames) > 1)
-                                                        <x-flux::button type="button"
-                                                            wire:click="removeNickname({{ $index }})"
-                                                            variant="danger" size="sm">
+                                                        <x-flux::button type="button" wire:click="removeNickname({{ $index }})" variant="danger" size="sm">
                                                             Remove
                                                         </x-flux::button>
                                                     @endif
                                                 </div>
                                             @endforeach
-                                            <x-flux::button type="button" wire:click="addNickname"
-                                                class="cursor-pointer" size="sm">
+                                            <x-flux::button type="button" wire:click="addNickname" class="cursor-pointer" size="sm">
                                                 Add Nickname
                                             </x-flux::button>
                                         </div>
@@ -779,4 +699,48 @@
         </div>
     </div>
 
+    <!-- Existing Person Modal -->
+    <x-flux::modal name="existing-person-modal" max-width="md">
+        <x-slot name="title">
+            <div class="flex items-center">
+                <svg class="h-6 w-6 text-yellow-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L4.082 16.5c-.77.833.192 2.5 1.732 2.5z" />
+                </svg>
+                Existing Person Found
+            </div>
+        </x-slot>
+
+        <x-slot name="content">
+            <div class="space-y-4">
+                <p class="text-gray-600 dark:text-gray-400">
+                    We found an existing person with a similar name. Do you want to edit the existing entry instead of creating a new one?
+                </p>
+
+                <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                    <div class="font-medium text-gray-900 dark:text-white" x-text="$wire.entangled('existingPersonName')"></div>
+                    <div class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                        Slug: <span x-text="$wire.entangled('existingPersonSlug')" class="font-mono"></span>
+                    </div>
+                </div>
+
+                <p class="text-sm text-gray-500 dark:text-gray-400">
+                    This helps prevent duplicate entries and maintains data consistency.
+                </p>
+            </div>
+        </x-slot>
+
+        <x-slot name="footer">
+            <div class="flex justify-end space-x-3">
+                <x-flux::button class="cursor-pointer" x-on:click="$dispatch('close-modal', 'existing-person-modal')">
+                    Continue Creating New
+                </x-flux::button>
+
+                <x-flux::button
+                    variant="primary"
+                    x-on:click="window.location.href = '/editor/people/' + $wire.entangled('existingPersonId') + '/edit'">
+                    Edit Existing Person
+                </x-flux::button>
+            </div>
+        </x-slot>
+    </x-flux::modal>
 </div>

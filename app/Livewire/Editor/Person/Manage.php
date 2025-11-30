@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Livewire\Admin\Person;
+namespace App\Livewire\Editor\Person;
 
 use App\Models\People;
 use App\Services\ImageKitService;
@@ -10,12 +10,14 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Livewire\Attributes\Layout;
 use Livewire\Attributes\Title;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 use Masmerise\Toaster\Toaster;
 
-#[Title("Person Manage Page")]
+#[Title("Manage Person")]
+#[Layout('components.layouts.editor')]
 class Manage extends Component
 {
     use WithFileUploads;
@@ -68,9 +70,6 @@ class Manage extends Component
     // Status
     public $status = 'active';
     public $verified = false;
-    public $approval_status = 'pending';
-
-    public $rejectionReason = '';
 
     // Image optimization
     public $imageWidth = 1200;
@@ -80,9 +79,7 @@ class Manage extends Component
     protected $imageKitService;
 
     protected $rules = [
-
         // Step-1
-
         'name' => 'required|string|max:255',
         'slug' => 'required|string|unique:people,slug',
         'full_name' => 'nullable|string|max:255',
@@ -135,14 +132,27 @@ class Manage extends Component
     public function boot()
     {
         $this->imageKitService = new ImageKitService();
+
+        // Ensure user is editor
+        if (!Auth::check() || !Auth::user()->isEditor()) {
+            abort(403, 'Unauthorized access.');
+        }
     }
 
     public function mount($id = null)
     {
+        // Check if user can manage content
+        if (!Auth::user()->canManageContent()) {
+            abort(403, 'You do not have permission to manage people.');
+        }
+
         if ($id) {
             $this->editingId = $id;
             $this->loadPerson($id);
             $this->autoSlug = false;
+
+            // Check if editor owns this person entry
+            $this->ensureEditorOwnership($id);
         } else {
             $this->nicknames = [''];
             $this->professions = [''];
@@ -153,7 +163,41 @@ class Manage extends Component
             if (!empty($this->name)) {
                 $this->generateSlug();
             }
+        }
+    }
 
+    /**
+     * Ensure editor can only edit their own entries
+     */
+    protected function ensureEditorOwnership($personId)
+    {
+        $person = People::findOrFail($personId);
+
+        // Admin can edit all, editors can only edit their own
+        if (Auth::user()->isEditor() && $person->created_by !== Auth::id()) {
+            abort(403, 'You can only edit your own person entries.');
+        }
+    }
+
+    /**
+     * Check for existing person before creating new one
+     */
+    public function checkExistingPerson()
+    {
+        if (empty($this->name)) {
+            return;
+        }
+
+        $existingPerson = People::where('name', $this->name)
+            ->orWhere('slug', Str::slug($this->name))
+            ->first();
+
+        if ($existingPerson) {
+            $this->dispatch('show-existing-person-modal', [
+                'personId' => $existingPerson->id,
+                'personName' => $existingPerson->name,
+                'personSlug' => $existingPerson->slug
+            ]);
         }
     }
 
@@ -172,16 +216,19 @@ class Manage extends Component
     }
 
     /**
-     * Auto-generatd slug when name changes
+     * Auto-generate slug when name changes
      */
     public function updatedName($value)
     {
-        if (!$this->autoSlug || !empty($value)) {
+        if ($this->autoSlug && !empty($value)) {
             $this->slug = Str::slug($value);
-
             $this->ensureUniqueSlug();
         }
 
+        // Check for existing person when name changes significantly
+        if (strlen($value) > 3) {
+            $this->checkExistingPerson();
+        }
     }
 
     /**
@@ -229,11 +276,8 @@ class Manage extends Component
         Toaster::success('Slug reset to auto-generated value.');
     }
 
-
     /**
      * Convert JSON data to key-value pairs for the form
-     * @param mixed $data
-     * @return array
      */
     public function convertToKeyValue($data): array
     {
@@ -263,8 +307,6 @@ class Manage extends Component
         }
         return $result;
     }
-
-
 
     public function loadPerson($id)
     {
@@ -302,10 +344,8 @@ class Manage extends Component
         $this->blood_group = $person->blood_group;
 
         $this->professions = $person->professions ?? [];
-
         $this->physical_stats = $this->convertToKeyValue($person->physical_stats);
         $this->favourite_things = $this->convertToKeyValue($person->favourite_things);
-
         $this->references = $person->references ?? [];
 
         $this->cover_img_caption = $person->cover_img_caption;
@@ -313,9 +353,6 @@ class Manage extends Component
 
         $this->status = $person->status;
         $this->verified = $person->verified;
-
-        $this->approval_status = $person->approval_status;
-        $this->rejectionReason = $person->rejection_reason;
     }
 
     public function nextStep()
@@ -387,9 +424,6 @@ class Manage extends Component
         $this->validate($stepRules[$this->currentStep]);
     }
 
-
-
-
     public function addNickname()
     {
         $this->nicknames[] = '';
@@ -405,7 +439,6 @@ class Manage extends Component
     {
         $this->professions[] = '';
     }
-
 
     public function removeProfession($index)
     {
@@ -437,7 +470,6 @@ class Manage extends Component
 
     public function save()
     {
-
         // validate all steps before saving
         $rules = $this->rules;
 
@@ -495,21 +527,14 @@ class Manage extends Component
                 if ($this->editingId) {
                     $person = People::findOrFail($this->editingId);
 
-                    // If editor is updating a rejected entry, reset to pending
                     if (Auth::user()->isEditor() && $person->approval_status === 'rejected') {
-
-
-                        // Add approval status fields to the update data
                         $data['approval_status'] = 'pending';
                         $data['rejection_reason'] = null;
                         $data['verified_by'] = null;
                         $data['verified_at'] = null;
                     }
 
-                    // Update the person with all data
                     $person->update($data);
-
-                    $updatedPerson = $person->fresh();
                 } else {
                     $person = People::create($data);
                 }
@@ -527,14 +552,13 @@ class Manage extends Component
 
             Toaster::success($this->editingId ? 'Person updated successfully.' : 'Person created successfully.');
 
-            return redirect()->route('webmaster.persons.index');
+            return redirect()->route('editor.persons.index');
 
         } catch (Exception $e) {
             DB::rollBack();
-            Toaster::error('Failed to save person:' . $e->getMessage());
+            Toaster::error('Failed to save person: ' . $e->getMessage());
         }
     }
-
 
     /**
      * Clean empty arrays to prevent JSON encoding issues
@@ -577,7 +601,6 @@ class Manage extends Component
         } catch (Exception $e) {
             throw $e;
         }
-
     }
 
     protected function uploadProfileImage(People $person)
@@ -608,7 +631,6 @@ class Manage extends Component
         } catch (Exception $e) {
             throw $e;
         }
-
     }
 
     public function removeCoverImage()
@@ -645,96 +667,10 @@ class Manage extends Component
         Toaster::success('Profile image removed successfully.');
     }
 
-    public function approvePerson()
-    {
-        /**
-         * @var \App\Models\User|null $user
-         */
-        $user = Auth::user();
-
-        if (!$user->isAdmin()) {
-            Toaster::error('Only administrators can approve persons.');
-            return;
-        }
-
-        try {
-            $person = People::findOrFail($this->editingId);
-            $person->approve(Auth::id());
-
-            Toaster::success('Person approved successfully.');
-
-            // Refresh the component to show updated status
-            $this->loadPerson($this->editingId);
-        } catch (Exception $e) {
-            Toaster::error('Failed to approve person: ' . $e->getMessage());
-        }
-    }
-
-    public function rejectPerson()
-    {
-
-        $user = Auth::user();
-
-        if (!$user->isAdmin()) {
-            Toaster::error('Only administrators can reject persons.');
-            return;
-        }
-
-        // Validate rejection reason
-        if (empty(trim($this->rejectionReason))) {
-            Toaster::error('Please provide a rejection reason.');
-            return;
-        }
-
-        try {
-            $person = People::findOrFail($this->editingId);
-
-            $person->reject(Auth::id(), $this->rejectionReason);
-
-            Toaster::success('Person rejected successfully.');
-
-            // Clear the rejection reason
-            $this->rejectionReason = '';
-
-            // Refresh the component to show updated status
-            $this->loadPerson($this->editingId);
-
-        } catch (Exception $e) {
-            Toaster::error('Failed to reject person: ' . $e->getMessage());
-        }
-    }
-
-        public function setPending()
-        {
-            /**
-             * @var \App\Models\User|null $user
-             */
-            $user = Auth::user();
-
-            if (!$user->isAdmin()) {
-                Toaster::error('Only administrators can change approval status.');
-                return;
-            }
-
-            try {
-                $person = People::findOrFail($this->editingId);
-                $person->setPending();
-
-                Toaster::success('Person status set to pending.');
-
-                // Refresh the component to show updated status
-                $this->loadPerson($this->editingId);
-            } catch (Exception $e) {
-                Toaster::error('Failed to update status: ' . $e->getMessage());
-            }
-        }
-
-
     public function render()
     {
         $indianStates = config('indian_states.all', []);
 
-        return view('livewire.admin.person.manage', compact('indianStates'));
+        return view('livewire.editor.person.manage', compact('indianStates'));
     }
-
 }

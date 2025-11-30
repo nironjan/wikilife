@@ -3,20 +3,26 @@
         <!-- Header -->
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
             <div>
-                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">People Management</h2>
-                <p class="text-gray-600 dark:text-gray-400">Manage biographies and profiles</p>
+                <h2 class="text-2xl font-bold text-gray-900 dark:text-white">My Persons</h2>
+                <p class="text-gray-600 dark:text-gray-400">Manage your biography entries</p>
             </div>
-            <a href="{{ route('webmaster.persons.manage') }}"
-               class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
-                </svg>
-                Add New Person
-            </a>
+            <div class="flex items-center space-x-4">
+                <!-- Editor Badge -->
+                <div class="bg-blue-100 dark:bg-blue-900 px-3 py-1 rounded-full text-sm text-blue-800 dark:text-blue-200">
+                    Editor Mode
+                </div>
+                <a href="{{ route('editor.persons.create') }}"
+                   class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                    <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path>
+                    </svg>
+                    Add New Person
+                </a>
+            </div>
         </div>
 
         <!-- Filters and Search -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <!-- Search -->
             <div>
                 <label for="search" class="sr-only">Search</label>
@@ -30,7 +36,7 @@
                     </div>
                     <input wire:model.live="search" id="search"
                            class="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-md leading-5 bg-white placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-1 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:text-white"
-                           placeholder="Search by name..." type="search">
+                           placeholder="Search your persons..." type="search">
                 </div>
             </div>
 
@@ -42,6 +48,17 @@
                     <option value="active">Active</option>
                     <option value="inactive">Inactive</option>
                     <option value="deceased">Deceased</option>
+                </select>
+            </div>
+
+            <!-- Approval Status Filter -->
+            <div>
+                <select wire:model.live="approvalStatus"
+                        class="block w-full pl-3 pr-10 py-2 text-base border border-gray-300 focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-white">
+                    <option value="">All Approval</option>
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
                 </select>
             </div>
 
@@ -61,7 +78,7 @@
         <div class="overflow-x-auto bg-white dark:bg-gray-800 rounded-lg shadow">
             @if($loading)
                 <!-- Skeleton Loading -->
-                @include('components.skeleton.person-skeleton')
+                @include('livewire.editor.person.person-list-skeleton')
             @else
                 <!-- Content -->
                 <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
@@ -85,7 +102,7 @@
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
-                            Created By
+                            Views
                         </th>
                         <th scope="col"
                             class="px-6 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider">
@@ -161,36 +178,16 @@
                                 ])>
                                     {{ ucfirst($person->approval_status) }}
                                 </span>
-                                @if($person->verified_by && $person->verified_at)
-                                    <div class="text-xs text-gray-500 dark:text-gray-400 mt-1">
-                                        Verified by {{ $person->verifier->name ?? 'Admin' }}<br>
-                                        {{ $person->verified_at->format('M j, Y') }}
-                                    </div>
-                                @endif
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
-                                @if($person->creator)
-                                    <div class="flex items-center">
-
-                                        <div>
-                                            <div class="font-medium text-gray-900 dark:text-white">
-                                                {{ $person->creator->name }}
-                                            </div>
-                                            <div class="text-xs text-gray-500 dark:text-gray-400">
-                                                {{ $person->creator->getRoleDisplayName() }}
-                                            </div>
-                                        </div>
-                                    </div>
-                                @else
-                                    <span class="text-gray-400 dark:text-gray-500">System</span>
-                                @endif
+                                {{ number_format($person->view_count) }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 dark:text-gray-400">
                                 {{ $person->created_at->format('M j, Y') }}
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
                                 <div class="flex justify-end space-x-2">
-                                    <a href="{{ route('webmaster.persons.manage', ['id' => $person->id]) }}"
+                                    <a href="{{ route('editor.persons.edit', ['id' => $person->id]) }}"
                                        class="inline-flex items-center px-3 py-1 border border-blue-300 rounded-md text-blue-600 bg-blue-50 hover:bg-blue-100 hover:border-blue-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-1 dark:bg-blue-900/20 dark:border-blue-700 dark:text-blue-400 dark:hover:bg-blue-800/30 text-xs font-medium transition-colors duration-150">
                                         <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path>
@@ -198,28 +195,53 @@
                                         Edit
                                     </a>
                                     <button wire:click="toggleStatus({{ $person->id }})"
-                                            class="inline-flex items-center px-3 py-1 border border-orange-300 rounded-md text-orange-600 bg-orange-50 hover:bg-orange-100 hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 dark:bg-orange-900/20 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-blue-800/30 text-xs font-medium transition-colors duration-150 cursor-pointer">
+                                            class="inline-flex items-center px-3 py-1 border border-orange-300 rounded-md text-orange-600 bg-orange-50 hover:bg-orange-100 hover:border-orange-400 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 dark:bg-orange-900/20 dark:border-orange-700 dark:text-orange-400 dark:hover:bg-orange-800/30 text-xs font-medium transition-colors duration-150 cursor-pointer">
                                         <svg class="w-3 h-3 mr-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
                                         </svg>
                                         {{ $person->status === 'active' ? 'Deactivate' : 'Activate' }}
                                     </button>
-                                    <button wire:click="deletePerson({{ $person->id }})"
-                                            wire:confirm="Are you sure you want to delete {{ $person->display_name }}?"
-                                            class="inline-flex items-center px-3 py-1 border border-red-300 rounded-md text-red-600 bg-red-50 hover:bg-red-100 hover:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:bg-red-900/20 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-800/30 text-xs font-medium transition-colors duration-150 cursor-pointer">
-                                        <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
-                                        </svg>
-                                        Delete
-                                    </button>
+
+                                    <!-- Delete Button with Security Check -->
+                                    @if($person->approval_status === 'approved')
+                                        <!-- Disabled Delete Button for Approved Entries -->
+                                        <button
+                                                class="inline-flex items-center px-3 py-1 border border-gray-300 rounded-md text-gray-400 bg-gray-100 cursor-not-allowed dark:bg-gray-700 dark:border-gray-600 dark:text-gray-500 text-xs font-medium transition-colors duration-150"
+                                                title="Cannot delete approved entries for security reasons">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    @else
+                                        <!-- Active Delete Button for Non-Approved Entries -->
+                                        <button wire:click="deletePerson({{ $person->id }})"
+                                                wire:confirm="Are you sure you want to delete {{ $person->display_name }}?"
+                                                class="inline-flex items-center px-3 py-1 border border-red-300 rounded-md text-red-600 bg-red-50 hover:bg-red-100 hover:border-red-400 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-1 dark:bg-red-900/20 dark:border-red-700 dark:text-red-400 dark:hover:bg-red-800/30 text-xs font-medium transition-colors duration-150 cursor-pointer">
+                                            <svg class="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                            </svg>
+                                            Delete
+                                        </button>
+                                    @endif
                                 </div>
                             </td>
                         </tr>
                     @empty
                         <tr>
-                            <td colspan="6"
+                            <td colspan="7"
                                 class="px-6 py-4 text-center text-sm text-gray-500 dark:text-gray-400">
-                                No people found matching your criteria.
+                                <div class="flex flex-col items-center justify-center py-8">
+                                    <svg class="w-16 h-16 text-gray-300 dark:text-gray-600 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" />
+                                    </svg>
+                                    <p class="text-lg font-medium text-gray-500 dark:text-gray-400 mb-2">No persons found</p>
+                                    <p class="text-sm text-gray-400 dark:text-gray-500 mb-4">You haven't created any person entries yet.</p>
+                                    <a href="{{ route('editor.persons.create') }}"
+                                       class="inline-flex items-center px-4 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-blue-700 focus:bg-blue-700 active:bg-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition ease-in-out duration-150">
+                                        Create Your First Person
+                                    </a>
+                                </div>
                             </td>
                         </tr>
                     @endforelse
@@ -229,7 +251,7 @@
         </div>
 
         <!-- Pagination -->
-        @if(!$loading)
+        @if(!$loading && $people->hasPages())
             <div class="mt-6">
                 {{ $people->links() }}
             </div>
