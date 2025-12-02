@@ -16,6 +16,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('person_id')->constrained('people')->onDelete('cascade');
             $table->string('degree');
+            $table->string('slug')->unique();
             $table->string('institution');
             $table->text('details')->nullable();
             $table->year('start_year')->nullable();

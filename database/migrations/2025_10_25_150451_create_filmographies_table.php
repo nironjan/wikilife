@@ -14,6 +14,7 @@ return new class extends Migration {
             $table->id();
             $table->foreignId('person_id')->constrained('people')->onDelete('cascade');
             $table->string('movie_title');
+            $table->string('slug')->unique();
             $table->date('release_date')->nullable();
             $table->string('role')->nullable();
             $table->enum('profession_type', ['actor', 'director', 'producer', 'writer', 'cinematographer', 'editor', 'composer', 'other'])->default('actor');

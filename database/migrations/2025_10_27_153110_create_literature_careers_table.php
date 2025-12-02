@@ -17,6 +17,7 @@ return new class extends Migration {
 
             // Role / appearance
             $table->string('role'); // host, writer
+            $table->string('slug')->unique();
             $table->string('media_type')->unique()->nullable(); // TV, Print, digital, portal
             $table->date('start_date')->nullable(); // career start
             $table->date('end_date')->nullable(); // career end

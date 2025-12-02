@@ -19,6 +19,9 @@ return new class extends Migration
             $table->string('slug')->unique();
             $table->text('content');
             $table->text('html_content')->nullable();
+            $table->text('description')->nullable();
+            $table->string('image')->nullable();
+            $table->string('image_file_id')->nullable();
             $table->string('update_type')->nullable();
             $table->boolean('is_approved')->default(false);
             $table->enum('status', ['draft', 'published'])->default('draft');

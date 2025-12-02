@@ -67,6 +67,10 @@ return new class extends Migration {
             $table->enum('status', ['active', 'inactive', 'deceased'])->default('active');
             $table->foreignId('created_by')->nullable()->constrained('users')->onDelete('set null');
             $table->boolean('verified')->default(false);
+            $table->enum('approval_status', ['pending', 'approved', 'rejected'])->default('pending');
+            $table->foreignId('verified_by')->nullable()->constrained('users')->onDelete('set null');
+            $table->timestamp('verified_at')->nullable();
+            $table->text('rejection_reason')->nullable();
 
             // Audit
             $table->timestamps();
@@ -80,6 +84,9 @@ return new class extends Migration {
             $table->index(['created_at']);
             $table->index(['view_count']);
             $table->index(['name']);
+            $table->index(['approval_status', 'created_at']);
+            $table->index(['verified_by']);
+            $table->index(['verified_at']);
         });
     }
 

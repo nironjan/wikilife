@@ -18,6 +18,14 @@ return new class extends Migration
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'customer', 'editor'])->default('customer');
+            $table->text('bio')->nullable();
+            $table->string('avatar')->nullable();
+            $table->string('avatar_file_id')->nullable();
+            $table->string('profile_image')->nullable();
+            $table->string('profile_image_file_id')->nullable();
+            $table->boolean('is_team_member')->default(false);
+            $table->timestamp('last_login_at')->nullable();
+            $table->enum('status', ['active', 'inactive', 'suspended'])->default('active');
             $table->rememberToken();
             $table->timestamps();
         });
